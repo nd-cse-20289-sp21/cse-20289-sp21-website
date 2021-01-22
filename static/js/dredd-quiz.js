@@ -69,12 +69,13 @@ function submitQuiz(quiz_url) {
 		// data now contains JSON from dredd
 		dr.innerHTML += `Checking ${assignment_name} quiz ...\n`;
 		for (const question in data) {
-			if (question === 'score') {
+			if (question === 'score' || question === 'value' || question === 'status') {
 				continue;
 			}
 			dr.innerHTML += (`${titleCase(question).padStart(8, " ")} ${data[question].toFixed(2)}\n`);
 		}
-		dr.innerHTML += `   Score ${data['score'].toFixed(2)}`
+		dr.innerHTML += `   Score ${data['score'].toFixed(2)} / ${data['value'].toFixed(2)}`;
+		dr.innerHTML += `  Status ${data['status']}`;
 		// show the results
 		document.getElementById('dr-container').style.display = 'block';
 	});
