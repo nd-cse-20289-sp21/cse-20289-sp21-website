@@ -1,0 +1,325 @@
+title:      "Reading 00: Slack, GitHub, Student Machines"
+icon:       fa-book
+navigation: []
+internal:
+external:
+body:       |
+
+    **Everyone**:
+
+    Welcome to [CSE 20289 Systems Programming](index.html), which (as the
+    syllabus states) is a course that "introduces students to the Unix
+    programming environment where they will explore various command line
+    utilities, files, processes, memory management, system calls, data
+    structures, networking, and concurrency".  What this means is that you will
+    first learn how to effectively utilize a modern [Unix] programming
+    environment and then you will study how to develop applications that take
+    advantage of system level [abstractions] such as [files], [processes], and
+    [sockets].
+
+    ## Course Overview
+
+    <img src="static/img/house.png" class="img-responsive pull-right">
+
+    Last semester, most of you took the **CSE 20311 Fundamentals of Computing**
+    course where you learned how to program in the [C] language.  After
+    *playing the Game of Life*, *generating anagrams*, and *building fractals*,
+    you should be capable of programming in a compiled language using
+    conditional statements, loops, and functions.  Moreover, you should be
+    somewhat familiar with [strings], [arrays], and those crazy [pointers].
+
+    In this course, we will build on this foundational knowledge by exploring
+    the [Unix] programming environment in order to get a better idea of how a
+    computer works and how to build applications that utilize different aspects
+    of conventional computing systems.  The semester can be broken down into
+    the following units:
+
+    1. **Unit 01: Bourne Shell**
+
+        First, we will begin by learning how to utilize the [Unix shell] and
+        then how to compose multiple [Unix] utilities into [pipelines] and
+        [shell scripts] while taking advantage of [regular expressions].
+
+    2. **Unit 02: Python**
+
+        Next, we will explore processing and manipulating data using [Python].
+        Along the way, we will discuss how to exploit the [functional
+        programming] paradigm to efficiently perform [parallel computing].
+
+    3. **Unit 03: C**
+
+        Finally, we will descend down the software stack to [C] and discuss
+        [memory management] as well as revisiting [pointers], [arrays],
+        [strings], and studying some [data structures].  We will then build our
+        own [Unix] applications that take advantage of system level
+        abstractions such as [files] and [sockets] through the use of [system
+        calls].  All of this exploration will culminate in a *multi-core*
+        [HTTP] client.
+
+    Moreover, throughout the course, we will frequently reflect on the wisdom
+    and power of the [Unix Philosophy]:
+
+    1. Write programs that do one thing and do it well.
+
+    2. Write programs to work together.
+
+    3. Write programs to handle text streams, because that is a universal interface.
+
+    Each week there will be a **Reading assignment** meant to give you a
+    context and reference into what we will be covering that upcoming week and
+    a **Homework assignment** that will provide you an opportunity apply the
+    material in (hopefully) interesting ways.  Of course, there are **three
+    exams** to assess your mastery of the material.
+
+    [strings]:  https://en.wikipedia.org/wiki/String_(computer_science)
+    [arrays]:   https://en.wikipedia.org/wiki/Array_data_structure
+    [pointers]: https://en.wikipedia.org/wiki/Pointer_(computer_programming)
+    [pipelines]:    https://en.wikipedia.org/wiki/Pipeline_(Unix)
+    [shell scripts]:https://en.wikipedia.org/wiki/Shell_script
+    [regular expressions]: https://en.wikipedia.org/wiki/Regular_expression
+    [Python]:       https://www.python.org/
+    [functional programming]:   https://en.wikipedia.org/wiki/Functional_programming
+    [parallel computing]:       https://en.wikipedia.org/wiki/Parallel_computing
+    [distributed computing]:    https://en.wikipedia.org/wiki/Distributed_computing
+    [C]: https://en.wikipedia.org/wiki/C_(programming_language)
+    [memory management]: https://en.wikipedia.org/wiki/Memory_management
+    [data representation]: https://en.wikipedia.org/wiki/Data_(computing)
+    [data structures]: https://en.wikipedia.org/wiki/Data_structure
+    [Unix Philosophy]: https://en.wikipedia.org/wiki/Unix_philosophy
+    [system calls]:     https://en.wikipedia.org/wiki/System_call
+    [brute-force]:      https://en.wikipedia.org/wiki/Brute-force_attack
+    [HTTP]:             https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol
+
+    <div class="alert alert-info" markdown="1">
+    #### <i class="fa fa-bookmark"></i> TL;DR
+
+    For this week, you need to read about using the command line and [Git], and
+    then setup your [GitHub] repository.  There is **nothing to submit**.
+    </div>
+
+    [GitHub]:       https://github.com/
+    [Git]:          https://git-scm.com/
+    [Unix]:         https://en.wikipedia.org/wiki/Unix
+    [abstractions]: https://en.wikipedia.org/wiki/Abstraction_(software_engineering)
+    [files]:        https://en.wikipedia.org/wiki/Computer_file
+    [processes]:    https://en.wikipedia.org/wiki/Process_(computing)
+    [sockets]:      https://en.wikipedia.org/wiki/Network_socket
+    [C]:            https://isocpp.org/
+
+    ## Readings
+
+    <img src="static/img/tlcl.jpg" class="img-responsive pull-right">
+
+    The readings for **Friday, February 5** are:
+
+    1. [The Linux Command Line](http://linuxcommand.org/tlcl.php)
+
+        - Chapter 1 - What is the Shell?
+        - Chapter 2 - Navigation
+        - Chapter 3 - Exploring the System
+        - Chapter 4 - Manipulating Files and Directories
+        - <p>Chapter 5 - Working With Commands<br></p>
+    
+    2. [Git Handbook](https://guides.github.com/introduction/git-handbook/)
+
+    3. [Pro Git](https://git-scm.com/book/en/v2)
+
+        - Chapter 1 - Getting Started
+        - Chapter 2 - Git Basics
+        - Chapter 3 - Git Branching
+
+    The focus of the readings is to review the basics of using the [Unix
+    shell], which most of you used in **CSE 20311 Fundamentals of Computing**
+    last semester, and to introduce you to [Git], which we will be using
+    throughout the semester.
+
+    In addition to reading the above chapters, it is recommended that you work
+    through the following tutorials:
+
+    1. [Command Line Crash Course]
+
+        This is a tutorial on using the command line interface on various
+        operating systems (you should focus on the [Unix shell]).
+
+    2. [Learn Git Branching]
+
+        This is an interactive tutorial on branching in [Git].
+
+    <div class="alert alert-success" markdown="1">
+    #### <i class="fa fa-terminal"></i> The Hands-on Imperative
+
+    To get the most out of your reading, you should be **typing** commands into
+    a terminal and **playing** around with the things you reading.
+
+    Passively reading will not be as fruitful as **actively** reading and
+    trying out things you are exploring.
+    </div>
+
+    ### Additional Resources
+
+    The following are additional resources that you may find useful:
+
+    #### Unix Shell
+
+    - [Learning the Shell](http://linuxcommand.org/lc3_learning_the_shell.php)
+
+    - [Survival guide for Unix newbies](http://matt.might.net/articles/basic-unix/)
+
+    #### Git
+
+    - [gittutorial](https://git-scm.com/docs/gittutorial)
+
+    - [Git Tutorial](https://www.vogella.com/tutorials/Git/article.html)
+
+    [Command Line Crash Course]:    https://learnpythonthehardway.org/book/appendixa.html
+    [Unix shell]:                   https://en.wikipedia.org/wiki/Unix_shell
+    [Learn Git Branching]:          https://learngitbranching.js.org/
+
+    ## Tasks
+
+    Normally, you would have **quiz** to complete after each reading. For this
+    initial reading, however, you only need do the following:
+
+    1. **Join** the class [Slack] channel.
+
+    2. **Create** your own **private assignments** [Git] repository on [GitHub].
+
+    3. **Clone** your **private assignments** [Git] repository to your local
+    computer or a **student machine**.
+    
+    ### Task 1: Slack
+
+    For communication outside of our meeting time, we will be using [Slack],
+    which is a real-time chat platform similar to **Discord**.  Your first task is
+    to create a **ND-CSE** [Slack] account (if you have not done so already)
+    and join the `#cse-20289-sp21` channel:
+
+    > [https://nd-cse.slack.com/messages/cse-20289-sp21/](https://nd-cse.slack.com/messages/cse-20289-sp21/)
+
+    <div class="alert alert-info" markdown="1">
+    #### <i class="fa fa-slack"></i> Slack Channel
+
+    There is a [class mailing list], but most day-to-day communication
+    (including office hours and homework help) should take place on [Slack].
+    Therefore, you should **check this channel regularly** as it is the primary
+    means of communication for the course.
+
+    </div>
+
+    [Slack]: https://nd-cse.slack.com
+    [class mailing list]: mailto:sp21-cse-20289-01-group@nd.edu
+
+    ### Task 2: GitHub
+    
+    All of your work in this class will be submitted to [GitHub] using [git].
+    Your second task is to setup your [GitHub] **assignments** repository by doing
+    the following:
+
+    1. **Sign-in** or create a [GitHub] account if you do not already have one.
+
+        > [https://github.com/join](https://github.com/join)
+
+        You may associate this account with either your Notre Dame or personal
+        email address.  It is up to you.
+
+    2. **Fork** the class assignments repository from the following template:
+
+        > [https://classroom.github.com/a/30qI-7ZU](https://classroom.github.com/a/30qI-7ZU)
+
+        This will create a **private** `cse-20289-sp21-assignments-$USERNAME`
+        repository under your own account and linked to the [nd-cse-20289-sp21]
+        organization.
+
+    <div class="alert alert-danger" markdown="1">
+    #### <i class="fa fa-github"></i> GitHub Repository
+
+    The **assignments** repository will be used for your individual **reading**
+    and **homework** assignments. It must be kept **private** and only shared
+    with the **instructional staff**.
+
+    </div>
+    
+    ### Task 3: Student Machines
+    
+    While you are free to use any machine you wish to do your work, the
+    department provides a set of **student machines** that you can login to and
+    do remote work in an environment crafted for the course.  The following
+    steps allow you to **clone** the **assigments** you just created to any
+    machine of your choosing.
+
+    1. **Clone** your [git] repository to your local machine (or the student machines):
+
+            :::bash
+            # Example of cloning GitHub assignments repository to local or student machine
+
+            $ git clone https://github.com/nd-cse-20289-sp21/cse-20289-sp21-assignments-$USERNAME.git
+            Cloning into 'cse-20289-sp21-assignments-pbui'...
+            Username for 'https://github.com': pbui
+            Password for 'https://pbui@github.com': 
+            remote: Enumerating objects: 100, done.
+            remote: Counting objects: 100% (100/100), done.
+            remote: Compressing objects: 100% (35/35), done.
+            remote: Total 100 (delta 18), reused 85 (delta 8), pack-reused 0
+            Receiving objects: 100% (100/100), 9.04 KiB | 0 bytes/s, done.
+            Resolving deltas: 100% (18/18), done.
+
+    2. **Edit** the `README.md` file in your **assignments** repository such
+    that the **Name** and **NetID** fields are completed (i.e. replace "Domer
+    McDomerson" and "dmcdomer"). You should **commit** your change and then
+    **push** them to [GitHub].
+
+            :::bash
+            # Example on editing README in assignments repository and pushing changes to GitHub
+            
+            $ cd cse-20289-sp21-assignments-$USERNAME   # Go into the assignments directory
+
+            $ nano README.md                            # Edit the README.md file
+
+            $ git add README.md                         # Mark the file for recording
+
+            $ git commit -m "Update README"             # Record the change
+            [master c550fa1] Update README
+            1 file changed, 2 insertions(+), 2 deletions(-)
+
+            $ git push                                  # Send your local changes to GitHub
+            Password for 'https://pbui@github.com':
+
+    <div class="alert alert-warning" markdown="1">
+    #### <i class="fa fa-server"></i> Student Machines
+
+    As a reminder, students in this class have access to the following
+    **student** machines: 
+
+    - `student00.cse.nd.edu`
+    - `student01.cse.nd.edu`
+    - `student02.cse.nd.edu`
+    - `student05.cse.nd.edu`
+    - `student06.cse.nd.edu`
+    - `student10.cse.nd.edu`
+    - `student11.cse.nd.edu`
+    - `student12.cse.nd.edu`
+    - `student13.cse.nd.edu`
+
+    </div>
+
+    The following is a video demonstration of the process of cloning your
+    [GitHub] repository and committing your first change.
+
+    <div class="thumbnail text-center">
+        <script id="asciicast-PTPZiLQzGoLA0O1GBZbCECwmN" src="https://asciinema.org/a/PTPZiLQzGoLA0O1GBZbCECwmN.js" async></script>
+    </div>
+
+    <div class="alert alert-success" markdown="1">
+    #### <i class="fa fa-check-square-o"></i> Tasks
+
+    Once you have setup [Slack], [GitHub], and have a working development
+    environment on your local machine or on a **student machine**, then you
+    have completed all the necessary tasks for this **reading assignment**.
+
+    </div>
+
+    [Bitbucket]:    https://bitbucket.org
+    [GitHub]:       https://github.com
+    [Markdown]:     https://daringfireball.net/projects/markdown/
+    [reference]:    https://guides.github.com/features/mastering-markdown/
+    [nd-cse-20289-sp21]: https://github.com/nd-cse-20289-sp21
