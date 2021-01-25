@@ -9,7 +9,7 @@
 
 - name:     "Unit 01: Bourne Shell"
 
-- name:     "Command Line Interface"
+- name:     "Using the Shell"
   days:
       - date:           Mon 02/08
         topics:         Files
