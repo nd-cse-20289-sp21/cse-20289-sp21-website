@@ -317,6 +317,8 @@ body:       |
   loadQuiz('static/json/homework01.json');
   </script>
 
+  <pre style="display: none;" id="dr-container" class="codehilite"><code id="dredd-response"></code></pre>
+
   As with [Reading 01], you will need to store your answers in a
   `homework01/answers.json` file.  You can use the form above to generate the
   contents of this file, or you can write the [JSON] by hand.
