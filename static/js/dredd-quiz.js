@@ -59,7 +59,7 @@ function submitQuiz(quiz_url) {
 	// first, erase the innerHTML of the JSON box
 	document.getElementById('quiz-responses').innerHTML = ``;
 	var assignment_name = quiz_url.slice(12,21);
-	var url = 'https://dredd.h4x0r.space/quiz/cse-30341-fa20/' + assignment_name;
+	var url = 'https://dredd.h4x0r.space/quiz/cse-20289-sp21/' + assignment_name;
 	fetch(url, {
 		body: JSON.stringify(responses),
 		method: 'POST'
