@@ -272,7 +272,7 @@ body:       |
   ### References
 
   If you need additional reference information, please refer to the readings
-  from [Reading 00]:
+  from [Reading 01]:
 
   1. [The Linux Command Line]:
 
@@ -428,7 +428,6 @@ body:       |
   [branch]: https://git-scm.com/docs/git-branch
   [add]:    https://git-scm.com/docs/git-add
   [Pull Request]:  https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request
-  [Reading 00]:         reading00.html
   [Reading 01]:         reading01.html
   [Reading 01 TA List]: reading01_tas.html
   [curl]:   http://man7.org/linux/man-pages/man1/curl.1.html
