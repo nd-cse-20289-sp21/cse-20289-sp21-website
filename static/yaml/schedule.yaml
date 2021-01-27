@@ -1,10 +1,12 @@
 - name:     Introduction
   days:
       - date:           Wed 02/03
-        topics:         Syllabus, Shell
+        topics:         Syllabus, Unix Shell
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1-3Lcw0m_TEAvdCFKkw-KEamM8sjwP0Pa0dUZrQdCbVo/edit?usp=sharing
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1rAw-x3JnNjscEuWkx4FhhF7f6pHBIqh1P8Onz9duHtg/edit?usp=sharing
 
       - date:           Fri 02/05
         topics:         Git, Markdown
