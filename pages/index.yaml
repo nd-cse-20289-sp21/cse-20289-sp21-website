@@ -308,7 +308,7 @@ body:       |
                     <td class="text-center">3 &times; 10, 4 &times; 12, 2 &times; 16</td>
                 </tr>
                 <tr>
-                    <td><span class="label label-danger">Exams</span> Midterm</td>
+                    <td><span class="label label-danger">Exams</span> Exams covering each unit.</td>
                     <td class="text-center">45, 45, 60</td>
                 </tr>
                 <tr>
