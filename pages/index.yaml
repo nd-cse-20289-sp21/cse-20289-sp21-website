@@ -511,7 +511,7 @@ body:       |
             the student will have until <b>Monday</b> to submit their work.</p>
 
             <p>To take advantage of this, a student simply makes a note on the
-            <b>Merge Request</b> for the assignment and refrains from getting
+            <b>Pull Request</b> for the assignment and refrains from getting
             credit for the <b>Guru Point</b>.</p>
 
             <p>Note, there are no free extensions for <b>Readings</b>.
