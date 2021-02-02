@@ -22,9 +22,17 @@
       - date:           Mon 02/08
         topics:         Files
         assignment:     Reading 01
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1B54V909FZKEimrOptcPWSCWurQ2ASnEvoyAwSTL-muw/edit?usp=sharing
 
       - date:           Wed 02/10
         topics:         Processes, I/O Redirection
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1Y5FH4KIkaVB2hB5eaXPUgbLbo2Ee_OrsdElCscHLCwE/edit?usp=sharing
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1Dz51z1n7aLepqKIwKci9Tif8xn-O0nLkrUOXr-pIWPM/edit?usp=sharing
 
       - date:           Fri 02/12
         topics:         Networking
