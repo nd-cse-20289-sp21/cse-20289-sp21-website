@@ -33,6 +33,8 @@
 - name:     Michael Lee
   netid:    mlee43
   github:   michaeldlee1
+  conflicts:
+    - dcoffey
 
 - name:     Nora Tucker
   netid:    ntucker2
