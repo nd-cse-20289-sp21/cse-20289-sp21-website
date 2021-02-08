@@ -29,6 +29,8 @@
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1B54V909FZKEimrOptcPWSCWurQ2ASnEvoyAwSTL-muw/edit?usp=sharing
+          - name:       Panopto
+            link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=52a1a4bc-e18a-4117-b448-acc9013e876d
 
       - date:           Wed 02/10
         topics:         Processes, I/O Redirection
