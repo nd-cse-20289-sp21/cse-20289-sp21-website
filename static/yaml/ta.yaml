@@ -39,6 +39,8 @@
 - name:     Nora Tucker
   netid:    ntucker2
   github:   ntucker2
+  conflicts:
+    - jyoun
 
 - name:     Nolan McShea
   netid:    nmcshea
