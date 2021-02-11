@@ -44,6 +44,9 @@
 
       - date:           Fri 02/12
         topics:         Networking
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1z9maFj7TsrvNRcazzAtlNhxeBGc_lgn5gsog6t-l8Ck/edit?usp=sharing
 
       - date:           Sat 02/13
         topics:         Command Line Adventure
