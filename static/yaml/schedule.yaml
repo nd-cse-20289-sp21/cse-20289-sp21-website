@@ -57,6 +57,9 @@
       - date:           Mon 02/15
         topics:         Variables, Command Substitution, Matching
         assignment:     Reading 02
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1a-QS649UTHL-98L6C7tlj6E5ySdfChnt8TY-WE_O8l8/edit?usp=sharing
 
       - date:           Wed 02/17
         topics:         Control Flow, Command Line Arguments
