@@ -473,10 +473,10 @@ body:       |
   `homework03/answers.json` file.  You can use the form above to generate the
   contents of this file, or you can write the [JSON] by hand.
 
-  To test your quiz, you can use the `test_quiz.py` script:
+  To test your quiz, you can use the `check.py` script:
 
       :::bash
-      $ ./test_quiz.py
+      $ ../.scripts/check.py
       Checking homework03 quiz ...
            Q01 0.25
            Q02 0.25
