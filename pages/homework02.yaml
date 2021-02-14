@@ -315,9 +315,9 @@ body:       |
   #### <i class="fa fa-check"></i> Verification
 
   To get credit for this Guru Point, show your [text editor] customizations to
-  the instructor or a TA to verify.  You have up until a week **after** this
-  assignment is due to verify your Guru Point.
-  </div>
+  the instructor or a TA to verify (or attached a video / screenshot to your
+  **Pull Request**).  You have up until a week **after** this assignment is due
+  to verify your Guru Point.  </div>
 
   <div class="alert alert-success" markdown="1">
   #### <i class="fa fa-calendar"></i> Self-Service Extension
