@@ -1,0 +1,37 @@
+{
+    "q01": {
+        "type": "multiple",
+        "question": "\n<p>Which of the following statements regarding <b>pipelines</b> are true\n(select all that apply)?</p>\n",
+        "responses": {
+            "a": "Pipelines are the ultimate manifestation of the <b>Unix Philosophy</b>.",
+            "b": "Pipelines are examples of <b>concurrency</b>.",
+            "c": "Pipelines enable opportunities for <b>parallelism</b>.",
+            "d": "Pipelines work by sending the standard output and error of one process to the standard input of another process.",
+            "e": "Pipelines are an uncommon computational pattern only found on Unix systems."
+        }
+    },
+    "q02": {
+        "type": "single",
+        "question": "\n<p>When using <tt>curl</tt>, we sometimes need to use the <tt>-L</tt> flag.\nWhy is that?</p>\n",
+        "responses": {
+            "a": "This flag tells <tt>curl</tt> to filter any URLs present in the requested resource.",
+            "b": "This flag tells <tt>curl</tt> to save the requested resource to the local file system.",
+            "c": "This flag tells <tt>curl</tt> to follow any HTTP redirects in the requested resource.",
+            "d": "This flag tells <tt>curl</tt> to listen on a specific port for the requested resource."
+        }
+    },
+    "q03": {
+        "type": "single",
+        "question": "\n<p>When using <tt>grep</tt> or <tt>sed</tt>, we sometimes need to use the\n<tt>-E</tt> flag.  Why is that?</p>\n",
+        "responses": {
+            "a": "This flag tells <tt>grep</tt> and <tt>sed</tt> to interpret patterns as <b>shell globs</b>.",
+            "b": "This flag tells <tt>grep</tt> and <tt>sed</tt> to interpret patterns as <b>extended regular expressions</b>.",
+            "c": "This flag tells <tt>grep</tt> and <tt>sed</tt> to interpret patterns as <b>literal strings</b> rather than regular expressions.",
+            "d": "This flag tells <tt>grep</tt> and <tt>sed</tt> to interpret patterns in an <b>case-insensitive manner</b>."
+        }
+    },
+    "q04": {
+        "type": "blank",
+        "question": "\n<p>Given the list of words located at <tt>/usr/share/dict/words</tt> on the\n<b>student</b> machines (or <tt><a\nhref=\"https://yld.me/raw/bf7U\">https://yld.me/raw/bf7U</a></tt> online),\nuse filters and pipelines to perform the following tasks:</p>\n\n<ol>\n\n  <li>\n\n  <p><b>Count</b> the number of words that <b>end with the letter \"y\"</b>.\n  ____</p>\n\n  <pre>\n  abacay\n  abactinally\n  abandonedly\n  abasedly\n  abashedly\n  ...\n  </pre>\n  </li>\n  \n  <li> \n\n  <p>Ignoring case, <b>count</b> the number of words that <b>start with the\n  letter \"b\"</b>. ____</p>\n\n  <pre>\n  B\n  B-\n  b\n  B911\n  B.A.\n  ...\n  </pre>\n  </li>\n  \n  <li> \n\n  <p>Ignoring case, <b>count</b> the number of words that have <b>three\n  consecutive vowels</b> (ie. <tt>a, e, i, o, u</tt>).  ____</p>\n\n  <pre>\n  ...\n  zygophyceae\n  zygophyceous\n  zygophyllaceae\n  zygophyllaceous\n  zygopteraceae\n  </pre>\n  </li>\n  \n  <li> \n\n  <p>Ignoring case, <b>count</b> the number of words that <b>contain the\n  pattern \"vowel-character-character-vowel\"</b>, where \"vowel\" and\n  \"character\" refer to the same character respectively. ____</p>\n\n  <pre>\n  ...\n  zocco\n  zoccolo\n  zoeller\n  zorillinae\n  zorro\n  </pre>\n  </li>\n  \n  <li> \n\n  <p><b>Count</b> the number of words <b>contain at least two digits, but\n  don't end in a digit</b>. ____</p>\n\n  <pre>\n  10-point\n  10th\n  11-point\n  12-point\n  16-point\n  ...\n  </pre>\n  </li>\n\n</ol>\n"
+    }
+}
