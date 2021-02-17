@@ -67,6 +67,9 @@
 
       - date:           Wed 02/17
         topics:         Control Flow, Command Line Arguments
+        items:
+          - name:       Slides
+            link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=08b4fe61-b090-4f4f-abed-acd201407b54
 
       - date:           Fri 02/19
         topics:         Regular Expressions
