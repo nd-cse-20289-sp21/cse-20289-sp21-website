@@ -102,6 +102,9 @@
       
       - date:           Fri 03/05
         topics:         Exam 01
+        items:
+          - name:       Checklist 01
+            link:       checklist01.html
 
 - name:     "Unit 02: Python"
 
