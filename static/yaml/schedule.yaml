@@ -72,10 +72,12 @@
             link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=08b4fe61-b090-4f4f-abed-acd201407b54
 
       - date:           Fri 02/19
-        topics:         Regular Expressions
+        topics:         Pipelines
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1Hh4rGDOS43LZDJf5MkuhpluWM49ylZW2nOqQgOsm4Is/edit?usp=sharing
+          - name:       Panopto
+            link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=1a2f7265-eabd-416c-9a81-acd4013e61a2
 
       - date:           Sat 02/20
         topics:         Meeting the Oracle
@@ -84,17 +86,17 @@
 - name:     "Text Filtering"
   days:
       - date:           Mon 02/22
-        topics:         "Filters: tr, cut, grep"
+        topics:         Regular Expressions
         assignment:     Reading 03
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1Hh4rGDOS43LZDJf5MkuhpluWM49ylZW2nOqQgOsm4Is/edit?usp=sharing
 
       - date:           Wed 02/24
-        topics:         "Filters: sed"
+        topics:         Filters
 
       - date:           Fri 02/26
-        topics:         "Filters: awk"
+        topics:         Filters
 
       - date:           Sat 02/27
         topics:         Weathering with Zipcodes
