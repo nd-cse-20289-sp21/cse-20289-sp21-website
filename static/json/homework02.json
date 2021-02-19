@@ -13,7 +13,7 @@
     },
     "q04": {
         "type": "blank",
-        "question": "\n<p>In <tt>find-doorman.sh</tt>, we referenced all the command-line\narguments with the variable: ____.</p>\n\n<p>In <tt>measure-latency.sh</tt>, we referenced the number of command-line\narguments with the variable: ____.</p>\n"
+        "question": "\n<p>In <tt>measure-latency.sh</tt>, we referenced all the command-line\narguments with the variable: ____.</p>\n\n<p>In <tt>find-doorman.sh</tt>, we referenced the number of command-line\narguments with the variable: ____.</p>\n"
     },
     "q05": {
         "type": "multiple",
