@@ -211,7 +211,7 @@ body:       |
       $ cd reading03                        # Go into reading03 folder
       $ $EDITOR answers.json                # Edit your answers.json file
 
-      $ ../.scripts/submit.py               # Check reading03 quiz
+      $ ../.scripts/check.py                # Check reading03 quiz
       Checking reading03 quiz ...
             Q1 1.00
          Score 1.00 / 1.00
