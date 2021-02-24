@@ -96,6 +96,9 @@
 
       - date:           Wed 02/24
         topics:         Filters
+        items:
+          - name:       Panopto
+            link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=208cbdbb-d108-4bc8-a8c8-acd9013f73f8
 
       - date:           Fri 02/26
         topics:         Filters
