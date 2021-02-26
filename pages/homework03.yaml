@@ -316,7 +316,7 @@ body:       |
       $ curl -s https://www.zipcodestogo.com/Indiana/
 
   Because you are pretty good with [regular expressions] now, you decide to
-  help Stella out with parsing this [HTML] and extracting the [zip codes].
+  help Samantha out with parsing this [HTML] and extracting the [zip codes].
 
   ### Task 1: `zipcode.sh`
 
