@@ -102,6 +102,9 @@
 
       - date:           Fri 02/26
         topics:         Filters
+        items:
+          - name:       Panopto
+            link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=d62412c3-e9dc-4c97-8353-acdb013c0d41
 
       - date:           Sat 02/27
         topics:         Weathering with Zipcodes
