@@ -1,0 +1,661 @@
+title:      "Homework 04: RPN, Unique"
+icon:       fa-code
+navigation: []
+internal:
+external:
+body:       |
+
+  The goal of this homework assignment is to allow you to practice using
+  [Python] to create scripts that utilize [data structures] such as [lists] and
+  [dicts] to create simple [Unix] filters or utilities.
+
+  For this assignment, record your scripts and any responses to the following
+  activities in the `homework04` folder of your **assignments** [GitHub]
+  repository and push your work by **noon Saturday, March 13**.
+
+  [Python]:             https://www.python.org/
+  [data structures]:    https://en.wikipedia.org/wiki/Data_structure
+  [lists]:              https://docs.python.org/3/tutorial/datastructures.html#more-on-lists
+  [dicts]:              https://docs.python.org/3/tutorial/datastructures.html#dictionaries
+  [dict]:               https://docs.python.org/3/tutorial/datastructures.html#dictionaries
+  [Unix]:               https://en.wikipedia.org/wiki/Unix
+
+  ## Activity 0: Preparation
+
+  Before starting this homework assignment, you should first perform a `git
+  pull` to retrieve any changes in your remote [GitHub] repository:
+
+      :::bash
+      $ cd path/to/repository                   # Go to assignments repository
+
+      $ git checkout master                     # Make sure we are in master branch
+
+      $ git pull --rebase                       # Get any remote changes not present locally
+
+  Next, create a new branch for this assignment:
+
+      :::bash
+      $ git checkout -b homework04              # Create homework04 branch and check it out
+
+  Once this is done, download the `Makefile` and test scripts:
+
+      ::bash
+      # Go to homework04 folder
+      $ cd homework04
+
+      # Download the Makefile
+      $ curl -LO https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework04/Makefile
+
+      # Add and commit Makefile
+      $ git add Makefile
+      $ git commit -m "homework04: add Makefile"
+
+      # Download the test scripts
+      $ make test-scripts
+
+  <div class="alert alert-info" markdown="1">
+  **Note**, you do not need to add and commit the test scripts since the
+  `Makefile` will automatically download them again whenever you run `make`.
+  </div>
+
+  You are now ready to work on the activities below.
+
+  ## Activity 1: RPN (5 Points)
+
+  <img src="http://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/HP_35_Calculator.jpg/180px-HP_35_Calculator.jpg" class="pull-right img-responsive">
+
+  Back in the day, when phones were [landlines], computers were the size of
+  minivans, and [Brian Kelly] was a linebacker at [Assumption College], the
+  pride and joy of every engineering geek was their [HP] scientific calculator.
+  Even the mighty [Woz][^1] [cherished] his legendary [HP-35].
+
+  Of course, since the old timers back then were super awesome (unlike today's
+  [zoomers]), they didn't use the standard *lame* [infix notation] to perform
+  their calculations; instead, they used the uber `1337` [reverse polish
+  notation].
+
+  That is, rather than entering in `<operand> <operation> <operand>`, you would
+  enter in `<operand> <operand> <operation>` to perform a calculation on the
+  **RPN** calculator. Using **RPN** eliminates the need for paretheses and
+  orders of operation since it is never ambiguous what operands are used with
+  which operation; the operation is always applied to the previous arguments.
+
+  This means that if you wanted to perform `3 + 4`, you would have to enter in:
+
+      :::text
+      3 4 +
+
+  To prove that you too are uber awesome and to relive some of the glory days,
+  you are to create a **RPN** calulator that can perform the following
+  arithmetic operations:  `+`, `-`, `*`, `/`.
+
+  [landlines]:    https://en.wikipedia.org/wiki/Landline
+  [Brian Kelly]:  https://en.wikipedia.org/wiki/Brian_Kelly_(American_football_coach)
+  [Assumption College]:   https://www.assumption.edu/
+  [HP]:           http://www.hp.com/
+  [Woz]:          http://en.wikipedia.org/wiki/Woz
+  [cherished]:    http://gizmodo.com/5306520/my-most-memorable-gadgets-by-steve-wozniak
+  [HP-35]:        http://h20331.www2.hp.com/Hpsub/cache/457246-0-0-225-121.html?jumpid=ex_r2845_go/35celebration/calculators
+  [zoomers]:      https://www.urbandictionary.com/define.php?term=Zoomer
+
+  [infix notation]:   http://en.wikipedia.org/wiki/Infix_notation
+  [reverse polish notation]: http://en.wikipedia.org/wiki/Reverse_Polish_notation
+  [RPN]: http://en.wikipedia.org/wiki/Reverse_Polish_notation
+
+  [^1]: Woz spilled my french fries. I will never forget.
+
+  ### Task 1: `rpn.py`
+
+  The `rpn.py` script does not take any flags besides `-h`:
+
+      :::text
+      $ ./rpn.py -h
+      Usage: rpn.py
+
+      By default, rpn.py will process expressions from standard input.
+
+  As noted in the **usage** message, the `rpn.py` script will process [RPN]
+  expressions by reading in one expression per line, evaluating that
+  expression, and then displaying the results.
+
+  For instance, given the following input:
+
+      :::text
+      4
+      5 8 * 1 +
+
+  The `rpn.py` script will output the following:
+
+      :::text
+      4.0
+      41.0
+
+  Here is an example of `rpn.py` in action:
+
+      :::text
+      $ ./rpn.py
+      4
+      4.0
+      5 8 * 1 +
+      41.0
+
+  #### Skeleton
+
+  Here is a skeleton you can use to start your `rpn.py` script:
+
+      :::bash
+      # Download rpn.py skeleton
+      $ curl -LO https://github.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/blob/master/homework04/rpn.py
+
+  It should look something like this:
+
+      :::python
+      #!/usr/bin/env python3
+
+      import os
+      import sys
+
+      # Globals
+
+      OPERATORS = {'+', '-', '*', '/'}
+
+      # Functions
+
+      def usage(status=0):
+          ''' Display usage message and exit with status. '''
+          progname = os.path.basename(sys.argv[0])
+          print(f'''Usage: {progname}
+
+      By default, {progname} will process expressions from standard input.''')
+
+          sys.exit(status)
+
+      def error(message):
+          ''' Display error message and exit with error. '''
+          print(message, file=sys.stderr)
+          sys.exit(1)
+
+      def evaluate_operation(operation, operand1, operand2):
+          ''' Return the result of evaluating the operation with operand1 and
+          operand2.
+
+          >>> evaluate_operation('+', 4, 2)
+          6
+
+          >>> evaluate_operation('-', 4, 2)
+          2
+
+          >>> evaluate_operation('*', 4, 2)
+          8
+
+          >>> evaluate_operation('/', 4, 2)
+          2.0
+          '''
+          pass
+
+      def evaluate_expression(expression):
+          ''' Return the result of evaluating the RPN expression.
+
+          >>> evaluate_expression('4 2 +')
+          6.0
+
+          >>> evaluate_expression('4 2 -')
+          2.0
+
+          >>> evaluate_expression('4 2 *')
+          8.0
+
+          >>> evaluate_expression('4 2 /')
+          2.0
+
+          >>> evaluate_expression('4 +')
+          Traceback (most recent call last):
+          ...
+          SystemExit: 1
+
+          >>> evaluate_expression('a b +')
+          Traceback (most recent call last):
+          ...
+          SystemExit: 1
+          '''
+          pass
+
+      def main():
+          ''' Parse command line arguments and process expressions from standard
+          input. '''
+          pass
+
+      # Main Execution
+
+      if __name__ == '__main__':
+          main()
+
+  #### Notes
+
+  - [pass] is a placeholder in [Python] that does nothing.  You may remove
+    these statements once you add code to the functions above.
+
+  <div class="alert alert-danger" markdown="1">
+  #### <i class="fa fa-code"></i> Doctests
+
+  The `>>> ...` strings under each function are [doctests].  These serve a dual
+  purpose: they provided documentation on what the function should do AND they
+  act as [unit tests] for the function.
+
+  You **must not remove or alter these** [doctests].
+
+  </div>
+
+  [pass]: https://docs.python.org/3/tutorial/controlflow.html#pass-statements
+
+  #### Hints
+
+  - `usage` is provided to you and you should call it from the `main` function
+    when appropriate.
+
+  - `error` is provided to you and you should call it from the
+    `evaluate_expression` function when you encounter an error such as not
+    having enough operands or not being able to convert a **token** into a
+    `float`.
+
+  - `evaluate_operation` takes one of the arithmetic `operations` as an
+    argument along with two `operands`.  You are to compute the result of
+    performing the `operation` on the two `operands` and return the result.
+
+  - `evaluate_expression` takes a [RPN] `expression` as a string, which you
+    will need to **split** into individual **tokens** or **words**.  You can
+    evaluate the `expression` by using a [stack] in the following manner:
+
+          :::python
+          for each word in expression:
+              if word is an operation:
+                  evaluate operation using top two items from stack
+              else:
+                  convert word into floating point
+
+              push result of evaluation or conversion to stack
+
+          return top of stack
+
+          Note 1: Must check if stack has enough operands
+          Note 2: Must check if conversion is successful
+
+  - `main` parses the command line arguments and then evaluates each [RPN]
+    expression from standard input and displays the result.
+
+  [stack]: https://en.wikipedia.org/wiki/Stack_(abstract_data_type)
+
+  ### Task 2: Testing
+
+  To aid you in testing the `rpn.py` script, we have provided you with both
+  [doctests] and `test_rpn.sh`, which you can use as follows:
+
+      :::bash
+      # Run just the doctests
+      $ python3 -m doctest rpn.py -v
+      ...
+      4 items had no tests:
+          rpn
+          rpn.error
+          rpn.main
+          rpn.usage
+      2 items passed all tests:
+        6 tests in rpn.evaluate_expression
+        4 tests in rpn.evaluate_operation
+      10 tests in 6 items.
+      10 passed and 0 failed.
+      Test passed.
+
+      # Run doctests and functional tests
+      $ ./test_rpn.sh
+      Testing rpn.py ...
+         Doctests                                 ... 2.00 / 2.00
+         Usage                                    ... Success
+         Expressions 0                            ... Success
+         Expressions 1                            ... Success
+         Expressions 2                            ... Success
+
+         Score 5.00
+
+  [doctests]: https://docs.python.org/3/library/doctest.html
+
+  ## Activity 2: Unique (5 Points)
+
+  Ben[^2] hates that he has to [sort] his data before he can use [uniq].  Now
+  that he is learning about the awesomeness of [Python] and power of [data
+  structures], he decides to write his own version of [uniq] that uses a [dict]
+  to avoid the need for sorting.  Because it is **2021** and vowels are no
+  longer expensive, he calls his version of the [Unix] filter: `unique.py`.
+
+  [sort]: http://man7.org/linux/man-pages/man1/sort.1.html
+  [uniq]: http://man7.org/linux/man-pages/man1/uniq.1.html
+
+  [^2]: Thanks to **Ben Lyons** for prototyping this assignment.
+
+  ### Task 1: `unique.py`
+
+  The `unique.py` script supports a few of [uniq]'s most frequently used flags:
+
+      :::text
+      $ ./unique.py -h
+      Usage: unique.py [flags]
+
+          -c      Prefix lines by the number of occurrences
+          -d      Only print duplicate lines
+          -i      Ignore differences in case when comparing, prints out full line in lowercase
+          -u      Only print unique lines
+
+      By default, unique.py prints one of each type of line.
+
+  The `-c` flag means that the program will prefix each line with the number of
+  times each line appears.
+
+  The `-d` flag modifies the output so that only duplicate lines (ie. `count >
+  1`) are displayed.
+
+  The `-i` flag will force the program to ignore case by converting each line
+  into lowercase.
+
+  The `-u` flag modifies the output so that only unique lines (ie. `count == 1`)
+  are displayed.
+
+  Given the following `pokemon.txt` file:
+
+      :::text
+      pikachu
+      pikachu
+      charmander
+      Squirtle
+      squirtle
+      squirtle
+
+  Here are examples of `unique.py` in action:
+
+      :::bash
+      $ cat pokemon.txt | ./unique.py
+      pikachu
+      charmander
+      Squirtle
+      squirtle
+
+      $ cat pokemon.txt | ./unique.py -i -c -d
+            2 pikachu
+            3 squirtle
+
+      $ cat pokemon.txt | ./unique.py -u
+      charmander
+      Squirtle
+
+  #### Skeleton
+
+  Here is a skeleton you can use to start your `unique.py` script:
+
+      :::bash
+      # Download unique.py skeleton
+      $ curl -LO https://github.com/nd-cse-20289-sp20/cse-20289-sp20-assignments/raw/master/homework04/unique.py
+
+  It should look something like this:
+
+      :::python
+      #!/usr/bin/env python3
+
+      import os
+      import sys
+
+      # Functions
+
+      def usage(status=0):
+          ''' Display usage message and exit with status. '''
+          progname = os.path.basename(sys.argv[0])
+          print(f'''Usage: {progname} [flags]
+
+          -c      Prefix lines by the number of occurrences
+          -d      Only print duplicate lines
+          -i      Ignore differences in case when comparing, prints out full line in lowercase
+          -u      Only print unique lines
+
+      By default, {progname} prints one of each type of line.''')
+          sys.exit(status)
+
+      def count_frequencies(stream=sys.stdin, ignore_case=False):
+          ''' Count the line frequencies from the data in the specified stream while
+          ignoring case if specified. '''
+          pass
+
+      def print_lines(frequencies, occurrences=False, duplicates=False, unique_only=False):
+          ''' Display line information based on specified parameters:
+
+          - occurrences:  if True, then prefix lines with number of occurrences
+          - duplicates:   if True, then only print duplicate lines
+          - unique_only:  if True, then only print unique lines
+          '''
+          pass
+
+      def main():
+          ''' Process command line arguments, count frequencies from standard input,
+          and then print lines. '''
+          pass
+
+      # Main Execution
+
+      if __name__ == '__main__':
+          main()
+
+  #### Hints
+
+  - `usage` is provided to you and you should call it from the `main` function
+    when appropriate.
+
+  - `count_frequencies` reads each line in the `stream` and uses a [dict] to
+    keep track of how often each line occurs.  If `ignore_case` is set, then
+    all lines are converted into lowercase.
+
+  - `print_lines` iterates through the results of `count_frequencies` and shows
+    each line, depending on the settings of `occurrences` (show counts),
+    `duplicates` (only show lines with duplicates), and `unique_only` (only
+    show lines that are unique).
+
+      When `occurrences` is `True`, you can use the following code to format
+      your output:
+
+          :::python
+          print(f'{frequency:>7} {line}')
+
+      This will ensure that the `frequency` or count for the `line` is
+      properly aligned.
+
+  - `main` processes the command line arguments using the `while` loop
+    discussed in class and then counts the frequences of the lines from
+    standard input and then prints the results based on the parsed options.
+
+  ### Task 2: Testing
+
+  To aid you in testing the `unique.py` script, we have provided you with both
+  `unique_test.py` and `test_unique.sh`, which you can use as follows:
+
+      :::bash
+      # Run just the unit tests
+      $ ./unique_test.py -v
+      test_00_count_frequencies (__main__.UniqueTest) ... ok
+      test_01_count_frequencies_ignore_case (__main__.UniqueTest) ... ok
+      test_02_print_lines (__main__.UniqueTest) ... ok
+      test_03_print_lines_ignore_case (__main__.UniqueTest) ... ok
+      test_04_print_lines_occurrences (__main__.UniqueTest) ... ok
+      test_05_print_lines_ignore_case_occurrences (__main__.UniqueTest) ... ok
+      test_06_print_lines_duplicates (__main__.UniqueTest) ... ok
+      test_07_print_lines_ignore_case_duplicates (__main__.UniqueTest) ... ok
+      test_08_print_lines_unique_only (__main__.UniqueTest) ... ok
+      test_09_print_lines_ignore_unique_only (__main__.UniqueTest) ... ok
+      test_10_print_lines_occurrences_duplicates (__main__.UniqueTest) ... ok
+      test_11_print_lines_ignore_case_occurrences_duplicates (__main__.UniqueTest) ... ok
+      test_12_print_lines_occurrences_unique_only (__main__.UniqueTest) ... ok
+      test_13_print_lines_ignore_case_occurrences_unique_only (__main__.UniqueTest) ... ok
+
+      ----------------------------------------------------------------------
+      Ran 14 tests in 0.001s
+
+      OK
+
+      # Run unit and functional tests
+      $ ./test_unique.sh
+      Testing unique.py ...
+         Unit Tests                               ... 2.00 / 2.00
+         Usage                                    ... Success
+         Unique                                   ... Success
+         Unique -i                                ... Success
+         Unique -c                                ... Success
+         Unique -i -c                             ... Success
+         Unique -d                                ... Success
+         Unique -i -d                             ... Success
+         Unique -c -d                             ... Success
+         Unique -i -c -d                          ... Success
+         Unique -u                                ... Success
+         Unique -i -u                             ... Success
+         Unique -c -u                             ... Success
+         Unique -i -c -u                          ... Success
+
+         Score 5.00
+
+  ## Activity 3: Quiz (2 Points)
+
+  Once you have completed all the activities above, you are to complete the
+  following **reflection quiz**:
+
+  <div id="quiz-questions"></div>
+
+  <div id="quiz-responses"></div>
+
+  <script src="static/js/dredd-quiz.js"></script>
+  <script>
+  loadQuiz('static/json/homework04.json');
+  </script>
+
+  <pre style="display: none;" id="dr-container" class="codehilite"><code id="dredd-response"></code></pre>
+
+  As with [Reading 01], you will need to store your answers in a
+  `homework04/answers.json` file.  You can use the form above to generate the
+  contents of this file, or you can write the [JSON] by hand.
+
+  To test your quiz, you can use the `check.py` script:
+
+      :::bash
+      $ ../.scripts/check.py
+      Checking homework04 quiz ...
+           Q01 0.20
+           Q02 0.40
+           Q03 0.60
+           Q04 0.20
+           Q05 0.60
+         Score 2.00 / 2.00
+        Status Success
+
+  ## Guru Point (1 Extra Credit Point)
+
+  For extra credit, you are to extend the `rpn.py` script to support the
+  exponent operation:
+
+      ::text
+      2 3 ^ -> 8
+
+  Once you have implemented this functionality, you are to extend the existing
+  [doctests] in your `rpn.py` to verify that the new operation is implemented
+  correctly.  Moreover, you are to create a new `rpn_test.py` that uses
+  [unittest] to test each arithmetic operation that your `rpn.py` script
+  supports (**hint**: you can use `unique_test.py` as a reference).
+
+  Note, [unit testing] is an important software development method used in most
+  modern workplaces and the purpose of this extra credit opportunity is to
+  allow you to practice making your own tests for a program you wrote.
+
+  <div class="alert alert-info" markdown="1">
+  #### <i class="fa fa-check"></i> Verification
+
+  To get credit for this Guru Point, show your modified `rpn.py` and your new
+  `rpn_test.py` to the instructor or a TA to verify (or attached a video /
+  screenshot to your **Pull Request**). You have up until a week
+  **after** this assignment is due to verify your Guru Point.
+
+  </div>
+
+  <div class="alert alert-success" markdown="1">
+  #### <i class="fa fa-calendar"></i> Self-Service Extension
+
+  Remember that you can always **forgo** this Guru Point for **two extra days**
+  to do the homework.  That is, if you need an extension, you can simply skip
+  the Guru Point and you will automatically have until Monday to complete the
+  assignment for full credit.
+
+  Just leave a note on your **Pull Request** of your intensions.
+
+  </div>
+
+  [unittest]: https://docs.python.org/3/library/unittest.html
+  [Unit tests]: https://en.wikipedia.org/wiki/Unit_testing
+  [Unit testing]: https://en.wikipedia.org/wiki/Unit_testing
+
+  ## Submission
+
+  To submit your assignment, please commit your work to the `homework04` folder
+  of your `homework04` branch in your **assignments** [GitHub] repository.
+  Your <tt>homework04</tt> folder should **only** contain the following files:
+
+  - <tt>Makefile</tt>
+  - <tt>answers.json</tt>
+  - <tt>rpn.py</tt>
+  - <tt>unique.py</tt>
+
+  <div class="alert alert-info" markdown="1">
+  **Note**: You do not need to commit the test scripts because the `Makefile`
+  automatically downloads them.
+  </div>
+
+      :::bash
+      #--------------------------------------------------
+      # BE SURE TO DO THE PREPARATION STEPS IN ACTIVITY 0
+      #--------------------------------------------------
+
+      $ cd homework04                                       # Go to Homework 03 directory
+
+      $ $EDITOR rpn.py                                      # Edit script
+      $ git add rpn.py                                      # Mark changes for commit
+      $ git commit -m "homework04: Activity 1 completed"    # Record changes
+      ...
+      $ $EDITOR unique.py                                   # Edit script
+      $ git add unique.py                                   # Mark changes for commit
+      $ git commit -m "homework04: Activity 2 completed"    # Record changes
+      ...
+      $ $EDITOR answers.json                                # Edit quiz
+      $ git add answers.json                                # Mark changes for commit
+      $ git commit -m "homework04: Activity 3 completed"    # Record changes
+      ...
+      $ git push -u origin homework04                       # Push branch to GitHub
+
+  <div class="alert alert-danger" markdown="1">
+  #### <i class="fa fa-github"></i> Pull Request
+
+  Remember to create a **Pull Request** and assign the appropriate TA from the
+  [Reading 04 TA List].
+
+  **DO NOT MERGE** your own **Pull Request**.  The TAs use open **Pull
+  Requests** to keep track of which assignments to grade.  Closing them
+  yourself will cause a delay in grading and confuse the TAs.
+
+  </div>
+
+  [Markdown]:   https://daringfireball.net/projects/markdown/
+  [git]:    https://git-scm.com/
+  [clone]:  https://git-scm.com/docs/git-clone
+  [commit]: https://git-scm.com/docs/git-commit
+  [push]:   https://git-scm.com/docs/git-push
+  [branching]:   https://git-scm.com/docs/git-branch
+  [code review]: https://en.wikipedia.org/wiki/Code_review
+  [GitHub]: https://github.com
+  [Linux]:  https://kernel.org
+  [branch]: https://git-scm.com/docs/git-branch
+  [add]:    https://git-scm.com/docs/git-add
+  [Reading 01]:         reading01.html
+  [Reading 04 TA List]: reading04_tas.html
+  [curl]:   http://man7.org/linux/man-pages/man1/curl.1.html
+  [wget]:   http://man7.org/linux/man-pages/man1/wget.1.html
+  [JSON]:   https://json.org/
+  [ESC]:    https://esc.nd.edu/

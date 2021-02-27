@@ -1,0 +1,34 @@
+{
+    "q01": {
+        "type": "multiple",
+        "question": "\n<p>Which of the following statements regarding <b>C++</b>, <b>Shell</b>,\nand <b>Python</b> are true (select all that apply)?</p>\n",
+        "responses": {
+            "interpreted": "<b>Python</b> and <b>Shell</b> scripts are usually interpreted at run-time.",
+            "compiled": "<b>Python</b> and <b>C++</b> programs are usually compiled ahead-of-time into machine code.",
+            "stdlib": "<b>Python</b> and <b>C++</b> have a standard library with a number of data structures and utilities.",
+            "shebang": "<b>Python</b> and <b>Shell</b> both require a shebang to be executed."
+        }
+    },
+    "q02": {
+        "type": "blank",
+        "question": "\n<p>In <tt>rpn.py</tt>, you used a Python <tt>list</tt> as a <b>stack</b>.\nGiven a <tt>list</tt> variable named <tt>s</tt>, how would you perform the\nfollowing <b>stack</b> operations:</p>\n\n<ol>\n    <li>Get the number of items in the <b>stack</b>: ____</li>\n    <li>Access the top of the <b>stack</b>: ____</li>\n    <li>Push a <tt>value</tt> onto the <b>stack</b>: ____</li>\n    <li>Pop an element from the <b>stack</b>: ____</li>\n</ol>\n"
+    },
+    "q03": {
+        "type": "blank",
+        "question": "\n<p>Use your <tt>rpn.py</tt> to evaluate the following expressions:</p>\n\n<ol>\n    <li><b>RPN Expression</b>: <tt>4 2 5 * + 1 3 2 * + /</tt> ____</li>\n    <li><b>RPN Expression</b>: <tt>5 1 2 + 4 * 3 - +</tt> ____</li>\n    <li><b>RPN Expression</b>: <tt>42 3 * 15 + 6 5 - *</tt> ____</li>\n    <li><b>RPN Expression</b>: <tt>12 8 3 * 6 / - 2 + -20.5 +</tt> ____</li>\n    <li><b>RPN Expression</b>: <tt>10 8 6 4 + -4 * / * 18 + 8 +</tt> ____</li>\n    <li><b>RPN Expression</b>: <tt>5 17 - 52 8 9 6 7 * + - + *</tt> ____</li>\n</ol>\n"
+    },
+    "q04": {
+        "type": "multiple",
+        "question": "\n<p>In <tt>unique.py</tt>, you used a Python <tt>dict</tt> to count the line\nfrequencies.  Assuming a <tt>dict</tt> named <tt>d</tt>, which of the\nfollowing statements regarding Python <tt>dict</tt>s are true (select all\nthat apply)</p>\n",
+        "responses": {
+            "keys": "To iterate over the keys, we must use <tt>d.keys()</tt>",
+            "items": "To iterate over the keys and values, we can use <tt>d.items()</tt>",
+            "len": "<tt>len(d)</tt> tells us how many different <b>values</b> are in the <tt>dict</tt>",
+            "get": "Using <tt>d.get()</tt> allows us to lookup a <i>key</i> while providing a default value in case it is not found."
+        }
+    },
+    "q05": {
+        "type": "blank",
+        "question": "\n<p>Use your <tt>unique.py</tt> on the data from\n<tt>https://yld.me/raw/bd4e</tt> to answer the following questions:</p>\n\n<ol>\n  <li>How many times does <tt>Red</tt> occur? ____</li>\n  <li>How many times does <tt>GREEN</tt> occur? ____</li>\n  <li>How many times does <tt>yellow</tt> occur (ignoring case)? ____</li>\n  <li>How many colors occur more than once (ignoring case)? ____</li>\n  <li>How many colors are unique? ____</li>\n  <li>Which color appears the most (ignoring case)? ____</li>\n</ol>\n"
+    }
+}
