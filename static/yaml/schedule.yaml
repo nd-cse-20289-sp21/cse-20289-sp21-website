@@ -115,6 +115,9 @@
       - date:           Mon 03/01
         topics:         Review
         assignment:     Reading 04
+        items:
+          - name:       Panopto
+            link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=8019b065-5aed-4dfa-ab29-acde0163a7f6
 
       - date:           Wed 03/03
         topics:         Python Scripting
