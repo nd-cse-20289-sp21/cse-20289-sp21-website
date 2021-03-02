@@ -121,6 +121,9 @@
 
       - date:           Wed 03/03
         topics:         Python Scripting
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1k2pQpGCnx0sxYcOA37qeGFsKrCjDZJ89eGPYlpoSp44/edit?usp=sharing
       
       - date:           Fri 03/05
         topics:         Exam 01
@@ -134,6 +137,9 @@
   days:
       - date:           Mon 03/08
         topics:         I/O, Strings
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1k2pQpGCnx0sxYcOA37qeGFsKrCjDZJ89eGPYlpoSp44/edit?usp=sharing
 
       - date:           Wed 03/10
         topics:         Lists, Dicts, Sets
@@ -151,6 +157,9 @@
       - date:           Mon 03/15
         topics:         Requests, Regular Expressions
         assignment:     Reading 06
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1k2pQpGCnx0sxYcOA37qeGFsKrCjDZJ89eGPYlpoSp44/edit?usp=sharing
 
       - date:           Wed 03/17
         topics:         CSV
