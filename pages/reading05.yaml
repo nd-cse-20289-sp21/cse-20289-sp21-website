@@ -123,6 +123,8 @@ body:       |
   loadQuiz('static/json/reading05.json');
   </script>
 
+  <pre style="display: none;" id="dr-container" class="codehilite"><code id="dredd-response"></code></pre>
+
   ### `exists.py`
 
   Use the `echo.py` script as the basis for a Python script called `exists.py`,
