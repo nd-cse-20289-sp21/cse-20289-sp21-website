@@ -1,0 +1,420 @@
+title:      "Reading 06: Data Processing"
+icon:       fa-book
+navigation: []
+internal:
+external:
+body:       |
+
+  **Everyone**:
+
+  Next week, we will continue to explore using the [Python] programming
+  language for data processing.  In particular, we will review [regular
+  expressions] and learn how to utilize them in [Python] and then examine ways
+  of processing structured information such as [CSV] and [JSON] files.
+
+  <div class="alert alert-info" markdown="1">
+  #### <i class="fa fa-search"></i> TL;DR
+
+  The focus of this reading is to introduce data processing in [Python].
+
+  </div>
+
+  <img src="static/img/python.png" class="pull-right">
+
+  ## Readings
+
+  The readings for this week are:
+
+  1. [Automate The Boring Stuff](https://automatetheboringstuff.com/)
+
+      - [Chapter 7. Pattern Matching with Regular Expressions](https://automatetheboringstuff.com/2e/chapter7/)
+
+          Focus on the use of [re.findall].
+
+      - [Chapter 12. Web Scraping](https://automatetheboringstuff.com/2e/chapter12/)
+
+          Focus on the usage of [requests].
+
+      - [Chapter 16. Working with CSV Files and JSON Data](https://automatetheboringstuff.com/2e/chapter16/)
+
+          Focus on [csv.reader] and [csv.DictReader] and using [requests] with [JSON].
+
+  ### Optional Resources
+
+  Here are some additional resources:
+
+  - [Regular Expression HOWTO](https://docs.python.org/3/howto/regex.html)
+
+  - [Python Regular Expressions](https://developers.google.com/edu/python/regular-expressions)
+
+  - [Real Python](https://realpython.com)
+
+      - [Python’s Requests Library (Guide)](https://realpython.com/python-requests/)
+
+      - [Reading and Writing CSV Files in Python](https://realpython.com/python-csv/)
+
+  ## Scripts
+
+  This week, there is no reading quiz.  Instead, you are to complete three
+  [Python] scripts: `courses.py`, `users.py`, and `machines.py`.
+
+  To test these scripts, you will need to download the [Makefile] and test
+  scripts:
+
+      :::bash
+      $ git checkout master                 # Make sure we are in master branch
+      $ git pull --rebase                   # Make sure we are up-to-date with GitHub
+
+      $ git checkout -b reading06           # Create reading06 branch and check it out
+
+      $ cd reading06                        # Go into reading06 folder
+
+      # Download Reading 06 Makefile
+      $ curl -LO https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/reading06/Makefile
+
+      # Execute tests (and download them)
+      $ make
+
+  ### Script: `courses.py`
+
+  For the first script, `courses.py`, you are to use [regular expressions] to
+  extract all the **CSE** courses from the [Computer Science
+  Curriculum](https://cse.nd.edu/undergraduate/computer-science-course-map/)
+  webpage.
+
+  After counting up how many courses there are per academic year (ie.
+  **Sophomore**, **Junior**, and **Senior**), print out the totals in
+  descending sorted order as shown below:
+
+      $ ./courses.py
+            5 Sophomore
+            4 Junior
+            2 Senior
+
+  It should basically be the [Python] equivalent of the following [pipeline]:
+
+      :::bash
+      $ curl -sL https://cse.nd.edu/undergraduate/computer-science-course-map/ \
+        | grep -Eo 'CSE [234][0-9]{4}' \
+        | sed -E -e 's/CSE 2.*/Sophomore/' -e 's/CSE 3.*/Junior/' -e 's/CSE 4.*/Senior/' \
+        | sort | uniq -c | sort -rn
+
+  [CSE]: https://cse.nd.edu
+
+  #### Skeleton
+
+  To help you get started, we have provided you with the following [courses.py]
+  skeleton code:
+
+      :::python
+      import collections
+      import re
+      import requests
+
+      # Globals
+
+      URL = 'https://cse.nd.edu/undergraduate/computer-science-course-map/'
+
+      # Initialize a default dictionary with integer values
+      counts = None
+
+      # TODO: Make a HTTP request to URL
+      response = None
+
+      # TODO: Access text from response object
+      data = None
+
+      # TODO: Compile regular expression to match CSE courses (ie. CSE XXXXX)
+      regex = None
+
+      # TODO: Search through data using compiled regular expression and count up all
+      # the courses per class year
+      for course in re.findall(None, None):
+          pass
+
+      # TODO: Sort items in counts dictionary by value in reverse order and
+      # display counts and class year
+      for year, count in sorted(counts.items(), key=lambda p: p[1]):
+          print(f'{count:>7} {year}')
+
+  Implement the `TODO` sections in the code in order to complete the `courses.py`
+  script.
+
+  [courses.py]: https://github.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/blob/master/reading06/courses.py
+
+  <div class="alert alert-success" markdown="1">
+  #### <i class="fa fa-lightbulb-o"></i> Hints
+
+  - A [collections.defaultdict] object is just a [dict] that has a default
+    value according to the specified type.  For instance, because `counts` is a
+    `collections.defaultdict(int)`, accessing `counts[key]` will automatically
+    insert a `0` (the default [int] value) for that `key` if it does not exist
+    in the [dict] yet.
+
+  - You can use [requests.get] to make a **HTTP** request.  The `response`
+    object you get back has a `text` attribute you can use to access the
+    content or data of the **request**.
+
+  - You can use the [re.compile] function to compile [regular expressions].
+    Likewise, you can use the [re.findall] function to search for all matches
+    in a string.  For instance:
+
+          :::python
+          # Match phone numbers in the format XXX-XXX-XXXX, while grouping just the
+          # the area codes.
+          regex = re.compile(r'(\d{3})-\d{3}-\d{4}')
+          for areacode in re.findall(regex, data):
+              print(areacode)
+
+  - You can set the `reverse` keyword argument of the [sorted] function to sort
+    in descending order (the default is ascending).
+
+  </div>
+
+  [collections.defaultdict]: https://docs.python.org/3/library/collections.html#collections.defaultdict
+  [dict]: https://docs.python.org/3/library/stdtypes.html#dict
+  [int]: https://docs.python.org/3/library/functions.html#int
+  [re.compile]: https://docs.python.org/3/library/re.html#re.compile
+  [re.findall]: https://docs.python.org/3/library/re.html#re.findall
+  [sorted]: https://docs.python.org/3/library/functions.html#sorted
+
+  ### Script: `users.py`
+
+  For the second script, `users.py`, you are to use [csv.reader] to loop
+  through the records in your local `/etc/passwd` file and extract all the user
+  descriptions (ie. the **fifth field**).
+
+  It should basically be the [Python] equivalent of the following [pipeline]:
+
+      :::bash
+      $ cat /etc/passwd | cut -d : -f 5 | sed '/^\s*$/d' | env LC_ALL=C sort
+
+  For instance, here is the output of `users.py` on **student05.cse.nd.edu**:
+
+      :::bash
+      $ ./users.py
+      Account used by the trousers package to sandbox the tcsd daemon
+      Anonymous NFS User
+      Apache
+      Condor Batch System
+      FTP User
+      GlusterFS daemons
+      Guest
+      LDAP Client User
+      MariaDB Server
+      NSCD Daemon
+      ...
+      mail
+      operator
+      qemu user
+      root
+      shutdown
+      sync
+      systemd Bus Proxy
+      systemd Network Management
+      tog-pegasus OpenPegasus WBEM/CIM services
+      usbmuxd user
+
+  <div class="alert alert-warning" markdown="1">
+  **Note**: The output does not contain any lines that are empty.
+  </div>
+
+  #### Skeleton Code
+
+  To help you get started, we have provided you with the following [users.py]
+  skeleton code:
+
+      :::python
+      import csv
+
+      # Constants
+
+      PATH = '/etc/passwd'
+
+      # TODO: Loop through ':' delimited data in PATH and extract the fifth field
+      # (user description)
+      pass
+
+      # TODO: Print user descriptions in sorted order
+      pass
+
+  Implement the `TODO` sections in the code in order to complete the `users.py`
+  script.
+
+  [users.py]: https://github.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/blob/master/reading06/users.py
+
+  <div class="alert alert-success" markdown="1">
+  #### <i class="fa fa-lightbulb-o"></i> Hints
+
+  - The [csv.reader] function takes a file stream (ie. use [open]) and can
+    optionally take a `delimiter` keyword argument to specify what separates
+    the fields in each row.
+
+          :::python
+          for row in csv.reader(open(path), delimiter=','):
+              print(row[0])
+
+  - You can check if a string is non-empty by simplying doing the following:
+
+          :::python
+          if string:      # Non-empty strings evaluate to True
+              do_the_thing()
+
+  </div>
+
+  [open]: https://docs.python.org/3/library/functions.html#open
+
+  ### Script: `machines.py`
+
+  For the third script, `machines.py`, you are to parse the [JSON] data from
+  `http://catalog.cse.nd.edu:9097/query.json`, which contains a listing of all
+  the machines and services registered with [Cooperative Computing Lab], and
+  display the name of the machines with the type `wq_factory`.
+
+  It should basically be the [Python] equivalent of the following [pipeline]:
+
+      :::bash
+      curl -sL http://catalog.cse.nd.edu:9097/query.json | sed -En 's/\{"name":"([^"]+)".*"type":"wq_factory".*/\1/p'
+
+  For instance, here is the output of `machines.py`:
+
+      :::bash
+      $ ./machines.py
+      103-165-135-150.dynamic.arizona.edu
+      126-165-135-150.dynamic.arizona.edu
+      barricade.cri.uchicago.edu
+      condorfe.crc.nd.edu
+      crcfe01.crc.nd.edu
+      crcfe02.crc.nd.edu
+      earth.crc.nd.edu
+      vm142-121.cyverse.org
+      Yeti.lifemapper.org
+
+  #### Skeleton
+
+  To help you get started, we have provided you with the following [machines.py]
+  skeleton code:
+
+      :::python
+      import requests
+
+      # Constants
+
+      URL = 'http://catalog.cse.nd.edu:9097/query.json'
+
+      # TODO: Make a HTTP request to URL
+      response = None
+
+      # TODO: Access json representation from response object
+      data = None
+
+      # TODO: Display all machine names with type "wq_factory"
+      pass
+
+  Implement the `TODO` sections in the code in order to complete the `machines.py`
+  script.
+
+  [machines.py]: https://github.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/blob/master/reading06/machines.py
+
+  <div class="alert alert-success" markdown="1">
+  #### <i class="fa fa-lightbulb-o"></i> Hints
+
+  - The `response` object returned by the [requests.get] function has a
+    [json()] method that parses the `response` text as [JSON] data and returns
+    an appropriate [Python] data structure.
+
+  - You may wish to the [pprint.pprint] function to examine and explore the
+    [JSON] data to determine how to access the 'name' and 'type' information of
+    each machine.
+
+  </div>
+
+  [requests.get]: https://requests.readthedocs.io/en/master/user/quickstart/#make-a-request
+  [json()]: https://requests.readthedocs.io/en/master/user/quickstart/#json-response-content
+  [pprint.pprint]: https://docs.python.org/3/library/pprint.html#pprint.pprint
+
+  ### Testing
+
+  To test all of these scripts, you can use the provided `test_scripts.sh`,
+  which should have been downloaded by the [Makefile]:
+
+      :::bash
+      $ ./test_scripts.sh
+      Testing scripts...
+       courses.py                               ... Success
+       users.py                                 ... Success
+       machines.py                              ... Success
+
+         Score 4.00
+
+  <div class="alert alert-warning" markdown="1">
+  #### <i class="fa fa-clock-o"></i> We'll Do It Live
+
+  Because the data in each of these scripts is being pulled from data sources
+  in real-time, the outputs may change in between runs.
+
+  </div>
+
+  ## Submission
+
+  To submit your work, follow the same process outlined in [Reading 01]:
+
+      :::bash
+      #--------------------------------------------------
+      # BE SURE TO DO THE PREPARATION STEPS ABOVE
+      #--------------------------------------------------
+
+      $ cd reading06                        # Go into reading06 folder
+
+      $ $EDITOR courses.py                  # Edit your courses.py file
+      $ $EDITOR users.py                    # Edit your users.py file
+      $ $EDITOR machines.py                 # Edit your machines.py file
+
+      $ ./test_scripts.sh                   # Test your reading 06 scripts
+
+      $ git add Makefile                    # Add Makefile to staging area
+      $ git add courses.py                  # Add courses.py to staging area
+      $ git add users.py                    # Add users.py to staging area
+      $ git add machines.py                 # Add machines.py to staging area
+
+      $ git commit -m "Reading 06: Scripts" # Commit work
+
+      $ git push -u origin reading06        # Push branch to GitHub
+
+  <div class="alert alert-danger" markdown="1">
+  #### <i class="fa fa-github"></i> Pull Request
+  Remember to create a **Pull Request** and assign the appropriate TA from the
+  [Reading 06 TA List].
+
+  **DO NOT MERGE** your own **Pull Request**. The TAs use open **Pull Requests**
+  to keep track of which assignments to grade.  Closing them yourself will
+  cause a delay in grading and confuse the TAs.
+  </div>
+
+  [Markdown]:       https://daringfireball.net/projects/markdown/
+  [git]:            https://git-scm.com/
+  [clone]:          https://git-scm.com/docs/git-clone
+  [commit]:         https://git-scm.com/docs/git-commit
+  [push]:           https://git-scm.com/docs/git-push
+  [GitHub]:         https://github.com
+  [Reading 01]:     reading01.html
+  [Reading 02]:     reading02.html
+  [Reading 06 TA List]: reading06_tas.html
+  [dredd]:          https://dredd.h4x0r.space
+  [Reading 06 quiz]:    static/json/reading06.json
+
+  [Makefile]:       https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/reading06/Makefile
+
+  [Regular Expressions]: https://en.wikipedia.org/wiki/Regular_expression
+  [CSV]: https://en.wikipedia.org/wiki/Comma-separated_values
+  [JSON]: https://www.json.org/
+  [pipeline]: https://en.wikipedia.org/wiki/Pipeline_(Unix)
+
+  [re.findall]: https://docs.python.org/3/library/re.html#re.findall
+  [requests]:   https://requests.readthedocs.io/en/master/
+  [csv.reader]: https://docs.python.org/3/library/csv.html#csv.reader
+  [csv.DictReader]: https://docs.python.org/3/library/csv.html#csv.DictReader
+  [Python]:                     https://www.python.org/
+  [lists]:                      https://docs.python.org/3/library/stdtypes.html#sequence-types-list-tuple-range
+  [dictionaries]:               https://docs.python.org/3/library/stdtypes.html#mapping-types-dict
+  [Cooperative Computing Lab]: http://ccl.cse.nd.edu/
