@@ -1,0 +1,912 @@
+title:      "Homework 05: Data Processing"
+icon:       fa-code
+navigation: []
+internal:
+external:
+body:       |
+
+  The goal of this homework assignment is to allow you to practice using
+  [Python] to create scripts that require sophisticated parsing of data and
+  manipulation of [data structures].  In this assignment, you will download
+  data in both [CSV] and [JSON] format, process it, and then present it to the
+  user in the terminal.
+
+  For this assignment, record your scripts and any responses to the following
+  activities in the `homework05` folder of your **assignments** [GitHub]
+  repository and push your work by **noon Saturday, March 20**.
+
+  [Python]:     https://www.python.org/
+  [JSON]:       https://json.org/
+  [CSV]:        https://en.wikipedia.org/wiki/Comma-separated_values
+  [data structures]: https://en.wikipedia.org/wiki/Data_structure
+
+  ## Activity 0: Preparation
+
+  Before starting this homework assignment, you should first perform a `git
+  pull` to retrieve any changes in your remote [GitHub] repository:
+
+      :::bash
+      $ cd path/to/repository                   # Go to assignments repository
+
+      $ git checkout master                     # Make sure we are in master branch
+
+      $ git pull --rebase                       # Get any remote changes not present locally
+
+  Next, create a new branch for this assignment:
+
+      :::bash
+      $ git checkout -b homework05              # Create homework05 branch and check it out
+
+  Once this is done, download the `Makefile` and test scripts:
+
+      :::bash
+      # Go to homework05 folder
+      $ cd homework05
+
+      # Download the Makefile
+      $ curl -LO https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework05/Makefile
+
+      # Add and commit Makefile
+      $ git add Makefile
+      $ git commit -m "homework05: add Makefile"
+
+      # Download the test scripts
+      $ make test-scripts
+  
+  You are now ready to work on the activities below.
+
+  <div class="alert alert-warning" markdown="1">
+  **Note**, you do not need to add and commit the test scripts since the
+  Makefile will automaticaly download them again whenever you run make.
+  </div>
+
+  ## Activity 1: Reddit (5 Points)
+
+  Katie likes to sit in the back of the class.  It has its **perks**:
+
+  - She can beat the rush out the door when class ends.
+
+  - She can see everyone browsing Facebook, playing video games[^1], watching
+    YouTube, or doing homework.
+
+  - She feels safe from being called upon by the instructor... except when he
+    does that strange thing where he goes around the class and tries to talk to
+    people.  Totally weird [^2].
+
+  That said, sitting in the back has its **downsides**:
+
+  - She can never see what the instructor is writing because he has terrible
+    handwriting and always writes too small [^3].
+
+  - She is prone to falling asleep because the instructor is really boring and
+    the class is not as interesting as her other computer science courses.
+
+  To combat her boredom, Katie typically just browses [Reddit].  Her favorite
+  [subreddits] are [AdviceAnimals], [aww], [todayilearned], and of course
+  [UnixPorn].  Lately, however, Katie has grown paranoid that her web browser
+  is leaking information about her[^4], and so she wants to be able to get the
+  latest links from [Reddit] directly in her terminal.
+
+  Fortunately for Katie, [Reddit] provides a [JSON] feed for every subreddit.
+  You simply need to append `.json` to the end of each subreddit.  For
+  instance, the [JSON] feed for [todayilearned] can be found here:
+
+      :::text
+      https://www.reddit.com/r/todayilearned/.json
+
+  To fetch that data, Katie uses the [Requests] package in [Python] to access
+  the [JSON] data:
+
+      :::python
+      r = requests.get('https://www.reddit.com/r/todayilearned/.json')
+      print(r.json())
+
+  <div class="alert alert-warning" markdown="1">
+  #### <i class="fa fa-reddit"></i> 429 Too Many Requests
+
+  [Reddit] tries to prevent bots from accessing its website too often.  To work
+  around any **429: Too Many Requests** errors, we can trick [Reddit] by
+  specifying our own user agent:<br><br>
+
+      :::python
+      headers  = {'user-agent': 'reddit-{}'.format(os.environ.get('USER', 'cse-20289-sp20'))}
+      response = requests.get(url, headers=headers)
+
+  This should allow you to make requests without getting the dreaded **429**
+  error.
+
+  </div>
+
+  The code above would output something like the following:
+
+      :::json
+      {"kind": "Listing", "data": {"modhash": "g8n3uwtdj363d5abd2cbdf61ed1aef6e2825c29dae8c9fa113", "children": [{"kind": "t3", "data": ...
+
+  Looking through that stream of text, Katie sees that the [JSON] data is a
+  collection of structured or hierarchical [dictionaries] and [lists].  This
+  looks a bit complex to her, so she wants you to help her complete the
+  `reddit.py` script which fetches the [JSON] data for a specified
+  **subreddit** or **URL** and allows the user to sort the articles by various
+  fields, restrict the number of items displayed, and even shorten the **URLs**
+  of each article.
+
+  [grep]:               http://man7.org/linux/man-pages/man1/grep.1.html
+  [active learning]:    https://en.wikipedia.org/wiki/Active_learning
+  [Requests]:           http://docs.python-requests.org/en/master/
+  [Reddit]:             https://www.reddit.com
+  [subreddits]:         https://www.reddit.com/reddits/
+  [AdviceAnimals]:      https://www.reddit.com/r/AdviceAnimals/
+  [aww]:                https://www.reddit.com/r/aww/
+  [todayilearned]:      https://www.reddit.com/r/todayilearned/
+  [UnixPorn]:           https://www.reddit.com/r/unixporn
+  [JSON]:               http://www.json.org/
+  [dictionary]:         https://docs.python.org/3/library/stdtypes.html#mapping-types-dict
+  [dictionaries]:       https://docs.python.org/3/library/stdtypes.html#mapping-types-dict
+  [lists]:              https://docs.python.org/3/library/stdtypes.html#sequence-types-list-tuple-range
+  [regular expression]: https://en.wikipedia.org/wiki/Regular_expression
+  [^1]:                 Or just browsing on your phone during lecture. Never forget.
+  [^2]:                 Sadly not this year... however, [Caring is Creepy](https://www.youtube.com/watch?v=PUMkxH03V5c)
+  [^3]:                 No whiteboard this year... sigh.
+  [^4]:                 It is.
+
+  ### Task 1: `reddit.py`
+
+  The `reddit.py` script takes the following arguments:
+
+      :::text
+      $ ./reddit.py
+      Usage: reddit.py [options] URL_OR_SUBREDDIT
+
+          -s          Shorten URLs using (default: False)
+          -n LIMIT    Number of articles to display (default: 10)
+          -o ORDERBY  Field to sort articles by (default: score)
+          -t TITLELEN Truncate title to specified length (default: 60)
+
+  The `-s` flag shortens **URLs** using the [is.gd] web service.  This means
+  that long **URLs** are converted into shorter ones such as: [https://is.gd/KfxOKD](https://is.gd/KfxOKD).
+
+  The `-n` flag specifies the number of articles to display.  By default, this is `10`.
+
+  The `-o` flag specifies the [Reddit] article attribute to use for sorting the
+  articles.  By default this should be `score`.  Note, if the `ORDERBY`
+  parameter is `score`, then the articles should be ordered in **descending
+  order**.  Otherwise, the articles should be ranked in **ascending order**.
+
+  The `-t` flag specifies the maximum length for the articles' titles.  Titles
+  longer than this value should be truncated.  The default value is `60`.
+
+  #### Examples
+
+  Here are some examples of `reddit.py` in action:
+
+      :::text
+      # Show Linux subreddit
+      $ ./reddit.py linux
+         1.   ytfzf now has image previews! {search, watch, download from  (Score: 1337)
+              https://i.redd.it/35oie0ooisk61.gif
+
+         2.   This won't be the decade of Linux being at the top or Window (Score: 714)
+              https://www.reddit.com/r/linux/comments/lxecy0/this_wont_be_the_decade_of_linux_being_at_the_top/
+
+         3.   A warning about 5.12-rc1 (Score: 620)
+              https://lwn.net/Articles/848265/
+
+         4.   Now KDE Plasma also supports transparent panels getting opaq (Score: 505)
+              https://write.as/niccolove/kde-plasma-5-22-adaptive-transparency
+
+         5.   Today, we are pleased to announce the release of MauiKit and (Score: 223)
+              https://i.redd.it/42vbwxkvn7l61.png
+
+         6.   AMD+Microsoft secured-core server, and what does it mean to  (Score: 170)
+              https://www.reddit.com/r/linux/comments/lx2iwb/amdmicrosoft_securedcore_server_and_what_does_it/
+
+         7.   Chrome (Chromium) release cycle shortened to 4 weeks, Chrome (Score: 109)
+              https://blog.chromium.org/2021/03/speeding-up-release-cycle.html
+
+         8.   Has there been any effort of porting "memtest86+" to UEFI an (Score: 109)
+              https://www.reddit.com/r/linux/comments/lxmjqz/has_there_been_any_effort_of_porting_memtest86_to/
+
+         9.   Zstandard v1.4.9 released (&gt;2x Faster Long Distance Mode) (Score: 109)
+              https://github.com/facebook/zstd/releases/tag/v1.4.9
+
+        10.   Linux Is Just More Efficient (Score: 65)
+              https://www.reddit.com/r/linux/comments/lxqppu/linux_is_just_more_efficient/
+
+      # Show top 5 nba articles
+      $ ./reddit.py -n 5 nba
+         1.   [Wojnarowski] Six-time All-Star forward Blake Griffin has ag (Score: 12005)
+              https://twitter.com/wojespn/status/1367882930383708168
+
+         2.   [Singer] Asked Jokic what he was going to do in the four day (Score: 6657)
+              https://www.reddit.com/r/nba/comments/lyd7l1/singer_asked_jokic_what_he_was_going_to_do_in_the/
+
+         3.   Giannis' reaction on being selected as the 1st pick on Team  (Score: 5454)
+              https://streamable.com/q386bm
+
+         4.   [Katz] "As Lillard and Beal talked about the reasons for sta (Score: 3931)
+              https://www.reddit.com/r/nba/comments/lyerlu/katz_as_lillard_and_beal_talked_about_the_reasons/
+
+         5.   Joe Ingles reacts to Donovan Mitchell and Rudy Gobert gettin (Score: 3279)
+              https://www.reddit.com/r/nba/comments/lykf0j/joe_ingles_reacts_to_donovan_mitchell_and_rudy/
+
+      # Show top 2 Wizard of Legend articles sorted by title
+      $ ./reddit.py -n 2 -o title WizardOfLegend
+         1.   A question about how relics work (Score: 2)
+              https://www.reddit.com/r/WizardofLegend/comments/lxmtx4/a_question_about_how_relics_work/
+
+         2.   Any Co-Op tips? (Score: 4)
+              https://www.reddit.com/r/WizardofLegend/comments/lx1ioi/any_coop_tips/
+
+      # Show top 2 unixporn articles sorted by score (with shorten URLs)
+      $ ./reddit.py -n 2 -o score -s unixporn
+         1.   [AWESOME] I tried, but it can be improved (Score: 1656)
+              https://is.gd/TwADW1
+
+         2.   [KDE/Plasma] Easy on the eyes gruvbox theme (Score: 990)
+              https://is.gd/bb7jWs
+
+  <div class="alert alert-warning" markdown="1">
+  #### <i class="fa fa-reddit"></i> We'll do it live
+
+  Note, since we are pulling data from an active website, the articles may
+  change between runs.
+
+  </div>
+
+  [requests.get]:   http://docs.python-requests.org/en/master/user/quickstart/#make-a-request
+
+  #### Skeleton Code
+
+  Here is skeleton code you can use to start your `reddit.py` script:
+
+      :::bash
+      # Download reddit.py skeleton
+      $ curl -LO https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework05/reddit.py 
+
+  It should look something like this:
+
+      :::python
+      import os
+      import sys
+
+      import requests
+
+      # Constants
+
+      ISGD_URL = 'http://is.gd/create.php'
+
+      # Functions
+
+      def usage(status=0):
+          ''' Display usage information and exit with specified status '''
+          print('''Usage: {} [options] URL_OR_SUBREDDIT
+
+          -s          Shorten URLs using (default: False)
+          -n LIMIT    Number of articles to display (default: 10)
+          -o ORDERBY  Field to sort articles by (default: score)
+          -t TITLELEN Truncate title to specified length (default: 60)
+          '''.format(os.path.basename(sys.argv[0])))
+          sys.exit(status)
+
+      def load_reddit_data(url):
+          ''' Load reddit data from specified URL into dictionary
+
+          >>> len(load_reddit_data('https://reddit.com/r/nba/.json'))
+          27
+
+          >>> load_reddit_data('linux')[0]['data']['subreddit']
+          'linux'
+          '''
+          return []
+
+      def shorten_url(url):
+          ''' Shorten URL using is.gd service
+
+          >>> shorten_url('https://reddit.com/r/aoe2')
+          'https://is.gd/dL5bBZ'
+
+          >>> shorten_url('https://cse.nd.edu')
+          'https://is.gd/3gwUc8'
+          '''
+          return ''
+
+      def print_reddit_data(data, limit=10, orderby='score', titlelen=60, shorten=False):
+          ''' Dump reddit data based on specified attributes '''
+          pass
+
+      def main():
+          arguments = sys.argv[1:]
+          url       = None
+          limit     = 10
+          orderby   = 'score'
+          titlelen  = 60
+          shorten   = False
+
+      # Main Execution
+
+      if __name__ == '__main__':
+          main()
+
+  <div class="alert alert-success" markdown="1">
+  #### <i class="fa fa-lightbulb-o"></i> Hints
+
+  - Read the `TODO` comments carefully.  **DO NOT REMOVE THE [doctests]**!
+
+  - `load_reddit_data`: To fetch the [Reddit] data, you can use the
+    [requests.get] method.  You can then access the [JSON] data via the
+    `json()` method of the object returned by [requests.get].  You will need to
+    think carefully about what portion of the [JSON] you actually want to
+    utilize.
+
+  - `print_reddit_data`: To display the articles, this function can use the
+    [sorted] function with either the `reverse` or `key` parameter to order the
+    articles.  It can then **slice** the resulting articles to limit the number
+    of things displayed.
+
+      Note, a `tab` character is used to separate the `index` and the `title`
+      and to indent the `url`.
+
+      To sort by a particular field or attribute, you can take advantage of the
+      `key` parameter of the [sorted] function:
+
+          :::python
+          articles = sorted(data, key=lambda i: i[field])
+
+  - `shorten_url`: To shorten a **URL**, you can use the [requests.get] method
+    to make a request to the [is.gd] webservice with the appropriate `params`
+    as shown below:
+
+          :::python
+          requests.get(ISGD_URL, params={'format': 'json', 'url': url})
+
+      You will need to parse the result of this request to extract the
+      shortened **URL**.
+
+  </div>
+
+  [sorted]: https://docs.python.org/3/library/functions.html#sorted
+
+  ### Task 2: `test_reddit.sh`
+
+  To aid you in testing the `reddit.py` script, we have provided you with
+  `test_reddit.sh`, which you can use as follows:
+
+      :::bash
+      $ ./test_reddit.sh
+      Testing reddit.py ...
+         Doctests                                 ... 1.00 / 1.00
+         Bad arguments                            ... Success
+         -h                                       ... Success
+         No arguments                             ... Success
+         linuxactionshow                          ... Success
+         linuxactionshow (-n 1)                   ... Success
+         linuxactionshow (-o url)                 ... Success
+         linuxactionshow (-t 10)                  ... Success
+         linuxactionshow (-s)                     ... Success
+         voidlinux                                ... Success
+         voidlinux (-n 5)                         ... Success
+         voidlinux (-n 5 -o title)                ... Success
+         voidlinux (-n 5 -o url -t 20)            ... Success
+         voidlinux (-n 2 -o score -t 40 -s)       ... Success
+
+         Score 5.00
+
+  Note, we chose an **inactive** subreddit,
+  [r/linuxactionshow](https://www.reddit.com/r/linuxactionshow) for our test
+  script since it should not change.  However, it is possible that it may
+  change[^5] and thus break our test script.  Just let the staff know and
+  adjustments can be made.
+
+  [^5]: Please don't mess with this sub-reddit on purpose.  I'm looking at you
+  `#csememers` (RIP).
+
+  ## Activity 2: CSE Demographics (7 Points)
+
+  One of the most pressing questions in Computer Science education is
+  addressing the [lack of diversity] in computing.  In order to meanfully
+  examine this issue, we will first need to look at some raw data.  For this
+  activity, you are to a script, `demographics.py`, that downloads, processes,
+  and visualizes the Computer Science and Engineering [demographic data] from
+  the classes of **2013** through **2023**.
+
+  [lack of diversity]:  https://blog.google/topics/education/racial-and-gender-gaps-computer-science-learning-new-google-gallup-research/
+  [CSE 40175 Ethical and Professional Issues]: https://www3.nd.edu/~pbui/teaching/cse.40175.fa19/
+  [demographic data]:   https://yld.me/raw/bWhu
+  [Computer Science and Engineering]: https://cse.nd.edu
+
+  ### Background
+
+  For context and background material, you may wish to first read some of the
+  following articles regarding gender and ethnic diversity in Computer Science
+  and the technology industry in general:
+
+  - [Computer science education still has diversity gaps](https://blog.google/outreach-initiatives/education/computer-science-education-research/)
+  
+  - [Computer science jobs pay well and are growing fast. Why are they out of reach for so many of America’s students](https://theconversation.com/computer-science-jobs-pay-well-and-are-growing-fast-why-are-they-out-of-reach-for-so-many-of-americas-students-150419)
+
+  - [The Secret History of Women in Coding](https://www.nytimes.com/2019/02/13/magazine/women-coding-computer-programming.html)
+
+  - [Why Women Don’t Code](https://quillette.com/2018/06/19/why-women-dont-code/)
+
+  - [Markets, discrimination, and "lowering the bar"](https://danluu.com/tech-discrimination/)
+
+  - [How Computer Science at CMU Is Attracting and Retaining Women](https://cacm.acm.org/magazines/2019/2/234346-how-computer-science-at-cmu-is-attracting-and-retaining-women/fulltext)
+
+  <div class="alert alert-info" markdown="1">
+  #### <i class="fa fa-gavel"></i> Ethical and Professional Issues
+
+  This assignment is inspired by a
+  [discussion](https://www3.nd.edu/~pbui/teaching/cse.40175.fa19/reading04.html)
+  we have in the [CSE 40175 Ethical and Professional Issues] class, which is a
+  required course for all [Computer Science and Engineering] students.
+
+  </div>
+
+  ### Demographic Data
+
+  Our beloved [Ramzi] has graciously provided us with the student [demographic
+  data] for all [Computer Science and Engineering] students from the class of
+  **2013** through **2023**.  This data looks something like this:
+
+      :::text
+      $ curl -sL https://yld.me/raw/bWhu | head -n 10
+      Year,Gender,Ethnic
+      2013,M,C
+      2014,M,C
+      2015,F,N
+      2016,F,N
+      2017,M,C
+      2018,M,C
+      2013,M,C
+      2014,M,S
+      2015,M,C
+
+  As can be seen above, the demographics [CSV] data has three columns:
+
+  1. The first column represents the graduating class year that student belongs
+  to.
+
+  1. The second column records the **gender** of the student and contains
+  either `M` or `F` which stands for `Male` or `Female` respectively.
+
+  2. The third column records the **ethnicity** of the student and consists of
+  the following mapping:
+
+      <table class="table table-striped table-bordered">
+        <thead>
+          <th>Letter</th>
+          <th>Ethnicity</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>C</td>
+            <td>Caucasian</td>
+          </tr>
+          <tr>
+            <td>O</td>
+            <td>Asian</td>
+          </tr>
+          <tr>
+            <td>S</td>
+            <td>Hispanic</td>
+          </tr>
+          <tr>
+            <td>B</td>
+            <td>African American</td>
+          </tr>
+          <tr>
+            <td>N</td>
+            <td>Native American / Pacific Islanders</td>
+          </tr>
+          <tr>
+            <td>T</td>
+            <td>Multiple Selection</td>
+          </tr>
+          <tr>
+            <td>U</td>
+            <td>Undeclared</td>
+          </tr>
+        </tbody>
+      </table>
+
+  ### Task 1: `demographics.py`
+
+  The `demographics.py` script takes the following arguments:
+
+      :::bash
+      # Display usage message
+      $ ./demographics.py -h
+      Usage: demographics.py [options] [URL]
+
+          -y  YEARS   Which years to display (default: all)
+          -p          Display data as percentages.
+          -G          Do not include gender information.
+          -E          Do not include ethnic information.
+
+  The `-y` flag specifies which years to display (the default is to display all
+  the years in the [CSV] data).
+
+  The `-p` flag forces the script to output data as percentages rather than raw
+  counts.
+
+  The `-G` and `-E` flags suppresses outputting the gender and ethnic data
+  respectively.
+
+  The user may specify a `URL` to the [CSV] file.  If one is not specified then
+  the script will use [https://yld.me/raw/axPa](https://yld.me/raw/axPa) as the
+  `URL`.
+
+  **Note**, the years are always displayed in ascending order.
+
+  #### Examples
+
+  Here are some examples of `demographics.py` in action:
+
+      :::bash
+      # No arguments
+      $ ./demographics.py
+             2013    2014    2015    2016    2017    2018    2019    2020    2021    2022    2023
+      ================================================================================================
+        M      49      44      58      60      65     101      96      92      89     120     121
+        F      14      12      16      19      26      45      54      43      46      35      47
+      ------------------------------------------------------------------------------------------------
+        B       3       2       4       1       5       3       3       4       6       4       1
+        C      43      43      47      53      60     107      96      92      87     100      96
+        N       1       1       1       7       5       5      13      14      13      13      20
+        O       7       5       9       9      12      10      13       7       8      12      11
+        S       7       4      10       9       3      13      10      10      11      16      27
+        T       2       1       1       0       6       8      15       7       9       6      11
+        U       0       0       2       0       0       0       0       1       1       1       2
+      ------------------------------------------------------------------------------------------------
+
+      # Show percentages rather than raw counts
+      $ ./demographics.py -p
+             2013    2014    2015    2016    2017    2018    2019    2020    2021    2022    2023
+      ================================================================================================
+        M   77.8%   78.6%   78.4%   75.9%   71.4%   69.2%   64.0%   68.1%   65.9%   77.4%   72.0%
+        F   22.2%   21.4%   21.6%   24.1%   28.6%   30.8%   36.0%   31.9%   34.1%   22.6%   28.0%
+      ------------------------------------------------------------------------------------------------
+        B    4.8%    3.6%    5.4%    1.3%    5.5%    2.1%    2.0%    3.0%    4.4%    2.6%    0.6%
+        C   68.3%   76.8%   63.5%   67.1%   65.9%   73.3%   64.0%   68.1%   64.4%   64.5%   57.1%
+        N    1.6%    1.8%    1.4%    8.9%    5.5%    3.4%    8.7%   10.4%    9.6%    8.4%   11.9%
+        O   11.1%    8.9%   12.2%   11.4%   13.2%    6.8%    8.7%    5.2%    5.9%    7.7%    6.5%
+        S   11.1%    7.1%   13.5%   11.4%    3.3%    8.9%    6.7%    7.4%    8.1%   10.3%   16.1%
+        T    3.2%    1.8%    1.4%    0.0%    6.6%    5.5%   10.0%    5.2%    6.7%    3.9%    6.5%
+        U    0.0%    0.0%    2.7%    0.0%    0.0%    0.0%    0.0%    0.7%    0.7%    0.6%    1.2%
+      ------------------------------------------------------------------------------------------------
+
+      # Show only gender percentages for the years 2021, 2022, and 2023 (with explicit URL)
+      $ ./demographics.py -y 2021,2022,2023 -E -p https://yld.me/raw/bWhu
+             2021    2022    2023
+      ================================
+        M   65.9%   77.4%   72.0%
+        F   34.1%   22.6%   28.0%
+      --------------------------------
+
+  <div class="alert alert-warning" markdown="1">
+  #### <i class="fa fa-warning"></i> Spacing and Formatting
+
+  Note, to pass the provided tests, you must match the spacing and formatting
+  **exactly**.  Only use **spaces** to align data (**no `\t`) and make sure you
+  have **no trailing whitespace**.
+
+  Formatting **hints** are provided in the **docstrings** provided in the
+  **skeleton code**.
+
+  </div>
+
+  #### Skeleton Code
+
+  Here is skeleton code you can use to start your `demographics.py` script:
+
+      :::bash
+      # Download demographics.py skeleton
+      $ curl -LO https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework05/demographics.py
+
+  It should look something like this:
+
+      :::python
+      import collections
+      import os
+      import sys
+
+      import requests
+
+      # Constants
+
+      URL     = 'https://yld.me/raw/bWhu'
+      TAB     = ' '*8
+      GENDERS = ('M', 'F')
+      ETHNICS = ('B', 'C', 'N', 'O', 'S', 'T', 'U')
+
+      # Functions
+
+      def usage(status=0):
+          ''' Display usage information and exit with specified status '''
+          progname = os.path.basename(sys.argv[0])
+          print(f'''Usage: {progname} [options] [URL]
+
+          -y  YEARS   Which years to display (default: all)
+          -p          Display data as percentages.
+          -G          Do not include gender information.
+          -E          Do not include ethnic information.
+          ''')
+          sys.exit(status)
+
+      def load_demo_data(url=URL):
+          ''' Load demographics from specified URL into dictionary
+
+          >>> load_demo_data('https://yld.me/raw/ilG').keys()
+          dict_keys(['2013', '2014', '2015', '2016', '2017', '2018', '2019'])
+
+          >>> load_demo_data('https://yld.me/raw/ilG')['2013']
+          {'M': 1, 'B': 2, 'F': 1, 'TOTAL': 2}
+
+          >>> load_demo_data('https://yld.me/raw/ilG')['2019']
+          {'M': 1, 'U': 2, 'F': 1, 'TOTAL': 2}
+          '''
+          return {}
+
+      def print_demo_separator(years, char='='):
+          ''' Print demographics separator
+
+          Note: The row consists of the 8 chars for each item in years + 1.
+
+          >>> print_demo_separator(['2012', '2013'])
+          ========================
+          '''
+          print()
+
+      def print_demo_years(years):
+          ''' Print demographics years row
+
+          Note: The row is prefixed by 4 spaces and each year is right aligned to 8
+          spaces ({:>8}).
+
+          >>> print_demo_years(['2012', '2013'])
+                  2012    2013
+          '''
+          print()
+
+      def print_demo_fields(data, years, fields, percent=False):
+          ''' Print demographics information (for particular fields)
+
+          Note: The first column should be a 4-spaced field name ({:>4}), followed by
+          8-spaced right aligned data columns ({:>8}).  If `percent` is True, then
+          display a percentage ({:>7.1f}%) rather than the raw count.
+
+          >>> data  = load_demo_data('https://yld.me/raw/ilG')
+          >>> years = sorted(data.keys())
+          >>> print_demo_fields(data, years, GENDERS, False)
+            M       1       1       1       1       1       1       1
+            F       1       1       1       1       1       1       1
+          '''
+          print()
+
+      def print_demo_data(data, years=None, percent=False, gender=True, ethnic=True):
+          ''' Print demographics data for the specified years and attributes '''
+          pass
+
+      def print_demo_gender(data, years, percent=False):
+          ''' Print demographics gender information '''
+          print_demo_fields(data, years, GENDERS, percent)
+          print_demo_separator(years, '-')
+
+      def print_demo_ethnic(data, years, percent=False):
+          ''' Print demographics ethnic information '''
+          print_demo_fields(data, years, ETHNICS, percent)
+          print_demo_separator(years, '-')
+
+      def main():
+          ''' Parse command line arguments, load data from url, and then print
+          demographic data. '''
+          arguments = sys.argv[1:]
+          url       = URL
+          years     = None
+          gender    = True
+          ethnic    = True
+          percent   = False
+
+      # Main Execution
+
+      if __name__ == '__main__':
+          main()
+
+  <div class="alert alert-success" markdown="1">
+  #### <i class="fa fa-lightbulb-o"></i> Hints
+
+  - Read the `TODO` comments carefully.  **DO NOT REMOVE THE [doctests]**!
+
+  - `load_demo_data`: To fetch the [demographic data], you can use the
+    [requests.get] method.  You can then access the raw data via the `text`
+    property of the object returned by [requests.get].  You will then need to
+    organize the [CSV] data into a [dictionary] of the following format:
+
+          :::text
+          {"year": {"gender": count, "ethnic": count, "TOTAL": count}}
+
+  - `print_demo_separator`: To display a separator line, this function should
+    print 8 `char`s for each `year + 1`.  Consider using string multiplication:
+
+          :::python
+          print(' '*8)  # Prints 8 spaces
+
+  - `print_demo_years`: To display the years, this function should use the
+    start with a string with `4` spaces and then concatenate to this string
+    each year formatted so it is right-aligned to `8` spaces.  You can
+    accomplish alignment by doing the following:
+
+          :::python
+          # Print the value of variable aligned to the right and taking up at least 8 spaces
+          print(f'{variable:>8}')
+
+  - `print_demo_fields`: To display all the rows for a given list of `fields`,
+    this function should build a row of text column by column.  Special care
+    must be taken to display percentages versus raw counts.
+
+  - `print_demo_data`: To display the table of data, this function should call
+    the `print_demo_years` and `print_demo_separator` functions, followed by
+    the `print_demo_gender` and `print_demo_ethnic` functions if necessary.
+
+  - `print_demo_gender`: This function simply calls the `print_demo_fields` and
+    `print_demo_separator` functions and is provided to you.
+
+  - `print_demo_ethnic`: This function simply calls the `print_demo_fields` and
+    `print_demo_separator` functions and is provided to you.
+
+  </div>
+
+  <div class="alert alert-warning" markdown="1">
+  #### <i class="fa fa-gears"></i> Iterative and incremental development
+
+  Do not try to implement everything at once. Instead, approach this activity
+  with the [iterative and incremental
+  development](https://en.wikipedia.org/wiki/Iterative_and_incremental_development)
+  mindset and slowly build pieces of your application one feature at a time:
+
+  1. Parse the program arguments.
+
+  2. Fetch the data from the specified **URL** and organize into a
+  [dictionary].
+
+  3. Write the table header.
+
+  4. Write one table row based on a field.
+
+  **Remember** that the goal at the end of each iteration is that you have a
+  **working** program that successfully implements all of the features up to
+  that point.
+
+  Focus on **one thing at a time** and feel free to write small **test code**
+  to try things out.
+
+  </div>
+
+  ### Task 2: `test_demographics.sh`
+
+  To aid you in testing the `demographics.py` script, we have provided you with
+  `test_demographics.sh`, which you can use as follows:
+
+      :::bash
+      $ ./test_demographics.sh
+      Testing demographics.py ...
+         Doctests                                 ... 1.00 / 1.00
+         Bad arguments                            ... Success
+         -h                                       ... Success
+         No arguments                             ... Success
+         bWhu                                     ... Success
+         bWhu -y 2013                             ... Success
+         bWhu -y 2023                             ... Success
+         bWhu -y 2017,2021,2019                   ... Success
+         bWhu -p                                  ... Success
+         bWhu -G                                  ... Success
+         bWhu -E                                  ... Success
+         ilG                                      ... Success
+         ilG -y 2016 -p                           ... Success
+         ilG -y 2016 -p -E                        ... Success
+         ilG -y 2016 -p -E -G                     ... Success
+
+         Score 7.00
+
+  [Ramzi]:  http://www3.nd.edu/~rbualuan/personal.html
+  [University of Notre Dame]:   https://www.nd.edu
+
+  ## Guru Point (1 Point)
+
+  For extra credit, you are to visualize the CSE demographics data above as
+  graphical plots using [Python] and [matplotlib] inside a [Jupyter] notebook.
+  You should produce graphs like these:
+
+  <div class="thumbnail">
+      <img src="static/img/gender-2020.png">
+  </div>
+
+  <div class="thumbnail">
+      <img src="static/img/ethnic-2020.png">
+  </div>
+
+  To run [Jupyter] on the **student machines**:, you can use the following command:
+
+      :::bash
+      $ jupyter-notebook-3.9 --ip studentXX.cse.nd.edu --port 9000 --no-browser
+
+  Replace `studentXX.cse.nd.edu` with the name of the student machine you are
+  on.  Also, you may need to change the port to something else between `9000` -
+  `9999`.
+
+  <div class="alert alert-info" markdown="1">
+  #### <i class="fa fa-check"></i> Verification
+
+  To get credit for this Guru Point, show your [Jupyter] notebook with the
+  graphical plots to the instructor or a TA to verify. You have up until a week
+  **after** this assignment is due to verify your Guru Point.
+
+  </div>
+
+  <div class="alert alert-success" markdown="1">
+  #### <i class="fa fa-calendar"></i> Self-Service Extension
+
+  Remember that you can always **forgo** this Guru Point for **two extra days**
+  to do the homework.  That is, if you need an extension, you can simply skip
+  the Guru Point and you will automatically have until Monday to complete the
+  assignment for full credit.
+
+  Just leave a note on your **Merge Request** of your intensions.
+
+  </div>
+
+  [Jupyter]: https://jupyter.org/
+  [matplotlib]: https://matplotlib.org/
+
+  ## Submission
+
+  To submit your assignment, please commit your work to the `homework05` folder
+  of your `homework05` branch in your **assignments** [GitHub] repository.
+  Your `homework04` folder should only contain the following files:
+
+  - `Makefile`
+  - `demographics.py`
+  - `reddit.py`
+
+  **Note**: You do not need to commit the test scripts because the `Makefile`
+  automatically downloads them.
+
+      :::bash
+      #--------------------------------------------------
+      # BE SURE TO DO THE PREPARATION STEPS IN ACTIVITY 0
+      #--------------------------------------------------
+
+      $ cd homework05                           # Go to Homework 05 directory
+      ...
+      $ $EDITOR reddit.py                       # Edit script
+      $ git add reddit.py                       # Mark changes for commit
+      $ git commit -m "homework05: activity 1"  # Record changes
+      ...
+      $ $EDITOR demographics.py                 # Edit script
+      $ git add demographics.py                 # Mark changes for commit
+      $ git commit -m "homework05: activity 2"  # Record changes
+      ...
+      $ git push -u origin homework05           # Push branch to GitHub
+
+  <div class="alert alert-danger" markdown="1">
+  #### <i class="fa fa-github"></i> Merge Request
+  Remember to create a **Pull Request** and assign the appropriate TA from the
+  [Reading 06 TA List].
+
+  **DO NOT MERGE** your own **Pull Request**.  The TAs use open **Pull
+  Requests** to keep track of which assignments to grade.  Closing them
+  yourself will cause a delay in grading and confuse the TAs.
+  </div>
+
+  [Markdown]:   https://daringfireball.net/projects/markdown/
+  [git]:    https://git-scm.com/
+  [clone]:  https://git-scm.com/docs/git-clone
+  [commit]: https://git-scm.com/docs/git-commit
+  [push]:   https://git-scm.com/docs/git-push
+  [branching]:   https://git-scm.com/docs/git-branch
+  [code review]: https://en.wikipedia.org/wiki/Code_review
+  [GitHub]: https://github.com
+  [Reading 06 TA List]: reading06_tas.html
+  [Reading 06]: reading06.html
+  [is.gd]: https://is.gd/
+  [doctests]: https://docs.python.org/3/library/doctest.html

@@ -170,7 +170,7 @@
         topics:         JSON
       
       - date:           Sat 03/20
-        topics:         CSE Demographics and Reddit
+        topics:         Reddit and CSE Demographics
         assignment:     Homework 05
 
 - name:     "Functional Programming"
