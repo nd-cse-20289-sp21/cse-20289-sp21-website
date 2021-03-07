@@ -145,7 +145,7 @@ body:       |
 
       :::bash
       # Download rpn.py skeleton
-      $ curl -LO https://github.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/blob/master/homework04/rpn.py
+      $ curl -LO https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework04/rpn.py
 
   It should look something like this:
 
@@ -392,7 +392,7 @@ body:       |
 
       :::bash
       # Download unique.py skeleton
-      $ curl -LO https://github.com/nd-cse-20289-sp20/cse-20289-sp20-assignments/raw/master/homework04/unique.py
+      $ curl -LO https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework04/unique.py
 
   It should look something like this:
 
