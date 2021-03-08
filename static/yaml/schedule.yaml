@@ -138,14 +138,16 @@
 - name:     "Python Scripting"
   days:
       - date:           Mon 03/08
-        topics:         I/O, Strings, Lists
+        topics:         Functions, Doctests, Lists
         assignment:     Reading 05
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1k2pQpGCnx0sxYcOA37qeGFsKrCjDZJ89eGPYlpoSp44/edit?usp=sharing
+          - name:       Panopto
+            link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=a26c0951-ecae-4149-994a-ace5013f2506
 
       - date:           Wed 03/10
-        topics:         Dicts, Sets
+        topics:         Strings, Dictionaries
 
       - date:           Fri 03/12
         topics:         Testing
