@@ -11,7 +11,7 @@
     },
     "q02": {
         "type": "blank",
-        "question": "\n<p>In <tt>rpn.py</tt>, you used a Python <tt>list</tt> as a <b>stack</b>.\nGiven a <tt>list</tt> variable named <tt>s</tt>, how would you perform the\nfollowing <b>stack</b> operations:</p>\n\n<ol>\n    <li>Get the number of items in the <b>stack</b>: ____</li>\n    <li>Access the top of the <b>stack</b>: ____</li>\n    <li>Push a <tt>value</tt> onto the <b>stack</b>: ____</li>\n    <li>Pop an element from the <b>stack</b>: ____</li>\n</ol>\n"
+        "question": "\n<p>In <tt>rpn.py</tt>, you used a Python <tt>list</tt> as a <b>stack</b>.\nGiven a <tt>list</tt> variable named <tt>s</tt>, how would you perform the\nfollowing <b>stack</b> operations:</p>\n\n<ol>\n    <li>Access the top of the <b>stack</b>: ____</li>\n    <li>Get the number of items in the <b>stack</b>: ____</li>\n    <li>Push a <tt>value</tt> onto the <b>stack</b>: ____</li>\n    <li>Pop an element from the <b>stack</b>: ____</li>\n</ol>\n"
     },
     "q03": {
         "type": "blank",
