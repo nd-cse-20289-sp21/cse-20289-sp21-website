@@ -138,14 +138,14 @@
 - name:     "Python Scripting"
   days:
       - date:           Mon 03/08
-        topics:         I/O, Strings
+        topics:         I/O, Strings, Lists
+        assignment:     Reading 05
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1k2pQpGCnx0sxYcOA37qeGFsKrCjDZJ89eGPYlpoSp44/edit?usp=sharing
 
       - date:           Wed 03/10
-        topics:         Lists, Dicts, Sets
-        assignment:     Reading 05
+        topics:         Dicts, Sets
 
       - date:           Fri 03/12
         topics:         Testing
