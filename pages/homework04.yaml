@@ -280,6 +280,12 @@ body:       |
           Note 1: Must check if stack has enough operands
           Note 2: Must check if conversion is successful
 
+      Here is a diagram that shows how you can use a [stack] to evaluate: `5 1 2 + 4 * + 3 -`:
+
+      <div class="thumbnail">
+      <img src="static/img/homework04-rpn.png" class="img-responsive">
+      </div>
+
   - `main` parses the command line arguments and then evaluates each [RPN]
     expression from standard input and displays the result.
 
