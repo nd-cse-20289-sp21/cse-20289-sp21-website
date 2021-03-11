@@ -838,8 +838,9 @@ body:       |
   #### <i class="fa fa-check"></i> Verification
 
   To get credit for this Guru Point, show your [Jupyter] notebook with the
-  graphical plots to the instructor or a TA to verify. You have up until a week
-  **after** this assignment is due to verify your Guru Point.
+  graphical plots to the instructor or a TA to verify (or attached a video /
+  screenshot to your **Pull Request**). You have up until a week **after** this
+  assignment is due to verify your Guru Point.
 
   </div>
 
@@ -851,7 +852,7 @@ body:       |
   the Guru Point and you will automatically have until Monday to complete the
   assignment for full credit.
 
-  Just leave a note on your **Merge Request** of your intensions.
+  Just leave a note on your **Pull Request** of your intensions.
 
   </div>
 
@@ -889,7 +890,7 @@ body:       |
       $ git push -u origin homework05           # Push branch to GitHub
 
   <div class="alert alert-danger" markdown="1">
-  #### <i class="fa fa-github"></i> Merge Request
+  #### <i class="fa fa-github"></i> Pull Request
   Remember to create a **Pull Request** and assign the appropriate TA from the
   [Reading 06 TA List].
 
