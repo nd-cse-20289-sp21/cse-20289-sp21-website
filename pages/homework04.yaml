@@ -640,7 +640,7 @@ body:       |
   #### <i class="fa fa-github"></i> Pull Request
 
   Remember to create a **Pull Request** and assign the appropriate TA from the
-  [Reading 04 TA List].
+  [Reading 05 TA List].
 
   **DO NOT MERGE** your own **Pull Request**.  The TAs use open **Pull
   Requests** to keep track of which assignments to grade.  Closing them
@@ -660,7 +660,7 @@ body:       |
   [branch]: https://git-scm.com/docs/git-branch
   [add]:    https://git-scm.com/docs/git-add
   [Reading 01]:         reading01.html
-  [Reading 04 TA List]: reading04_tas.html
+  [Reading 05 TA List]: reading05_tas.html
   [curl]:   http://man7.org/linux/man-pages/man1/curl.1.html
   [wget]:   http://man7.org/linux/man-pages/man1/wget.1.html
   [JSON]:   https://json.org/
