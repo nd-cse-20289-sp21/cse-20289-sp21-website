@@ -1,0 +1,280 @@
+title:      "Reading 07: Functional Programming"
+icon:       fa-book
+navigation: []
+internal:
+external:
+body:       |
+
+  **Everyone**:
+
+  Next week, we will explore a new programming paradigm called [functional
+  programming], which, if you look closely, is similar to the [Unix
+  Philosophy]: By decomposing data processing problems into small functions
+  that **work together** to process data without side-effects, we can expose
+  opportunities for [concurrency] and [parallelism] to build powerful
+  **abstractions** such as [MapReduce].
+
+  <div class="alert alert-info" markdown="1">
+  #### <i class="fa fa-search"></i> TL;DR
+
+  The focus of this reading is to introduce you to [functional programming] in
+  [Python].
+
+  </div>
+
+  <img src="static/img/python.png" class="pull-right">
+
+  ## Readings
+
+  The readings for this week are:
+
+  1. [Introduction to Functional Programming in Python](https://www.dataquest.io/blog/introduction-functional-programming-python/)
+
+  2. [Iterators, generator expressions and generators](http://www.scipy-lectures.org/advanced/advanced_python/index.html)
+
+  ### Optional Resources
+
+  Here are some additional resources:
+
+  1. [Functional Programming HOWTO](https://docs.python.org/3/howto/functional.html)
+
+  2. [A practical introduction to functional programming](https://maryrosecook.com/blog/post/a-practical-introduction-to-functional-programming)
+
+  3. [Real Python](https://realpython.com/)
+
+      - [Functional Programming in Python](https://realpython.com/courses/functional-programming-python/)
+
+      - [When to Use a List Comprehension in Python](https://realpython.com/list-comprehension-python/)
+
+      - [How to Use Generators and yield in Python](https://realpython.com/introduction-to-python-generators/)
+
+  [The Linux Command Line]:     http://linuxcommand.org/tlcl.php
+  [Unix]:                       https://en.wikipedia.org/wiki/Unix
+  [Unix Shell]:                 https://en.wikipedia.org/wiki/Unix_shell
+  [Git]:                        https://git-scm.com/
+  [Bash]:                       https://www.gnu.org/software/bash/
+  [shell scripting]:            https://en.wikipedia.org/wiki/Shell_script
+  [filters]:                    https://en.wikipedia.org/wiki/Filter_(software)#Unix
+  [pipelines]:                  https://en.wikipedia.org/wiki/Pipeline_(Unix)
+  [Unix Philosophy]:            https://en.wikipedia.org/wiki/Unix_philosophy
+  [functional programming]:     https://en.wikipedia.org/wiki/Functional_programming
+  [data structures]:            https://en.wikipedia.org/wiki/Data_structure
+  [Python]:                     https://www.python.org/
+  [list]:                       https://docs.python.org/3/library/stdtypes.html#sequence-types-list-tuple-range
+  [dict]:                       https://docs.python.org/3/library/stdtypes.html#mapping-types-dict
+  [MapReduce]:                  https://research.google/pubs/pub62/
+  [concurrency]:                https://en.wikipedia.org/wiki/Concurrency_(computer_science)
+  [parallelism]:                https://en.wikipedia.org/wiki/Parallel_computing
+
+  ## Quiz
+
+  This week the reading is split into two sections: the first part is a short
+  [dredd] quiz, while the second part involves three short [Python] scripts:
+  `evens_fp.py`, `evens_lc.py`, and `evens_gr.py`.
+
+  To test these scripts, you will need to download the [Makefile] and test
+  scripts:
+
+      :::bash
+      $ git checkout master                 # Make sure we are in master branch
+      $ git pull --rebase                   # Make sure we are up-to-date with GitHub
+
+      $ git checkout -b reading07           # Create reading07 branch and check it out
+
+      $ cd reading07                        # Go into reading07 folder
+
+      # Download Reading 07 Makefile
+      $ curl -LO https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/reading07/Makefile
+
+      # Execute tests (and download them)
+      $ make
+
+  ### Questions
+
+  Record the answers to the following [Reading 07 Quiz] questions in your
+  `reading07` branch:
+
+  <div id="quiz-questions"></div>
+
+  <div id="quiz-responses"></div>
+
+  <script src="static/js/dredd-quiz.js"></script>
+
+  <script>
+  loadQuiz('static/json/reading07.json');
+  </script>
+
+  <pre style="display: none;" id="dr-container" class="codehilite"><code id="dredd-response"></code></pre>
+
+  ### Scripts
+
+  Given the following [Python] script, `evens.py`:
+
+      :::python
+      #!/usr/bin/env python3
+
+      import sys
+
+      results = []
+      for number in sys.stdin:
+          number = number.strip()
+          if int(number) % 2 == 0:
+              results.append(number)
+
+      print(' '.join(results))
+
+
+  1. Create a second version of this script called `evens_fp.py` that
+  re-implements the original `evens.py` script in **one line** using [map],
+  [filter], and [lambda]:
+
+          :::python
+          #!/usr/bin/env python3
+
+          import sys
+
+          print(' '.join(
+              # TODO: One-line expression with map, filter, lambda
+          ))
+
+  2. Create a third version of this script called `evens_lc.py` that
+  re-implements the original `evens.py` script in **one line**
+  using [list comprehensions]:
+
+          :::python
+          #!/usr/bin/env python3
+
+          import sys
+
+          print(' '.join(
+              # TODO: One-line expression with list comprehension
+          ))
+
+  3. Create a fourth version of this script called `evens_gr.py` that
+  re-implements the original `evens.py` script by creating a [generator] function
+  using the [yield] keyword.
+
+          :::python
+          #!/usr/bin/env python3
+
+          import sys
+
+          def evens(stream):
+              # TODO: Implementation that uses yield statement
+
+          print(' '.join(evens(sys.stdin)))
+
+  To test your scripts manually, you should be able to reproduce the following output:
+
+      ::bash
+      $ seq 1 10 | ./evens_fp.py
+      2 4 6 8 10
+
+      $ seq 1 10 | ./evens_lc.py
+      2 4 6 8 10
+
+      $ seq 1 10 | ./evens_gr.py
+      2 4 6 8 10
+
+  [map]:    https://docs.python.org/3/library/functions.html#map
+  [filter]: https://docs.python.org/3/library/functions.html#filter
+  [lambda]: https://docs.python.org/3/tutorial/controlflow.html#lambda-expressions
+  [list comprehensions]: https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions
+  [generator]:  https://docs.python.org/3/howto/functional.html#generators
+  [yield]:      https://docs.python.org/3/reference/simple_stmts.html#yield
+
+  ## Submission
+
+  To submit you work, follow the same process outlined in [Reading 01]:
+
+      :::bash
+      #--------------------------------------------------
+      # BE SURE TO DO THE PREPARATION STEPS ABOVE
+      #--------------------------------------------------
+
+      $ cd reading07                        # Go into reading07 folder
+
+      $ $EDITOR answers.json                # Edit your answers.json file
+
+      $ ../.scripts/check.py                # Check reading07 quiz
+      Checking reading07 quiz ...
+            Q1 1.00
+         Score 1.00 / 1.00
+        Status Success
+
+      $ git add answers.json                # Add answers.json to staging area
+      $ git commit -m "Reading 07: Quiz"    # Commit work
+
+      $ $EDITOR evens_fp.py                 # Edit your evens_fp.py file
+      $ $EDITOR evens_lc.py                 # Edit your evens_lc.py file
+      $ $EDITOR evens_gr.py                 # Edit your evens_gr.py file
+
+      $ make                                # Test all scripts
+      Testing evens_fp.py ...
+       evens_fp.py on seq 1 10                  ... Success
+       evens_fp.py on seq 10 20                 ... Success
+       evens_fp.py on seq 1 1000000 (count)     ... Success
+       evens_fp.py no list()                    ... Success
+       evens_fp.py structure                    ... Success
+
+         Score 1.00
+
+      Testing evens_lc.py ...
+       evens_lc.py on seq 1 10                  ... Success
+       evens_lc.py on seq 10 20                 ... Success
+       evens_lc.py on seq 1 1000000 (count)     ... Success
+       evens_lc.py no list()                    ... Success
+       evens_lc.py structure                    ... Success
+         Score 1.00
+
+      Testing evens_gr.py ...
+       evens_gr.py on seq 1 10                  ... Success
+       evens_gr.py on seq 10 20                 ... Success
+       evens_gr.py on seq 1 1000000 (count)     ... Success
+       evens_gr.py no list()                    ... Success
+       evens_gr.py structure                    ... Success
+         Score 1.00
+
+      $ git add Makefile                    # Add Makefile to staging area
+      $ git add evens_fp.py                 # Add evens_fp.py to staging area
+      $ git add evens_lc.py                 # Add evens_lc.py to staging area
+      $ git add evens_gr.py                 # Add evens_gr.py to staging area
+      $ git commit -m "Reading 07: Scripts" # Commit work
+
+      $ git push -u origin reading07        # Push branch to GitHub
+
+  <div class="alert alert-danger" markdown="1">
+  #### <i class="fa fa-github"></i> Pull Request
+  Remember to create a **Pull Request** and assign the appropriate TA from the
+  [Reading 07 TA List].
+
+  **DO NOT MERGE** your own **Pull Request**.  The TAs use open **Pull Requests**
+  to keep track of which assignments to grade.  Closing them yourself will
+  cause a delay in grading and confuse the TAs.
+  </div>
+
+  [re.findall]: https://docs.python.org/3/library/re.html#re.findall
+  [requests]:   https://requests.readthedocs.io/en/master/
+  [Python]:                     https://www.python.org/
+  [lists]:                      https://docs.python.org/3/library/stdtypes.html#sequence-types-list-tuple-range
+  [dictionaries]:               https://docs.python.org/3/library/stdtypes.html#mapping-types-dict
+  [Cooperative Computing Lab]: http://ccl.cse.nd.edu/
+
+  [Markdown]:       https://daringfireball.net/projects/markdown/
+  [git]:            https://git-scm.com/
+  [clone]:          https://git-scm.com/docs/git-clone
+  [commit]:         https://git-scm.com/docs/git-commit
+  [push]:           https://git-scm.com/docs/git-push
+  [GitHub]:         https://github.com
+  [Reading 01]:     reading01.html
+  [Reading 07 TA List]: reading07_tas.html
+  [dredd]:          https://dredd.h4x0r.space
+  [Reading 07 Quiz]: static/json/reading07.json
+
+  [The Linux Command Line]:     http://linuxcommand.org/tlcl.php
+  [Unix]:                       https://en.wikipedia.org/wiki/Unix
+  [Unix Shell]:                 https://en.wikipedia.org/wiki/Unix_shell
+  [Git]:                        https://git-scm.com/
+  [Bash]:                       https://www.gnu.org/software/bash/
+  [shell scripting]:            https://en.wikipedia.org/wiki/Shell_script
+  [Makefile]:                   https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/reading07/Makefile
