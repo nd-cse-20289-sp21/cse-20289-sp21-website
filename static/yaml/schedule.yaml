@@ -148,9 +148,12 @@
 
       - date:           Wed 03/10
         topics:         Strings, Dictionaries
+        items:
+          - name:       Panopto
+            link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=9187736b-4fc8-4db8-8a13-ace7014039f3
 
       - date:           Fri 03/12
-        topics:         Testing
+        topics:         I/O, Processes, Requests
 
       - date:           Sat 03/13
         topics:         RPN, Unique
@@ -159,7 +162,7 @@
 - name:     "Data Processing"
   days:
       - date:           Mon 03/15
-        topics:         Requests, Regular Expressions
+        topics:         Regular Expressions
         assignment:     Reading 06
         items:
           - name:       Slides
