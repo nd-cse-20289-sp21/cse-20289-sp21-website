@@ -153,7 +153,10 @@
             link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=9187736b-4fc8-4db8-8a13-ace7014039f3
 
       - date:           Fri 03/12
-        topics:         I/O, Processes, Requests
+        topics:         I/O, Processes, Requests, Regular Expressions
+        items:
+          - name:       Panopto
+            link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=e100c9c5-2196-4dd4-b4ff-ace9013c7ee6
 
       - date:           Sat 03/13
         topics:         RPN, Unique
@@ -162,17 +165,17 @@
 - name:     "Data Processing"
   days:
       - date:           Mon 03/15
-        topics:         Regular Expressions
+        topics:         CSV
         assignment:     Reading 06
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1k2pQpGCnx0sxYcOA37qeGFsKrCjDZJ89eGPYlpoSp44/edit?usp=sharing
 
       - date:           Wed 03/17
-        topics:         CSV
+        topics:         JSON
 
       - date:           Fri 03/19
-        topics:         JSON
+        topics:         Translations
       
       - date:           Sat 03/20
         topics:         Reddit and CSE Demographics
