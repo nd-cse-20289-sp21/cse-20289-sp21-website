@@ -1,0 +1,706 @@
+title:      "Homework 06: Hulk Smash"
+icon:       fa-code
+navigation: []
+internal:
+external:
+body:       |
+
+  The goal of this homework assignment is to allow you to practice using
+  [functional programming] to process data in [Python].  In this assignment,
+  you will write a script that [brute-force] attacks a large collection of
+  passwords using multiple processes.  That is, we will use [functional
+  programming] to construct a concurrent application, and then exploit this
+  [concurrency] by using multiple CPU cores to execute the program in
+  [parallel].
+
+  For this assignment, record your scripts and any responses to the following
+  activities in the in the `homework06` folder of your **assignments** GitHub
+  repository and push your work by **noon Saturday, March 27**.
+
+  [MapReduce]:  https://en.wikipedia.org/wiki/MapReduce
+  [map]:        https://docs.python.org/3/library/functions.html#map
+  [filter]:     https://docs.python.org/3/library/functions.html#filter
+  [lambda]:     https://docs.python.org/3/tutorial/controlflow.html#lambda-expressions
+  [list comprehensions]: https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions
+  [generator]:  https://docs.python.org/3/howto/functional.html#generators
+  [yield]:      https://docs.python.org/3/reference/simple_stmts.html#yield
+  [inverted index]: https://en.wikipedia.org/wiki/Inverted_index
+  [functional programming]: https://en.wikipedia.org/wiki/Functional_programming
+  [concurrency]: https://en.wikipedia.org/wiki/Concurrency_(computer_science)
+  [parallel]:   https://en.wikipedia.org/wiki/Parallel_computing
+
+  ## Activity 0: Preparation
+
+  Before starting this homework assignment, you should first perform a `git
+  pull` to retrieve any changes in your remote [GitHub] repository:
+
+      :::bash
+      $ cd path/to/repository                   # Go to assignments repository
+
+      $ git checkout master                     # Make sure we are in master branch
+
+      $ git pull --rebase                       # Get any remote changes not present locally
+
+  Next, create a new branch for this assignment:
+
+      :::bash
+      $ git checkout -b homework06              # Create homework06 branch and check it out
+
+  Once this is done, download the `Makefile` and test scripts:
+
+      :::bash
+      # Go to homework06 folder
+      $ cd homework06
+
+      # Download the Makefile
+      $ curl -LO https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework06/Makefile
+
+      # Add and commit Makefile
+      $ git add Makefile
+      $ git commit -m "homework06: Add Makefile"
+
+      # Download the test scripts
+      $ make test-scripts
+
+  <div class="alert alert-warning" markdown="1">
+  **Note**, you do not need to add and commit the test scripts since the
+  `Makefile` will automatically download them again whenever you run make.
+  </div>
+
+  <img src="static/img/hulk-smash.png" class="pull-right" style="margin-left: 10px">
+
+  You are now ready to work on the activities below.
+
+  ## Activity 1: Hulk (10 Points)
+
+  With various [password
+  leaks](https://www.wired.com/story/collection-leak-usernames-passwords-billions/)
+  being announced on a [weekly
+  basis](https://venturebeat.com/2021/03/10/exposed-admin-password-leads-to-massive-surveillance-camera-breach-at-hundreds-of-businesses/) there has
+  been a lot of discussion on [password
+  hygiene](https://lifehacker.com/how-to-create-a-strong-password-1797681069)
+  and [password
+  strength](https://www.fbi.gov/contact-us/field-offices/portland/news/press-releases/oregon-fbi-tech-tuesday-building-a-digital-defense-with-passwords).
+  There is even a website to check [have i been
+  pwned](https://haveibeenpwned.com/).
+
+  In all decent password accounting systems, the raw password is rarely stored.
+  Instead a [cryptographic hash] such as [MD5] or [SHA1] is used to record a
+  user's password digest or checksum and it is these hashes that are leaked to
+  outsiders in these all too frequent breaches.  Because these [cryptographic
+  hash] functions are generally considered [one-way functions], attackers
+  cannot directly obtain the original input password even though they know the
+  output of the [cryptographic hash].
+
+  For instance, the [MD5] digest of `goirish` is:
+
+      :::bash
+      $ printf goirish | md5sum
+      c761cc3341c91238ba735b26874572a0 -
+
+  As you can see, the string `c761cc3341c91238ba735b26874572a0` does not
+  provide an attacker any clues about the original password `goirish`.  To
+  obtain the original text, attackers often employ [various
+  techniques](https://arstechnica.com/security/2013/05/how-crackers-make-minced-meat-out-of-your-passwords/)
+  such as [brute-force cracking].
+
+  [cryptographic hash]: https://en.wikipedia.org/wiki/Cryptographic_hash_function
+  [one-way functions]:  https://en.wikipedia.org/wiki/One-way_function
+
+  ### Task 1: `hulk.py`
+
+  For the first task, you are to create `hulk.py`, which is a script that uses
+  [brute-force] to **smash** a set of [MD5] hashes:
+
+      :::text
+      $ ./hulk.py -h
+      Usage: hulk.py [-a alphabet -c CORES -l LENGTH -p PREFIX -s HASHES]
+          -a ALPHABET Alphabet to use in permutations
+          -c CORES    CPU Cores to use
+          -l LENGTH   Length of permutations
+          -p PREFIX   Prefix for all permutations
+          -s HASHES   Path of hashes file
+
+  Given an `ALPHABET` (default is `abcdefghijklmnopqrstuvwxyz0123456789`),
+  `hulk.py` will compute the [MD5] hash of every [permutation] of the
+  `ALPHABET` for the specified `LENGTH` and check if it is in the [set] of
+  `HASHES`.  If a `PREFIX` is specified, then this should be inserted before
+  each candidate [permutation].
+
+  #### Examples
+
+  For instance, suppose we had a `sample.hashes` file that contained the
+  following [MD5] checksums:
+
+      :::text
+      0cc175b9c0f1b6a831c399e269772661
+      92eb5ffee6ae2fec3ad71c777531578f
+      4a8a08f09d37b73795649038408b5f33
+      900150983cd24fb0d6963f7d28e17f72
+
+  If we executed `hulk.py` with a `LENGTH` of `1`, we should get the following
+  result:
+
+      :::text
+      $ ./hulk.py -l 1 -s sample.hashes
+      a
+      b
+      c
+
+  That is, `hulk.py` determined that three of the hashes correspond to the
+  passwords `a`, `b`, and `c`.
+
+  If we executed `hulk.py` with a `LENGTH` of `2` and a `PREFIX` of `a`, we
+  should get the following result:
+
+      :::text
+      $ ./hulk.py -l 2 -s sample.hashes -p a
+      abc
+
+  That is, `hulk.py` determined that 1 of the hashes corresponds to the
+  password `abc`.  Note, we could have achieved the same results by executing:
+
+      :::text
+      $ ./hulk.py -l 3 -s sample.hashes
+      abc
+
+  The difference is the former searches each [permutation] in the form `aXX`
+  where `X` is a letter from the `ALPHABET` due to the `PREFIX` of `a`, while
+  the latter searches each [permutation] in the form `XXX`.
+
+  Finally, if `CORES` is greater than `1` and the `LENGTH` is greater than `1`,
+  the script will use the [concurrent.futures] module to [brute-force] passwords
+  in parallel with the specified number of `CORES`:
+
+      :::text
+      $ ./hulk.py -l 1 -c 2 -s sample.hashes
+      a
+      b
+      c
+
+  #### Skeleton Code
+
+  To help you get started, the instructor has provided you with the following
+  skeleton code:
+
+      :::bash
+      # Download skeleton code
+      $ curl -LO https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework06/hulk.py
+
+  The [skeleton code] contains the following:
+
+      :::python
+      import concurrent.futures
+      import hashlib
+      import os
+      import string
+      import sys
+
+      # Constants
+
+      ALPHABET = string.ascii_lowercase + string.digits
+
+      # Functions
+
+      def usage(exit_code=0):
+          progname = os.path.basename(sys.argv[0])
+          print(f'''Usage: {progname} [-a ALPHABET -c CORES -l LENGTH -p PATH -s HASHES]
+          -a ALPHABET Alphabet to use in permutations
+          -c CORES    CPU Cores to use
+          -l LENGTH   Length of permutations
+          -p PREFIX   Prefix for all permutations
+          -s HASHES   Path of hashes file''')
+          sys.exit(exit_code)
+
+      def md5sum(s):
+          ''' Compute md5 digest for given string. '''
+          return ''
+
+      def permutations(length, alphabet=ALPHABET):
+          ''' Recursively yield all permutations of the given length using the
+          provided alphabet. '''
+          yield None
+
+      def flatten(sequence):
+          ''' Flatten sequence of iterators. '''
+          yield None
+
+      def crack(hashes, length, alphabet=ALPHABET, prefix=''):
+          ''' Return all password permutations of specified length that are in hashes
+          by sequentially trying all permutations. '''
+          return []
+
+      def whack(arguments):
+          ''' Call the crack function with the specified list of arguments '''
+          return []
+
+      def smash(hashes, length, alphabet=ALPHABET, prefix='', cores=1):
+          ''' Return all password permutations of specified length that are in hashes
+          by concurrently subsets of permutations concurrently.
+          '''
+          return []
+
+      def main():
+          arguments   = sys.argv[1:]
+          alphabet    = ALPHABET
+          cores       = 1
+          hashes_path = 'hashes.txt'
+          length      = 1
+          prefix      = ''
+
+      # Main Execution
+
+      if __name__ == '__main__':
+          main()
+
+  You are to complete the sections marked `TODO` in order to complete the
+  `hulk.py` script.
+
+  [skeleton code]: https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework06/hulk.py
+
+  <div class="alert alert-success" markdown="1">
+  #### <i class="fa fa-lightbulb-o"></i> Hints
+
+  1. For `md5sum`, you **must** compute the [MD5] hash of a string by using the
+  [hashlib] library.  To convert a [unicode] string into [bytes], you can call
+  the [str.encode] method of the string object.
+
+  2. For `permutations`, you **must** use a [recursive] algorithm to implement
+  a [generator] using the [yield] statement.  You may not use any of the
+  utilities in the [itertools] module for this function.
+
+  3. For `flatten`, you **must** use the [yield] statement to implement a
+  [generator] that takes a **sequence of iterables** and converts it into a
+  single sequence of values from the nested data.
+
+  4. For `crack`, you **must** implement the function using only [list
+  comprehensions] or [generator expressions] (you can use multiple ones).
+
+  5. For `whack`, you **must** implement the function by calling the `crack`
+  function with the provided list of arguments.
+
+  6. For `smash`, you **must** implement the function by using the `map` method
+  of the [ProcessPoolExecutor] from the [concurrent.futures] module in order to
+  take advantage of multiple CPU `cores`.
+
+      Your code should look something like this:
+
+          :::python
+          # Generator expression representing a sequence of arguments to pass
+          # to `cracker` (hashes, length, alphabet remain constant, but prefix
+          # should change for each argument tuple).
+          arguments = ((...) for ... in ...)
+
+          # Create a ProcessPoolExecutor and then apply cracker to the
+          # arguments
+          with concurrent.futures.ProcessPoolExecutor(cores) as executor:
+              ... executor.map(...)
+
+  7. You can parse the command line options as we have done in the past, or you
+  can investigate using [argparse] or [getopt].
+
+  8. You **must** use a [set] to store the collection of [MD5] hashes.
+
+  </div>
+
+  [itertools.chain.from_iterable]: https://docs.python.org/3/library/itertools.html#itertools.chain.from_iterable
+  [itertools]:      https://docs.python.org/3/library/itertools.html
+  [MD5]:            https://en.wikipedia.org/wiki/MD5
+  [SHA1]:           https://en.wikipedia.org/wiki/SHA1
+  [permutation]:    https://en.wikipedia.org/wiki/Permutation
+  [dict]:           https://docs.python.org/3/library/stdtypes.html#dict
+  [set]:            https://docs.python.org/3/library/stdtypes.html#set
+  [recursive]:      https://en.wikipedia.org/wiki/Recursion_(computer_science)
+  [hashlib]:        https://docs.python.org/3/library/hashlib.html
+  [concurrent.futures]: https://docs.python.org/3/library/concurrent.futures.html
+  [argparse]:       https://docs.python.org/3/library/argparse.html#module-argparse
+  [getopt]:         https://docs.python.org/3/library/getopt.html
+  [ProcessPoolExecutor]: https://docs.python.org/3/library/concurrent.futures.html#concurrent.futures.ProcessPoolExecutor
+  [generator expressions]: https://www.python.org/dev/peps/pep-0289/
+  [unicode]:        https://docs.python.org/3/howto/unicode.html#converting-to-bytes
+  [bytes]:          https://docs.python.org/3/library/stdtypes.html#binary-sequence-types-bytes-bytearray-memoryview
+  [str.encode]:     https://docs.python.org/3/library/stdtypes.html#str.encode
+
+  ### Task 2: Testing
+
+  To aid you in testing the `hulk.py` script, we are providing you with
+  `test_hulk.sh`, which you can use as follows:
+
+      :::bash
+      # Download Makefile
+      $ curl -LO https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework06/Makefile
+
+      # Download test script, hashes.txt, and run test
+      $ make
+
+      # Run test script manually
+      $ ./test_hulk.sh
+      Testing hulk.py ...
+         Unit Tests                               ... 2.00 / 2.00
+         Usage                                    ... Success
+         Hulk LENGTH 1                            ... Success
+         Hulk LENGTH 1 (ALPHABET: abc)            ... Success
+         Hulk LENGTH 2                            ... Success
+         Hulk LENGTH 2 (ALPHABET: uty)            ... Success
+         Hulk LENGTH 3                            ... Success
+         Hulk LENGTH 3 (ALPHABET: abc)            ... Success
+         Hulk LENGTH 4                            ... Success
+         Hulk LENGTH 4 (ALPHABET: abcd)           ... Success
+         Hulk LENGTH 2 (CORES: 2)                 ... Success
+         Hulk LENGTH 3 (CORES: 2)                 ... Success
+         Hulk LENGTH 4 (CORES: 2)                 ... Success
+         Hulk LENGTH 1 (PREFIX: a)                ... Success
+         Hulk LENGTH 1 (PREFIX: 1, CORES: 2)      ... Success
+         Hulk LENGTH 2 (PREFIX: a)                ... Success
+         Hulk LENGTH 2 (PREFIX: a, CORES: 2)      ... Success
+         Hulk LENGTH 3 (PREFIX: a)                ... Success
+         Hulk LENGTH 3 (PREFIX: a, CORES: 2)      ... Success
+
+         Score 10.00
+
+  <div class="alert alert-warning" markdown="1">
+  #### <i class="fa fa-clock-o"></i> Timeout Failures
+
+  If you fail a function test but the output appears correct, it is mostly
+  likely that your code is **too slow**.  In addition to checking the output of
+  your commands, the `test_hulk.sh` uses the `timeout` command to ensure your
+  program does not run for too long.
+
+  Carefully reconsider the **data structures** and **functional programming**
+  methods you employed if your code is timing out.
+
+  </div>
+
+  In addition to the test script, there is also `hulk_test.py`, which contains
+  [unit tests] for most of the functions you need to implement.  You can
+  execute these tests manually as follows:
+
+      :::bash
+      $ ./hulk_test.py -v
+      test_00_md5sum (__main__.HulkTestCase) ... ok
+      test_01_permutations (__main__.HulkTestCase) ... ok
+      test_02_flatten (__main__.HulkTestCase) ... ok
+      test_03_crack (__main__.HulkTestCase) ... ok
+      test_04_whack (__main__.HulkTestCase) ... ok
+      test_05_smash (__main__.HulkTestCase) ... ok
+
+      ----------------------------------------------------------------------
+      Ran 6 tests in 0.168s
+
+      OK
+
+  This will test each of the five functions individually and thus allow you to
+  build and test your program one function at a time.
+
+  <div class="alert alert-success" markdown="1">
+  #### <i class="fa fa-code"></i> Incremental Development
+
+  Do not try to write the whole program at once.  Implement **one feature at a
+  time** and **verify** that it works.  The [unit tests] are provided to allow
+  you to test individual components, while the `test_hulk.sh` is given to
+  enable you to test the completed solution.
+
+  </div>
+
+  [unit tests]: https://en.wikipedia.org/wiki/Unit_testing
+
+  ## Activity 2: Deadpool (1 Point)
+
+  Once you are confident that your program is correct, you are to use `hulk.py`
+  to [brute-force] crack set of `12038` [password hashes] found at:
+
+      https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework06/hashes.txt
+
+  To keep track of who has cracked the most passwords, you can submit your set
+  of discovered passwords to the [deadpool]:
+
+      :::bash
+      $ cat PASSWORDS | curl --data-binary @- http://xavier.h4x0r.space:9111/NETID
+
+  Replace `PASSWORDS` with the name of the file with your passwords and `NETID`
+  with your Notre Dame NetID:
+
+      :::bash
+      # Generate passwords of length 1 and store them in passwords.txt
+      $ ./hulk.py -l 1 | tee -a passwords.txt
+      ...
+
+      # Upload passwords.txt
+      $ cat passwords.txt | curl --data-binary @- http://xavier.h4x0r.space:9111/pbui
+      {"timestamp": 1488333215.967784, "passwords": 36}
+
+  For full credit, you **must** crack at least `8000` passwords.  There are
+  `12038` total hashes.  Each password is no more than `8` characters long and
+  only consists of lowercase letters and numeric digits.
+
+  <div class="alert alert-warning" markdown="1">
+  #### <i class="fa fa-warning"></i> Chegg Passwords
+
+  Many of the passwords in the [password hashes] collection were pulled from
+  the recent [Chegg password leak] as recorded on [Hashes.org].
+
+  </div>
+
+  [Chegg password leak]: https://ndsmcobserver.com/2019/10/saint-marys-email-addresses-appear-in-credential-dump-following-chegg-data-breach/
+  [Hashes.org]: https://hashes.org/leaks.php?id=2763
+
+  <div class="alert alert-info" markdown="1">
+  #### <i class="fa fa-bolt"></i> Parallel Universe
+
+  To speed up your computations, consider using different values for
+  `CORES`: <br><br>
+
+      :::bash
+      $ ./hulk.py -l 6 -c 2  # Use 2 processes
+
+  To find out how many cores a Linux machine has, you can do:<br><br>
+
+      :::bash
+      $ lscpu
+
+  </div>
+
+  <div class="alert alert-danger" markdown="1">
+  #### <i class="fa fa-handshake-o"></i> Shared Resources
+
+  Remember that you need to **share** the **student** machines with all the
+  other students in class.
+
+  **Therefore, do not run `hulk.py` on lengths larger than `6`...  otherwise
+  you will take up significant CPU resources away from other students for long
+  periods of time.**
+
+  If you want to crack passwords of length greater than `6`, you will need to
+  run [hashcat] on your own machines as explained in the **Guru Point**.
+
+  </div>
+
+  ## Activity 3: Quiz (1 Point)
+
+  Once you have completed all the activities above, you are to complete the
+  following **reflection quiz**:
+
+  <div id="quiz-questions"></div>
+
+  <div id="quiz-responses"></div>
+
+  <script src="static/js/dredd-quiz.js"></script>
+  <script>
+  loadQuiz('static/json/homework06.json');
+  </script>
+
+  <pre style="display: none;" id="dr-container" class="codehilite"><code id="dredd-response"></code></pre>
+
+  As with [Reading 01], you will need to store your answers in a
+  `homework06/answers.json` file.  You can use the form above to generate the
+  contents of this file, or you can write the [JSON] by hand.
+
+  To test your quiz, you can use the `check.py` script:
+
+      :::bash
+      $ ../.scripts/check.py
+      Checking homework06 quiz ...
+           Q01 0.50
+           Q02 0.30
+           Q03 0.20
+         Score 1.00 / 1.00
+        Status Success
+
+  [Python]:                 https://www.python.org/
+  [password hashes]:        https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework06/hashes.txt
+  [brute-force]:            https://en.wikipedia.org/wiki/Brute-force_attack
+  [brute-force cracking]:   https://en.wikipedia.org/wiki/Password_cracking
+  [deadpool]:               http://xavier.h4x0r.space:9111/
+
+  ## Guru Point (2 Points)
+
+  This week there are two different opportunities for extra credit.  You may
+  choose to do one, both, or none of them.
+
+  <div class="alert alert-success" markdown="1">
+  #### <i class="fa fa-calendar"></i> Self-Service Extension
+
+  Remember that you can always **forgo** this Guru Point for **two extra days**
+  to do the homework.  That is, if you need an extension, you can simply skip
+  the Guru Point and you will automatically have until Monday to complete the
+  assignment for full credit.
+
+  Just leave a note on your **Pull Request** of your intensions.
+
+  </div>
+
+  <img src="static/img/hashcat-logo.jpg" class="pull-right" style="margin-left: 10px">
+
+  ### Hash Cat
+
+  As can be seen, cracking passwords using [brute-force] is extremely slow,
+  especially on [CPUs].  For extra credit, you are to download and use the
+  [hashcat] program **on your own computer**:
+
+  > [hashcat] is the world's fastest and most advanced password recovery
+  utility, supporting five unique modes of attack for over 200 highly-optimized
+  hashing algorithms. hashcat currently supports CPUs, GPUs, and other hardware
+  accelerators on Linux, Windows, and macOS, and has facilities to help enable
+  distributed password cracking.
+
+  The secret to [hashcat]'s speed is that it can take advantage of your [GPU]
+  (aka. your video card), which turns out to be a massively parallel computing
+  system (basically a commodity supercomputer).  You will learn more about the
+  [GPU]'s power in your **Computer Architecture** class, but for this extra
+  credit, all you need to do is take advantage of it by using [hashcat].
+
+  <div class="alert alert-danger" markdown="1">
+  #### <i class="fa fa-tachometer"></i> Discrete Video Card
+
+  For optimal performance, your computer should use a **discrete** video card
+  from [Nvidia] or [AMD].  Moreover, you will need to have the proper drivers
+  and [OpenCL] software installed for [hashcat] to take advantage of your
+  [GPU].
+
+  </div>
+
+  Once you have downloaded [hashcat] **to your own computer** and the [password
+  hashes] file for this assignment, you should use [hashcat] to crack passwords
+  of length `7` and `8`:
+
+      :::bash
+      # Brute-force MD5 hashed passwords of length 7 with lowercase letters and digits
+      $ hashcat -a 3 -m 0 -1 ?l?d -o passwords.7 hashes.txt ?1?1?1?1?1?1?1
+
+      # Brute-force MD5 hashed passwords of length 8 with lowercase letters and digits
+      $ hashcat -a 3 -m 0 -1 ?l?d -o passwords.8 hashes.txt ?1?1?1?1?1?1?1?1
+
+  <div class="alert alert-success" markdown="1">
+  **Note**: for **macOS** users, you may wish to install [hashcat] via
+  [Homebrew].
+  </div>
+
+  <div class="alert alert-warning" markdown="1">
+  #### <i class="fa fa-clock-o"></i> This Might Take A While
+
+  Even though a [GPU] is basically a commodity supercomputer, cracking
+  passwords using [brute-force] still takes time.  With a **discrete** [Nvidia]
+  **GTX 980** in a desktop machine, cracking all passwords of length `8` took
+  about **20 minutes**.  On the other hand, with an **integrated** [Intel] 620
+  in a laptop, cracking all passwords of length `8` had a time estimate of
+  about `2` days.
+
+  This is still dramatically better than using say **hundreds** of machines for
+  **hours** to crack passwords (which is what we have done in the past).
+
+  </div>
+
+  After executing these commands, the cracked passwords should be in the
+  `passwords.7` and `passwords.8` files.  You will need to use either [Python]
+  or [shell] to extract the passwords and append them to the list of passwords
+  of lengths `1` - `6` you found using `hulk.py`.
+
+  <div class="alert alert-info" markdown="1">
+  #### <i class="fa fa-check"></i> Verification
+
+  To get credit for this Guru Point, you are to upload at least `10,000`
+  passwords to [deadpool].  You have up until a week **after** this assignment
+  is due to verify your Guru Point.
+
+  </div>
+
+  [CPUs]:       https://en.wikipedia.org/wiki/Central_processing_unit
+  [GPU]:        https://en.wikipedia.org/wiki/Graphics_processing_unit
+  [hashcat]:    https://hashcat.net/hashcat/
+  [Nvidia]:     https://www.nvidia.com/
+  [AMD]:        https://www.amd.com/
+  [Intel]:      https://www.intel.com/
+  [OpenCL]:     https://www.khronos.org/opencl/
+  [shell]:      https://en.wikipedia.org/wiki/Unix_shell
+  [homebrew]:   https://brew.sh/
+
+  ### SSH Keys
+
+  Passwords are great, but what would even be better is not having to enter
+  your password everytime you do a `git pull` or `git push`!
+
+  For extra credit, you are to setup [SSH Keys] and configure your [GitHub]
+  account to utilize them.  The following are resources on how to set this up:
+
+  - [Connecting to GitHub with SSH](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh)
+  - [How To Set Up SSH Keys](https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys--2)
+
+  Basically, with [SSH Keys] properly configured, you can do things such as
+  push and pull to [GitHub] without having to enter your password everytime and
+  login to remote Unix machines without a password.  This is handy for
+  automating tasks where no human interaction is desirable.
+
+  Once you setup your [SSH Keys], you will need to [change your remote
+  URL](https://docs.github.com/en/github/using-git/changing-a-remotes-url)
+
+  <div class="alert alert-info" markdown="1">
+  #### <i class="fa fa-check"></i> Verification
+
+  To get credit for this Guru Point, you must show either the instructor or TA
+  a demonstration of either pushing to your repository or pulling from it using
+  [SSH] (or attached a video / screenshot to your Pull Request).  You have up
+  until a week **after** this assignment is due to verify your Guru Point.
+
+  </div>
+
+  [SSH Keys]:   https://docs.github.com/en/github/authenticating-to-github/reviewing-your-ssh-keys
+  [SSH]:        http://www.openssh.com/
+
+  ## Submission
+
+  To submit your assignment, please commit your work to the `homework06` folder
+  of your `homework06` branch in your **assignments** [GitHub] repository.
+  Your `homework06` folder should only contain the following files:
+
+  - `Makefile`
+  - `README.md`
+  - `answers.json`
+  - `hulk.py`
+  - `passwords.txt`
+
+  The `passwords.txt` should contain a list of all all the passwords you found
+  from the [password hashes] collection.
+
+      :::bash
+      #--------------------------------------------------
+      # BE SURE TO DO THE PREPARATION STEPS IN ACTIVITY 0
+      #--------------------------------------------------
+
+      $ cd homework06                           # Go to Homework 06 directory
+      ...
+      $ git add Makefile                        # Mark changes for commit
+      $ git add hulk.py                         # Mark changes for commit
+      $ git commit -m "homework06: Activity 1"  # Record changes
+      ...
+      $ git add passwords.txt                   # Mark changes for commit
+      $ git commit -m "homework06: Activity 2"  # Record changes
+      ...
+      $ git add answers.json                    # Mark changes for commit
+      $ git commit -m "homework06: Activity 3"  # Record changes
+      ...
+      $ git push -u origin homework06           # Push branch to GitHub
+
+  <div class="alert alert-danger" markdown="1">
+  #### <i class="fa fa-github"></i> Pull Request
+  Remember to create a **Pull Request** and assign the appropriate TA from the
+  [Reading 07 TA List].
+
+  **DO NOT MERGE** your own **Pull Request**.  The TAs use open **Pull
+  Requests** to keep track of which assignments to grade.  Closing them
+  yourself will cause a delay in grading and confuse the TAs.
+  </div>
+
+  [Markdown]:   https://daringfireball.net/projects/markdown/
+  [git]:    https://git-scm.com/
+  [clone]:  https://git-scm.com/docs/git-clone
+  [commit]: https://git-scm.com/docs/git-commit
+  [push]:   https://git-scm.com/docs/git-push
+  [branching]:   https://git-scm.com/docs/git-branch
+  [code review]: https://en.wikipedia.org/wiki/Code_review
+  [GitHub]: https://github.com
+  [Reading 07 TA List]: reading07_tas.html
+  [Reading 01]: reading01.html
+  [Reading 06]: reading06.html
+  [Reading 07]: reading07.html
+  [doctests]:   https://docs.python.org/3/library/doctest.html
+  [JSON]:       https://www.json.org

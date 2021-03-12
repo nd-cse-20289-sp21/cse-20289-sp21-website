@@ -1,0 +1,27 @@
+{
+    "q01": {
+        "type": "blank",
+        "question": "\n<p>Use your <tt>hulk.py</tt> on the <tt>hashes.txt</tt> from\n<tt>https://yld.me/raw/Dal</tt> to answer the following questions:</p>\n\n<ol>\n  <li>How many passwords have a length of <tt>4</tt> and only contain <b>vowels</b>? ____</li>\n  <li>How many passwords have a length of <tt>5</tt> and start with <tt>p</tt>? ____</li>\n  <li>How many passwords have a length of <tt>6</tt>, start with <tt>a</tt>, and only contain the letters <tt>abcdefghijklmnop</tt>? ____</li>\n  <li>How many passwords have a length of <tt>5</tt>? ____</li>\n  <li>How many passwords have a length of <tt>6</tt>? ____</li>\n</ol>\n"
+    },
+    "q02": {
+        "type": "multiple",
+        "question": "\n<p>Which of the following statements regarding <tt>hulk.py</tt>,\n<b>concurrency</b>, and <b>parallelism</b> are true (<i>select all that\napply</i>)?</p>\n",
+        "responses": {
+            "serial": "<tt>hulk.py</tt> is inherently <b>serial</b>.",
+            "embarrassing": "<tt>hulk.py</tt> is an <b>embarrassingly parallel</b> problem.",
+            "task": "<tt>hulk.py</tt> exhibits <b>task parallelism</b>.",
+            "data": "<tt>hulk.py</tt> exhibits <b>data parallelism</b>.",
+            "scaling": "<tt>hulk.py</tt> <b>always</b> performs faster given more CPU <b>cores</b>."
+        }
+    },
+    "q03": {
+        "type": "multiple",
+        "question": "\n<p>Which of the following statements regarding passwords are true\n(<i>select all that apply</i>)?</p>\n",
+        "responses": {
+            "alphabet": "To increase password strength, it is best to increase the complexity of the <b>alphabet</b>.",
+            "length": "To increase password strength, it is best to increase the <b>length</b> of the password.",
+            "complexity_al": "Brute-forcing passwords is <tt>O(alphabet^length)</tt>.",
+            "complexity_la": "Brute-forcing passwords is <tt>O(length^alphabet)</tt>."
+        }
+    }
+}
