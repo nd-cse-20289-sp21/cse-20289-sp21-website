@@ -818,11 +818,11 @@ body:       |
   You should produce graphs like these:
 
   <div class="thumbnail">
-      <img src="static/img/gender-2020.png">
+      <img src="static/img/gender-2023.png">
   </div>
 
   <div class="thumbnail">
-      <img src="static/img/ethnic-2020.png">
+      <img src="static/img/ethnic-2023.png">
   </div>
 
   To run [Jupyter] on the **student machines**:, you can use the following command:
