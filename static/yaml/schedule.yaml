@@ -170,6 +170,8 @@
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1k2pQpGCnx0sxYcOA37qeGFsKrCjDZJ89eGPYlpoSp44/edit?usp=sharing
+          - name:       Panopto
+            link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=96c9f4c3-8a40-4174-8db2-acec012c9f1c
 
       - date:           Wed 03/17
         topics:         JSON
