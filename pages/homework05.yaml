@@ -834,6 +834,17 @@ body:       |
   on.  Also, you may need to change the port to something else between `9000` -
   `9999`.
 
+  <div class="alert alert-warning" markdown="1">
+  #### <i class="fa fa-google"></i> Google Colaboratory
+
+  Alternatively, you can use [Google Colaboratory] to run a [Jupyter] notebook
+  from your Google Drive.  This is a hassle-free way to explore developing with
+  [Python] and [matplotlib], while using Google Cloud resources (*thus no need
+  for the VPN or the student machines*).
+  </div>
+
+  [Google Colaboratory]: https://colab.research.google.com
+
   <div class="alert alert-info" markdown="1">
   #### <i class="fa fa-check"></i> Verification
 
