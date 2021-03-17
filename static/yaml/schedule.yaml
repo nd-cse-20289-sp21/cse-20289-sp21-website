@@ -126,7 +126,7 @@
             link:       https://docs.google.com/presentation/d/1k2pQpGCnx0sxYcOA37qeGFsKrCjDZJ89eGPYlpoSp44/edit?usp=sharing
           - name:       Panopto
             link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=3e2bd57f-5d37-4206-92f5-ace0013da5c9
-      
+
       - date:           Fri 03/05
         topics:         Exam 01
         items:
@@ -181,7 +181,10 @@
 
       - date:           Fri 03/19
         topics:         Functional Programming
-      
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1VpzYR5rITkDKG2yKcFh6Vu6APYRfLCwGy5S0R7QjrxE/edit?usp=sharing
+
       - date:           Sat 03/20
         topics:         Reddit and CSE Demographics
         assignment:     Homework 05
@@ -191,13 +194,23 @@
       - date:           Mon 03/22
         topics:         List Comprehensions
         assignment:     Reading 07
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1VpzYR5rITkDKG2yKcFh6Vu6APYRfLCwGy5S0R7QjrxE/edit?usp=sharing
+
 
       - date:           Wed 03/24
-        topics:         Generators
+        topics:         Iterators, Generators
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1loRqgoSOsQ9NJPZzQuGYCGuG1eRyk7ocQtfZLHBKKHk/edit?usp=sharing
 
       - date:           Fri 03/26
         topics:         Parallel Computing
-      
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1N_w8Q8GLobzkU4nJKNGjkYm1VQ_QnlEkgNLs1-9WLsE/edit?usp=sharing
+
       - date:           Sat 03/27
         topics:         Hulk Smash
         assignment:     Homework 06
@@ -210,7 +223,7 @@
 
       - date:           Wed 03/31
         topics:         Exam 02
-      
+
       - date:           Fri 04/02
         topics:         Good Friday
 
@@ -227,7 +240,7 @@
 
       - date:           Fri 04/09
         topics:         Debugging (GDB, Valgrind)
-      
+
       - date:           Sat 04/10
         topics:         C-String Library
         assignment:     Homework 07
@@ -252,10 +265,10 @@
 
       - date:           Wed 04/21
         topics:         Mini-Break
-      
+
       - date:           Wed 04/23
         topics:         I/O
-      
+
       - date:           Sat 04/24
         topics:         Detecting Duplicates
         assignment:     Homework 08
@@ -280,10 +293,10 @@
 
       - date:           Wed 05/05
         topics:         Signals
-      
+
       - date:           Fri 05/07
         topics:         VPS
-      
+
       - date:           Sat 05/08
         topics:         "Thor's Hammer"
         assignment:     Homework 09
@@ -292,6 +305,6 @@
   days:
       - date:           Mon 05/10
         topics:         Review
-      
+
       - date:           Tue 05/18
         topics:         Exam 03
