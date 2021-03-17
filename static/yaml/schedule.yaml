@@ -175,9 +175,12 @@
 
       - date:           Wed 03/17
         topics:         JSON
+        items:
+          - name:       Panopto
+            link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=717d73bc-3fd8-48d8-9d99-acee012a1355
 
       - date:           Fri 03/19
-        topics:         Translations
+        topics:         Functional Programming
       
       - date:           Sat 03/20
         topics:         Reddit and CSE Demographics
@@ -186,11 +189,11 @@
 - name:     "Functional Programming"
   days:
       - date:           Mon 03/22
-        topics:         Functional Programming
+        topics:         List Comprehensions
         assignment:     Reading 07
 
       - date:           Wed 03/24
-        topics:         Iterators, Generators
+        topics:         Generators
 
       - date:           Fri 03/26
         topics:         Parallel Computing
