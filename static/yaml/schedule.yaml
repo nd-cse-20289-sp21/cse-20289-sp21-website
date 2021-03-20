@@ -225,6 +225,9 @@
 
       - date:           Wed 03/31
         topics:         Exam 02
+        items:
+          - name:       Checklist 02
+            link:       checklist02.html
 
       - date:           Fri 04/02
         topics:         Good Friday
@@ -268,7 +271,7 @@
       - date:           Wed 04/21
         topics:         Mini-Break
 
-      - date:           Wed 04/23
+      - date:           Fri 04/23
         topics:         I/O
 
       - date:           Sat 04/24
