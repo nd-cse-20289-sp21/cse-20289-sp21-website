@@ -242,6 +242,9 @@
       - date:           Mon 04/05
         topics:         Pointers, Arrays, Strings
         assignment:     Reading 09
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1qvdywatR3B1MNGahVrMMObGKAnRUBiWmzuXbRTGz8WA/edit?usp=sharing
 
       - date:           Wed 04/07
         topics:         Debugging (GDB, Valgrind)
