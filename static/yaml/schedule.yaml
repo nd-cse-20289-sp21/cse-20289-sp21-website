@@ -194,26 +194,27 @@
 - name:     "Functional Programming"
   days:
       - date:           Mon 03/22
-        topics:         List Comprehensions
-        assignment:     Reading 07
-        items:
-          - name:       Slides
-            link:       https://docs.google.com/presentation/d/1VpzYR5rITkDKG2yKcFh6Vu6APYRfLCwGy5S0R7QjrxE/edit?usp=sharing
-
-
-      - date:           Wed 03/24
         topics:         Iterators, Generators
+        assignment:     Reading 07
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1loRqgoSOsQ9NJPZzQuGYCGuG1eRyk7ocQtfZLHBKKHk/edit?usp=sharing
           - name:       Panopto
             link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=caa064ce-7555-4928-8fcf-acf4003b064f
 
-      - date:           Fri 03/26
+      - date:           Wed 03/24
+        items:
         topics:         Parallel Computing
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1N_w8Q8GLobzkU4nJKNGjkYm1VQ_QnlEkgNLs1-9WLsE/edit?usp=sharing
+
+
+      - date:           Fri 03/26
+        topics:         Compiling and Building
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1-IfpHy3rX2kQ2a5zwBzJauK2G6378dQNXKo74gJKmso/edit?usp=sharing
 
       - date:           Sat 03/27
         topics:         Hulk Smash
@@ -239,14 +240,14 @@
 - name:     "Pointers, Arrays, Strings"
   days:
       - date:           Mon 04/05
-        topics:         Compiling, Building
+        topics:         Pointers, Arrays, Strings
         assignment:     Reading 09
 
       - date:           Wed 04/07
-        topics:         Pointers, Arrays, Strings
+        topics:         Debugging (GDB, Valgrind)
 
       - date:           Fri 04/09
-        topics:         Debugging (GDB, Valgrind)
+        topics:         Memory Allocation
 
       - date:           Sat 04/10
         topics:         C-String Library
@@ -255,26 +256,26 @@
 - name:     "Memory Management"
   days:
       - date:           Mon 04/11
-        topics:         Memory Allocation
         assignment:     Reading 10
-
-      - date:           Wed 04/13
         topics:         Structs, Unions
 
-      - date:           Fri 04/15
+      - date:           Wed 04/13
         topics:         Linked Data Structures
+
+      - date:           Fri 04/15
+        topics:         Files, Directories
 
 - name:     "File System"
   days:
       - date:           Mon 04/19
-        topics:         Files, Directories
         assignment:     Reading 11
+        topics:         I/O
 
       - date:           Wed 04/21
         topics:         Mini-Break
 
       - date:           Fri 04/23
-        topics:         I/O
+        topics:         TCP/IP
 
       - date:           Sat 04/24
         topics:         Detecting Duplicates
@@ -283,14 +284,14 @@
 - name:     "Networking"
   days:
       - date:           Mon 04/26
-        topics:         TCP
+        topics:         Sockets
         assignment:     Reading 12
 
       - date:           Wed 04/28
-        topics:         Sockets
+        topics:         HTTP
 
       - date:           Fri 04/30
-        topics:         HTTP
+        topics:         VPS
 
 - name:     "Processes"
   days:
@@ -302,7 +303,7 @@
         topics:         Signals
 
       - date:           Fri 05/07
-        topics:         VPS
+        topics:         Pipes
 
       - date:           Sat 05/08
         topics:         "Thor's Hammer"
