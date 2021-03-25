@@ -287,11 +287,11 @@ body:       |
 
           :::python
           # Generator expression representing a sequence of arguments to pass
-          # to `cracker` (hashes, length, alphabet remain constant, but prefix
+          # to `whack` (hashes, length, alphabet remain constant, but prefix
           # should change for each argument tuple).
           arguments = ((...) for ... in ...)
 
-          # Create a ProcessPoolExecutor and then apply cracker to the
+          # Create a ProcessPoolExecutor and then apply whack to the
           # arguments
           with concurrent.futures.ProcessPoolExecutor(cores) as executor:
               ... executor.map(...)
