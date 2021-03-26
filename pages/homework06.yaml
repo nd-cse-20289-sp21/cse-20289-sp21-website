@@ -279,9 +279,48 @@ body:       |
   5. For `whack`, you **must** implement the function by calling the `crack`
   function with the provided list of arguments.
 
+      This function exists because `map` can only pass a single argument to the
+      function it applies.  To workaround this limitation, we create the
+      `whack` helper function which takes a `tuple` of arguments which can then
+      unpack to call `crack`.  That is, `whack` takes a `tuple` of **four**
+      items which correspond to the parameters to `crack` and we simply need to
+      call `crack` with these items.
+
   6. For `smash`, you **must** implement the function by using the `map` method
   of the [ProcessPoolExecutor] from the [concurrent.futures] module in order to
   take advantage of multiple CPU `cores`.
+
+      To allow for parallel execution, you will need to do **divide up the
+      work** normally done by one process. The easiest way to accomplish this
+      is by taking advantage of the `prefix` feature of `crack`.
+
+      For instance, if the specified `LENGTH` is `4`, you can `crack` passwords
+      of length `3` with prefixes of `[a, b, ..., 9]` to achieve the same result:
+
+          :::text
+          Passwords of length 4     Prefixes + Passwords of length 3
+
+          aaaa                      a + aaa -> aaaa
+          aaab                      a + aab -> aaab
+          ....                      ....
+          baaa                      b + aaa -> baaa
+          baab                      b + aab -> baab
+          ....                      ....
+
+      In `smash`, you will need to create an `arguments` sequence that consists
+      of the argument tuples to pass to `whack`.  As explained above, each tuple
+      consists of the arguments to `crack`: `hashes`, `length`, `alphabet`,
+      `prefix`.  Based on the previous description, only the `length` and 
+      `prefix` arguments need to be modified in the arguments sequence:
+
+          :::python
+          (original hashes, new length, original alphabet, new prefix)
+
+      For simplicity, we suggest that you use each letter in the `alphabet` as
+      part of the `prefix` in the arguments tuple, while keeping in mind that
+      you still need to account for the `prefix` passed to `smash` itself.
+      Because we are now using the `prefix` feature of `crack`, you will also
+      need to update the `length` argument in the `tuple`.
 
       Your code should look something like this:
 
@@ -295,6 +334,10 @@ body:       |
           # arguments
           with concurrent.futures.ProcessPoolExecutor(cores) as executor:
               ... executor.map(...)
+
+      Because the `executor.map` will return a sequence of sequences, you will
+      want to use the `flatten` function you wrote to convert the result into a
+      single sequence.
 
   7. You can parse the command line options as we have done in the past, or you
   can investigate using [argparse] or [getopt].
