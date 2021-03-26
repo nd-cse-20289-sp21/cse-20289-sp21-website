@@ -269,12 +269,30 @@ body:       |
   a [generator] using the [yield] statement.  You may not use any of the
   utilities in the [itertools] module for this function.
 
+      For the **base** case, you will want to consider what happens with a
+      `length` of `1` and for the **recursive** case, how you can combine the
+      `alphabet` with the results of `permutations` of `length - 1` to `yield`
+      each **permutation** of the specified `length`.
+
+          :::python
+          if length == 1:   # Base case
+              yield each letter in alphabet
+          else:             # Recursive case
+              yield the combination of each letter with each permutation of length - 1
+
   3. For `flatten`, you **must** use the [yield] statement to implement a
   [generator] that takes a **sequence of iterables** and converts it into a
   single sequence of values from the nested data.
 
+      The idea with this function is that given a nested sequence of iterators
+      such as `[[A, B, C], [D, E, F]]`, you `yield` each item from the
+      subsequences: `A, B, C, D, E, F`.
+
   4. For `crack`, you **must** implement the function using only [list
   comprehensions] or [generator expressions] (you can use multiple ones).
+
+      Pay careful attention to **not** use **too much memory** in this
+      function, particularly when calling `permutations`.
 
   5. For `whack`, you **must** implement the function by calling the `crack`
   function with the provided list of arguments.
@@ -284,7 +302,12 @@ body:       |
       `whack` helper function which takes a `tuple` of arguments which can then
       unpack to call `crack`.  That is, `whack` takes a `tuple` of **four**
       items which correspond to the parameters to `crack` and we simply need to
-      call `crack` with these items.
+      call `crack` with these items:
+
+          :::python
+          # Calling whack should result in calling crack with the arguments
+          # tuple unpacked as parameters.
+          whack((hashes, length, alphabet, prefix)) -> crack(hashes, length, alphabet, prefix)
 
   6. For `smash`, you **must** implement the function by using the `map` method
   of the [ProcessPoolExecutor] from the [concurrent.futures] module in order to
@@ -310,7 +333,7 @@ body:       |
       In `smash`, you will need to create an `arguments` sequence that consists
       of the argument tuples to pass to `whack`.  As explained above, each tuple
       consists of the arguments to `crack`: `hashes`, `length`, `alphabet`,
-      `prefix`.  Based on the previous description, only the `length` and 
+      `prefix`.  Based on the previous description, only the `length` and
       `prefix` arguments need to be modified in the arguments sequence:
 
           :::python
