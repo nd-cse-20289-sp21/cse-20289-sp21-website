@@ -217,6 +217,8 @@
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1-IfpHy3rX2kQ2a5zwBzJauK2G6378dQNXKo74gJKmso/edit?usp=sharing
+          - name:       Panopto
+            link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=98fa809a-6a5f-4732-9a72-acf7012c168d
 
       - date:           Sat 03/27
         topics:         Hulk Smash
@@ -242,17 +244,20 @@
 - name:     "Pointers, Arrays, Strings"
   days:
       - date:           Mon 04/05
-        topics:         Pointers, Arrays, Strings
+        topics:         Compiling and Building
         assignment:     Reading 09
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1-IfpHy3rX2kQ2a5zwBzJauK2G6378dQNXKo74gJKmso/edit?usp=sharing
+
+      - date:           Wed 04/07
+        topics:         Pointers, Arrays, Strings
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1qvdywatR3B1MNGahVrMMObGKAnRUBiWmzuXbRTGz8WA/edit?usp=sharing
 
-      - date:           Wed 04/07
-        topics:         Debugging (GDB, Valgrind)
-
       - date:           Fri 04/09
-        topics:         Memory Allocation
+        topics:         Debugging (GDB, Valgrind)
 
       - date:           Sat 04/10
         topics:         C-String Library
@@ -262,19 +267,19 @@
   days:
       - date:           Mon 04/11
         assignment:     Reading 10
-        topics:         Structs, Unions
+        topics:         Memory Allocation
 
       - date:           Wed 04/13
-        topics:         Linked Data Structures
+        topics:         Structs, Unions
 
       - date:           Fri 04/15
-        topics:         Files, Directories
+        topics:         Linked Data Structures
 
 - name:     "File System"
   days:
       - date:           Mon 04/19
         assignment:     Reading 11
-        topics:         I/O
+        topics:         Files, Directories
 
       - date:           Wed 04/21
         topics:         Mini-Break
