@@ -229,6 +229,9 @@
       - date:           Mon 03/29
         topics:         Review
         assignment:     Reading 08
+        items:
+          - name:       Panopto
+            link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=5c46b7fe-a6df-48c6-a36a-acfa012af19d
 
       - date:           Wed 03/31
         topics:         Exam 02
