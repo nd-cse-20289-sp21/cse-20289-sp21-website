@@ -810,6 +810,19 @@ body:       |
   You can find a more exhaustive list on [Distrowatch].  For virtualization
   software, [Virtualbox] is a popular choice.
 
+  <div class="alert alert-warning" markdown="1">
+  #### <i class="fa fa-linux"></i> NDLUG Distro Battle Royale
+
+  Feel free to checkout [NDLUG](https://ndlug.org)'s recent **lugcast**
+  regarding ranking different [Linux] distributions:
+
+  <br>
+
+  <div class="text-center">
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/sfMUFDRVeb0?start=2582" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>
+  </div>
+
   ### Docker
 
   For extra credit, you are to demonstrate your [Homework 07] code running
