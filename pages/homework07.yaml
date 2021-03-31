@@ -1,0 +1,914 @@
+title:      "Homework 07: Pointers, Arrays, Strings"
+icon:       fa-code
+navigation: []
+internal:
+external:
+body:       |
+
+  The goal of this homework assignment is to allow you to practice using
+  [pointers], [arrays], and [strings] in [C99].  The first activity involves
+  building a string utilities library, while the second activity requires you
+  to use this library to build a `str` utility similar to [tr].
+
+  For this assignment, record your source code and any responses to the
+  following activities in the `homework07` folder of your **assignments**
+  [GitHub] repository and push your work by **noon Saturday, April 10**.
+
+  [arrays]:             https://en.wikipedia.org/wiki/C_(programming_language)#Arrays
+  [pointer]:            https://en.wikipedia.org/wiki/C_(programming_language)#Pointers
+  [pointers]:           https://en.wikipedia.org/wiki/C_(programming_language)#Pointers
+  [strings]:            https://en.wikipedia.org/wiki/String_(computer_science)
+  [string]:             https://en.wikipedia.org/wiki/String_(computer_science)
+  [C99]:                https://en.wikipedia.org/wiki/C_(programming_language)#C99
+  [tr]:                 http://man7.org/linux/man-pages/man1/tr.1.html
+  [Python]:             https://www.python.org/
+  [shell]:              https://en.wikipedia.org/wiki/Unix_shell
+  [C]:                  https://en.wikipedia.org/wiki/C_(programming_language)
+  [str.lower]:          https://docs.python.org/3/library/stdtypes.html#str.lower
+  [str.strip]:          https://docs.python.org/3/library/stdtypes.html#str.strip
+  [standard library]:   https://en.wikipedia.org/wiki/C_standard_library
+  [sentinel pattern]:   https://en.wikipedia.org/wiki/Sentinel_value
+
+  ## Activity 0: Preparation
+
+  Before starting this homework assignment, you should first perform a `git
+  pull` to retrieve any changes in your remote [GitHub] repository:
+
+      :::bash
+      $ cd path/to/repository                   # Go to assignments repository
+
+      $ git checkout master                     # Make sure we are in master branch
+
+      $ git pull --rebase                       # Get any remote changes not present locally
+
+  Next, create a new branch for this assignment:
+
+      :::bash
+      $ git checkout -b homework07              # Create homework07 branch and check it out
+
+  You are now ready to work on the activities below.
+
+  <div class="alert alert-info" markdown="1">
+  #### <i class="fa fa-question"></i> Frequently Asked Questions
+  <div class="text-center">
+  <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vT7bFDOhob5yVCzoWsL5NX00RymZ4gl6YUZItwa8F2R6AYswGHIaerDqM-DxRKWsFXtDbbsJucsJ93C/embed?start=false&loop=false&delayms=3000" frameborder="0" width="480" height="389" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+  </div>
+  </div>
+
+  ## Activity 1: String Utilities Library (7 Points)
+
+  In [Python], we had the luxury of [strings] being first-class objects with
+  all sorts of useful methods such as [str.lower] or [str.strip].
+  Unfortunately, [strings] in [C] are just [arrays] that utilize the [sentinel
+  pattern] for denoting the end of the [strings] and the [standard library] is
+  a bit bare when it comes to manipulating [strings].
+
+  To rectify this situation, for the first activity you are to create a string
+  utilities library, `libstr`, which contains functions such as `str_lower` and
+  `str_strip` which implement some of the functionality present in [Python] but
+  lacking in [C99].
+
+  #### Skeleton Code
+
+  To help you get started, the instructor has provided you with the following
+  skeleton code:
+
+      :::bash
+      # Go to homework07 folder
+      $ cd homework07
+
+      # Download Makefile, library.c, main.c, and str.h
+      $ curl -L --remote-name-all https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework07/{Makefile,library.c,main.c,str.h}
+
+      # Download test scripts (optional)
+      $ curl -L --remote-name-all https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework07/{test_libstr.py,test_str.sh}
+
+  Once downloaded, you should see the following files in your `homework07`
+  directory:
+
+      :::bash
+      homework07
+          \_ Makefile                   # This is the Makefile for building all the project artifacts
+          \_ README.md                  # This is the README file for recording your responses
+          \_ library.c                  # This is the C99 implementation file for the string utilities library
+          \_ main.c                     # This is the C99 implementation file for the string utility
+          \_ str.h                      # This is the C99 header file for the string utilities library
+          \_ test_libstr.py             # This is the Python test script for the string utilities library
+          \_ test_str.py                # This is the Shell test script for the string utility
+
+  The details on what you need to implement are described in the following sections.
+
+  ### Task 0: `str.h`
+
+  The `str.h` file is the [header] file for the string utilities library, which
+  means it contains the function [prototypes]:
+
+      :::c
+      /* str.h: string utilities library */
+
+      #pragma once
+
+      #include <stdbool.h>
+      #include <stdlib.h>
+
+      /* Case */
+      void    str_lower(char *s);
+      void    str_upper(char *s);
+      void    str_title(char *s);
+
+      /* Strip */
+      void    str_chomp(char *s);
+      void    str_strip(char *s);
+
+      /* Reverse */
+      void    str_reverse(char *s);
+
+      /* Translation */
+      void    str_translate(char *s, char *from, char *to);
+
+      /* vim: set sts=4 sw=4 ts=8 expandtab ft=c: */
+
+  Other programs will `#include` this file in order to use the functions we
+  will be implementing in this library.
+
+  <div class="alert alert-info" markdown="1">
+  **Note**: For this task, you **do not** need to modify this file.  Instead,
+  you should review it and ensure you understand the provided code.
+  </div>
+
+  [header]:     https://en.wikipedia.org/wiki/Include_directive#C.2FC.2B.2B
+  [prototypes]: https://en.wikipedia.org/wiki/Function_prototype
+
+  ### Task 1: `Makefile`
+
+  The `Makefile` contains all the **rules** or **recipes** for building the
+  project artifacts (e.g. `libstr.a`, `libstr.so`, etc.):
+
+      :::make
+      CC=       gcc
+      CFLAGS=   -g -Wall -std=gnu99
+      LD=       gcc
+      LDFLAGS=  -L.
+      AR=       ar
+      ARFLAGS=  rcs
+
+      TARGETS=  libstr.a \
+                libstr.so
+
+      all:      $(TARGETS)
+
+      test:
+              @$(MAKE) -sk test-all
+
+      test-all: test-libstr test-str
+
+      test-libstr:  libstr.so
+              curl -sLO https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework07/test_libstr.py
+              chmod +x test_libstr.py
+              ./test_libstr.py -v
+
+      test-str: str-static str-dynamic
+              curl -sLO https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework07/test_str.sh
+              chmod +x test_str.sh
+              ./test_str.sh
+
+      clean:
+              rm -f $(TARGETS) *.o
+
+      # TODO: Add rules for libstr.a libstr.so
+
+      # TODO: Add rules for str-dynamic str-static
+
+  For this task, you will need to add [rules] for building the [static library]
+  `libstr.a` and the [shared library] `libstr.so`.  Besure to have a **recipe**
+  for any *intermediate* [object] files that both libraries require.
+
+  <div class="alert alert-info" markdown="1">
+  #### <i class="fa fa-cogs"></i> Makefile Variables
+
+  You **must** use the `CC`, `CFLAGS`, `LD`, `LDFLAGS`, `AR`, and `ARFLAGS`
+  variables when appropriate in your [rules].  You **should** also consider
+  using [automatic variables] such as `$@` and `$<` as well.
+
+  </div>
+
+  Once you have a working `Makefile`, you should be able to run the following commands:
+
+      :::bash
+      # Build all TARGETS
+      $ make
+      gcc -g -Wall -std=gnu99 -fPIC -c -o library.o library.c
+      ar rcs libstr.a library.o
+      gcc -L. -shared -o libstr.so library.o
+
+      # Run all tests
+      $ make test
+      test_00_str_lower (__main__.StrTestCase) ... FAIL
+      test_01_str_upper (__main__.StrTestCase) ... FAIL
+      test_02_str_title (__main__.StrTestCase) ... FAIL
+      test_03_str_chomp (__main__.StrTestCase) ... FAIL
+      test_04_str_strip (__main__.StrTestCase) ... FAIL
+      test_05_str_reverse (__main__.StrTestCase) ... FAIL
+      test_06_str_translate (__main__.StrTestCase) ... FAIL
+         Score 2.16
+      ...
+
+      # Remove generated artifacts
+      $ make clean
+      rm -f libstr.a libstr.so *.o
+
+  <div class="alert alert-danger" markdown="1">
+  **Note**: The tests will **fail** if you haven't implemented the string
+  utilities library.
+  </div>
+
+  <div class="alert alert-warning" markdown="1">
+  #### <i class="fa fa-warning"></i> Warnings
+
+  You must include the `-Wall` flag in your `CFLAGS` when you compile.  This
+  also means that your code must **compile without any warnings**, otherwise
+  points will be deducted.
+
+  </div>
+
+  [rules]:          https://www.gnu.org/software/make/manual/html_node/Rule-Example.html#Rule-Example
+  [object]:         https://en.wikipedia.org/wiki/Object_file
+  [static library]: https://en.wikipedia.org/wiki/Static_library#Creating_static_libraries_in_C.2FC.2B.2B
+  [shared library]: https://en.wikipedia.org/wiki/Library_(computing)#Shared_libraries
+  [automatic variables]:    https://www.gnu.org/software/make/manual/html_node/Automatic-Variables.html
+
+  ### Task 2: `library.c`
+
+  The `library.c` file contains the [C99] implementation for the string
+  utilities library.
+
+  For this task, you will need to implement the following functions:
+
+  1. `void    str_lower(char *s)`
+
+      > This function converts all the letters in `s` to lowercase (e.g.
+      `s.lower()` in [Python])
+
+      <div class="alert alert-success" markdown="1">
+      **Hint**: Use [tolower] to convert a `char` to lowercase.
+      </div>
+
+  2. `void    str_upper(char *s)`
+
+      > This function converts all the letters in `s` to uppercase (e.g.
+      `s.upper()` in [Python]).
+
+      <div class="alert alert-success" markdown="1">
+      **Hint**: Use [toupper] to convert a `char` to uppercase.
+      </div>
+
+  3. `void    str_title(char *s)`
+
+      > This function converts all the letters in `s` to titlecase (e.g.
+      `s.title()` in [Python]).
+
+      <div class="alert alert-success" markdown="1">
+      **Hint**: Anything that is not a letter (ie. [isalpha]) is a word
+      boundary.
+      </div>
+
+  4. `void    str_chomp(char *s)`
+
+      > This function removes a trailing newline character from `s` if one is
+      present (e.g. `s[:-1] if s[-1] == '\n' else s` in [Python]).
+
+      <div class="alert alert-success" markdown="1">
+      **Hint**: Use [strlen] to get the length of the string and then do some
+      pointer arithmetic.
+      </div>
+
+  5. `void    str_strip(char *s)`
+
+      > This function removes any whitespace from the front and back of `s` (e.g.
+      `s.strip()` in [Python]).
+
+      <div class="alert alert-success" markdown="1">
+      **Hint**: Use two *reader* and *writer* pointers to modify the string.
+      </div>
+
+  5. `void    str_reverse(char *s)`
+
+      > This function reverses the letters in `s` (e.g. `s[::-1]` in [Python]).
+
+      <div class="alert alert-success" markdown="1">
+      **Hint**: Considering how to *swap* two `chars`.
+      </div>
+
+  7. `void    str_translate(char *s, char *from, char *to)`
+
+      > This function translates the letters in `s` using the mapping provided
+      by `from` and `to` (e.g. `s.translate(string.maketrans(from, to))` in
+      [Python]).
+
+      <div class="alert alert-success" markdown="1">
+      **Hint**: Construct and then utilize a **lookup** table.
+      </div>
+
+  <div class="alert alert-danger" markdown="1">
+  #### <i class="fa fa-check-square-o"></i> Requirements
+
+  1. The functions above **must** perform modifications **in-place** (if
+  necessary). That is, you must **not allocate** any additional temporary
+  strings as scratch space.  Moreover, you should not need to use the [heap] or
+  [dynamic memory allocation].
+
+  2. The functions above **must** run in `O(n)` (ie. **linear**) time and use
+  `O(1)` (ie. **constant**) space.
+
+  3. The functions above **must** only use [pointers] when iterating through a
+  [string] or accessing individual characters in a [string].  That is, you
+  cannot **index** into a [string]:
+
+          :::c
+          /* Allowed: Iterate through string using pointers */
+          for (char *c = s; *c; c++)
+              putc(*c, stdout);
+
+          /* Forbidden: Iterate through string using array index */
+          for (size_t i = 0; i < strlen(s); i++) {
+              putc(s[i], stdout);       // Not allowed
+              putc(*(s + i), stdout);   // Also not allowed
+          }
+
+      That said, you can still do [pointer] arithmetic to initialize a [pointer]:
+
+          :::c
+          /* Allowed: Get back of a string */
+          char *tail = s + strlen(s) - 1;
+
+  </div>
+
+  [tolower]:    http://man7.org/linux/man-pages/man3/toupper.3.html
+  [toupper]:    http://man7.org/linux/man-pages/man3/toupper.3.html
+  [strlen]:     http://man7.org/linux/man-pages/man3/strlen.3.html
+  [isalpha]:    http://man7.org/linux/man-pages/man3/isalpha.3.html
+  [heap]:       https://en.wikipedia.org/wiki/Heap_(programming)
+  [dynamic memory allocation]: https://en.wikipedia.org/wiki/C_dynamic_memory_allocation
+
+  ### Task 3: `test_libstr.py`
+
+  As you implement the functions in `library.c`, you should use the
+  `test_libstr.py` script to test each function:
+
+      :::bash
+      # Build artifacts
+      $ make
+
+      # Run test script manually
+      $ ./test_libstr.py -v
+      test_00_str_lower (__main__.StrTestCase) ... ok
+      test_01_str_upper (__main__.StrTestCase) ... ok
+      test_02_str_title (__main__.StrTestCase) ... ok
+      test_03_str_chomp (__main__.StrTestCase) ... ok
+      test_04_str_strip (__main__.StrTestCase) ... ok
+      test_05_str_reverse (__main__.StrTestCase) ... ok
+      test_06_str_translate (__main__.StrTestCase) ... ok
+        Score 7.00
+
+      ----------------------------------------------------------------------
+      Ran 7 tests in 0.001s
+
+      OK
+
+  Alternatively, you can both build the artifacts and run the test script by
+  doing the following:
+
+      :::bash
+      # Build and run test scripts
+      $ make test
+
+  To use [Python] to interactively test a function, you can do something like
+  the following:
+
+      :::python
+      # Import ctypes package
+      >>> import ctypes
+
+      # Load string utilies shared library
+      >>> libstr = ctypes.CDLL('./libstr.so')
+
+      # Call str_lowercase function
+      >>> s = b'Hello, World!'
+      >>> libstr.str_lower(s)
+      >>> s
+      b'hello, world!'
+
+  Of course, you are free to create your own test programs to debug and test
+  your string utilities library.
+
+  <div class="alert alert-success" markdown="1">
+  #### <i class="fa fa-repeat"></i> Iterative Development
+
+  You should practice [iterative development].  That is, rather than writing a
+  bunch of code and then debugging it all at once, you should concentrate on
+  one function at a time and then test that **one thing at a time**.  The
+  provided [unit tests] allow you to check on the correctness of the individual
+  functions without implementing everything at once.  Take advantage of this
+  and build one thing at a time.
+
+  </div>
+
+  [iterative development]:  https://en.wikipedia.org/wiki/Iterative_and_incremental_development
+  [unit tests]:             https://en.wikipedia.org/wiki/Unit_testing
+
+  ## Activity 2: Str Utility (3 Points)
+
+  Once you have a working string utilities library, you are to complete the
+  `str` utility:
+
+      :::bash
+      $ ./str-static -h                                             # Display usage
+      Usage: ./str-static SOURCE TARGET
+
+      Post Translation filters:
+
+          -s          Strip whitespace
+          -r          Reverse line
+          -l          Convert to lowercase
+          -u          Convert to uppercase
+          -t          Convert to titlecase
+
+      $ echo "   Hello world" | ./str-static                        # Just echo input
+         Hello world
+
+      $ echo "   Hello world" | ./str-static -s                     # Strip whitespace
+      Hello world
+
+      $ echo "   Hello world" | ./str-static -r                     # Reverse letters
+      dlrow olleH
+
+      $ echo "   Hello world" | ./str-static -l                     # Lowercase
+         hello world
+
+      $ echo "   Hello world" | ./str-static -u                     # Uppercase
+         HELLO WORLD
+
+      $ echo "   Hello world" | ./str-static -t                     # Titlecase
+         Hello World
+
+      $ echo "   Hello world" | ./str-static 'aeio' '4310'          # Translate
+         H3ll0 w0rld
+
+      $ echo "   Hello world" | ./str-static -s -l 'aeio' '4310'    # Translate, strip, and lowercase
+      h3ll0 w0rld
+
+  The `str` utility **must** use the corresponding functions from the string
+  utilities library you created above to translate and filter the input text.
+
+  ### Task 1: `Makefile`
+
+  The first task is to modify the `Makefile` to include additional [rules] for
+  the following targets:
+
+  1. `str-static`: This is a [static executable] of `main.c`.
+
+  2. `str-dynamic`: This is a [dynamic executable] of `main.c`.
+
+  Once again, be sure to add any [rules] for any *intermediate* [object] files.
+
+  Additionally, be sure to add `str-static` and `str-dynamic` to the `all`
+  **recipe** and to add `test-str` to the `test-all` **recipe**.
+
+  Once you have a working `Makefile`, you should be able to run the following commands:
+
+      :::bash
+      # Build all TARGETS
+      $ make
+      gcc -g -Wall -std=gnu99 -fPIC -c -o library.o library.c
+      ar rcs libstr.a library.o
+      gcc -L. -shared -o libstr.so library.o
+      gcc -g -Wall -std=gnu99 -c -o main.o main.c
+      gcc -L. -o str-dynamic main.o -lstr
+      gcc -L. -static -o str-static main.o -lstr
+
+      # Run all tests
+      $ make test
+      test_00_str_lower (__main__.StrTestCase) ... ok
+      test_01_str_upper (__main__.StrTestCase) ... ok
+      test_02_str_title (__main__.StrTestCase) ... ok
+      test_03_str_chomp (__main__.StrTestCase) ... ok
+      test_04_str_strip (__main__.StrTestCase) ... ok
+      test_05_str_reverse (__main__.StrTestCase) ... ok
+      test_06_str_translate (__main__.StrTestCase) ... ok
+        Score 7.00
+
+      ----------------------------------------------------------------------
+      Ran 7 tests in 0.001s
+
+      OK
+
+      Testing str utility...
+       str -h                                   ... Success
+       str -h (valgrind)                        ... Success
+       str                                      ... Success
+       str (valgrind)                           ... Success
+       str aeio 4310                            ... Success
+       str aeio 4310 (valgrind)                 ... Success
+       str -s aeio 4310                         ... Success
+       str -s aeio 4310 (valgrind)              ... Success
+       str -r aeio 4310                         ... Success
+       str -r aeio 4310 (valgrind)              ... Success
+       str -l aeio 4310                         ... Success
+       str -l aeio 4310 (valgrind)              ... Success
+       str -u aeio 4310                         ... Success
+       str -u aeio 4310 (valgrind)              ... Success
+       str -t aeio 4310                         ... Success
+       str -t aeio 4310 (valgrind)              ... Success
+       str -l -u aeio 4310                      ... Success
+       str -l -u aeio 4310 (valgrind)           ... Success
+       str -l -s aeio 4310                      ... Success
+       str -l -s aeio 4310 (valgrind)           ... Success
+       str -r -u aeio 4310                      ... Success
+       str -r -u aeio 4310 (valgrind)           ... Success
+       str -r -s -t aeio 4310                   ... Success
+       str -r -s -t aeio 4310 (valgrind)        ... Success
+         Score 3.00
+
+      # Remove generated artifacts
+      $ make clean
+      rm -f libstr.a libstr.so str-dynamic str-static *.o
+
+  ### Task 2: `main.c`
+
+  The `main.c` file is contains the [C99] implementation of the string utility
+  described above:
+
+      :::c
+      /* main.c: string library utility */
+
+      #include "str.h"
+
+      #include <errno.h>
+      #include <stdio.h>
+      #include <stdlib.h>
+      #include <string.h>
+
+      /* Globals */
+
+      char *PROGRAM_NAME = NULL;
+
+      /* Flags */
+
+      enum {
+          /* TODO: Enumerate Flags */
+      };
+
+      /* Functions */
+
+      void usage(int status) {
+          fprintf(stderr, "Usage: %s SOURCE TARGET\n\n", PROGRAM_NAME);
+          fprintf(stderr, "Post Translation filters:\n\n");
+          fprintf(stderr, "   -s          Strip whitespace\n");
+          fprintf(stderr, "   -r          Reverse line\n");
+          fprintf(stderr, "   -l          Convert to lowercase\n");
+          fprintf(stderr, "   -u          Convert to uppercase\n");
+          fprintf(stderr, "   -t          Convert to titlecase\n");
+          exit(status);
+      }
+
+      void translate_stream(FILE *stream, char *source, char *target, int flag) {
+          /* TODO: Process each line in stream by performing transformations */
+      }
+
+      /* Main Execution */
+
+      int main(int argc, char *argv[]) {
+          /* TODO: Parse command line arguments */
+
+          /* TODO: Translate Stream */
+
+          return EXIT_SUCCESS;
+      }
+
+      /* vim: set sts=4 sw=4 ts=8 expandtab ft=c: */
+
+  In addition to implementing command line parsing in the `main` function and
+  you will need to implement the `translate_stream` function
+
+  1. `void translate_stream(FILE *stream, char *source, char *target, int flag)`
+
+      > This function reads one line at a time from the `stream` and performs
+      string translation based on the values in `source` and `target`.  Any
+      post processing is controlled by `flag`, which is a [bitmask] that
+      specifies which filters to apply (ie. *strip*, *reverse*, *lower*,
+      *upper*, *title*).
+
+  <div class="alert alert-warning" markdown="1">
+  **Note**: You should apply the filters in the order specified above.
+  </div>
+
+  <div class="alert alert-success" markdown="1">
+  **Hint**: To handle the `flag` [bitmask], you should have an [enumerate] for
+  each filter, where each filter corresponds to a particular [bit field]:
+
+      :::c
+      enum {                        /* Define Flags */
+          STRIP = 1<<1,
+          ...
+      };
+
+      flag |= STRIP;                /* Set a Flag */
+
+      if (flag & STRIP) {           /* Check a Flag */
+          ...
+      }
+  </div>
+
+  [bitmask]:    https://en.wikipedia.org/wiki/Mask_(computing)
+  [enumerate]:  https://en.wikipedia.org/wiki/Enumerated_type#C
+  [bit field]:  https://en.wikipedia.org/wiki/Bit_field
+
+  ### Task 3: `test_str.sh`
+
+  To test your `str` utility, you can use the provided `test_str.sh` script:
+
+      :::bash
+      # Build artifacts
+      $ make
+
+      # Run test script manually
+      $ ./test_str.sh
+
+      Testing str utility...
+       str -h                                   ... Success
+       str -h (valgrind)                        ... Success
+       str                                      ... Success
+       str (valgrind)                           ... Success
+       str aeio 4310                            ... Success
+       str aeio 4310 (valgrind)                 ... Success
+       str -s aeio 4310                         ... Success
+       str -s aeio 4310 (valgrind)              ... Success
+       str -r aeio 4310                         ... Success
+       str -r aeio 4310 (valgrind)              ... Success
+       str -l aeio 4310                         ... Success
+       str -l aeio 4310 (valgrind)              ... Success
+       str -u aeio 4310                         ... Success
+       str -u aeio 4310 (valgrind)              ... Success
+       str -t aeio 4310                         ... Success
+       str -t aeio 4310 (valgrind)              ... Success
+       str -l -u aeio 4310                      ... Success
+       str -l -u aeio 4310 (valgrind)           ... Success
+       str -l -s aeio 4310                      ... Success
+       str -l -s aeio 4310 (valgrind)           ... Success
+       str -r -u aeio 4310                      ... Success
+       str -r -u aeio 4310 (valgrind)           ... Success
+       str -r -s -t aeio 4310                   ... Success
+       str -r -s -t aeio 4310 (valgrind)        ... Success
+         Score 3.00
+
+  Alternatively, you can both build the artifacts and run the test script by
+  doing the following:
+
+      :::bash
+      # Build and run test scripts
+      $ make test
+
+  <div class="alert alert-danger" markdown="1">
+  #### <i class="fa fa-check-square-o"></i> Valgrind
+
+  The `test_str.sh` [shell] script will use the [valgrind] tool to verify that
+  your program does not contain any memory errors such as [memory leaks],
+  [uninitialized values], or [invalid accesses].
+
+  You can run [valgrind] manually by doing:
+
+      :::bash
+      $ echo "   Hello World" | valgrind --leak-check=full ./str-dynamic
+      ==28627== Memcheck, a memory error detector
+      ==28627== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+      ==28627== Using Valgrind-3.12.0 and LibVEX; rerun with -h for copyright info
+      ==28627== Command: ./str-dynamic
+      ==28627==
+        Hello World
+      ==28627==
+      ==28627== HEAP SUMMARY:
+      ==28627==     in use at exit: 0 bytes in 0 blocks
+      ==28627==   total heap usage: 2 allocs, 2 frees, 5,120 bytes allocated
+      ==28627==
+      ==28627== All heap blocks were freed -- no leaks are possible
+      ==28627==
+      ==28627== For counts of detected and suppressed errors, rerun with: -v
+      ==28627== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+  **Note**: You should run [valgrind] on the [dynamic executable] rather than
+  the [static executable].  Likewise, [valgrind] may behave differently on
+  [macOS] than it does on [Linux], so beware of spurious errors on the former.
+
+  </div>
+
+  [memory leaks]:           https://en.wikipedia.org/wiki/Memory_leak
+  [uninitialized values]:   http://valgrind.org/docs/manual/mc-manual.html#mc-manual.uninitvals
+  [invalid accesses]:       http://valgrind.org/docs/manual/mc-manual.html#mc-manual.badrw
+  [valgrind]:               http://valgrind.org/
+  [dynamic executable]:     https://en.wikipedia.org/wiki/Dynamic_linker
+  [static executable]:      https://en.wikipedia.org/wiki/Static_library
+  [macOS]:                  https://www.apple.com/macos/
+
+  ## Activity 3: Quiz (2 Points)
+
+  Once you have completed all the activities above, you are to complete the
+  following **reflection quiz**:
+
+  <div id="quiz-questions"></div>
+
+  <div id="quiz-responses"></div>
+
+  <script src="static/js/dredd-quiz.js"></script>
+  <script>
+  loadQuiz('static/json/homework07.json');
+  </script>
+
+  <pre style="display: none;" id="dr-container" class="codehilite"><code id="dredd-response"></code></pre>
+
+  As with [Reading 01], you will need to store your answers in a
+  `homework07/answers.json` file.  You can use the form above to generate the
+  contents of this file, or you can write the [JSON] by hand.
+
+  To test your quiz, you can use the `check.py` script:
+
+      :::bash
+      $ ../.scripts/check.py
+      Checking homework07 quiz ...
+          Q01 0.40
+          Q02 0.30
+          Q03 0.40
+          Q04 0.20
+          Q05 0.70
+        Score 2.00 / 2.00
+       Status Success
+
+  [JSON]: https://json.org
+
+  ## Guru Point: Linux (2 Points)
+
+  There are two extra credit opportunities: install a [Linux] distribution or
+  utilize [docker] containers.  You may do one or both for extra credit.
+
+  ### Installation
+
+  For extra credit, install a [Linux] distribution either on a partition on
+  your laptop, in a [virtual machine], or on a [Raspberry Pi].
+
+  There are a number of [Linux] distributions and which one you wish to install
+  is up to you.  That said, these are probably the most popular ones:
+
+  <div class="row">
+    <div class="col-xs-6 col-md-3">
+      <a href="http://www.ubuntu.com/" class="thumbnail">
+        <img src="https://assets.ubuntu.com/v1/57a889f6-ubuntu-logo112.png">
+      </a>
+    </div>
+
+    <div class="col-xs-6 col-md-3">
+      <a href="https://getfedora.org/" class="thumbnail">
+        <img src="https://fedoraproject.org/w/uploads/6/65/Fedora_vertical.png">
+      </a>
+    </div>
+
+    <div class="col-xs-6 col-md-3">
+      <a href="https://www.linuxmint.com/" class="thumbnail">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Linux_Mint_logo_without_wordmark.svg/483px-Linux_Mint_logo_without_wordmark.svg.png">
+      </a>
+    </div>
+
+    <div class="col-xs-6 col-md-3">
+      <a href="https://www.debian.org/" class="thumbnail">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Debian-OpenLogo.svg/363px-Debian-OpenLogo.svg.png">
+      </a>
+    </div>
+
+    <div class="col-xs-6 col-md-3">
+      <a href="https://www.archlinux.org/" class="thumbnail">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Archlinux-vert-dark.svg/320px-Archlinux-vert-dark.svg.png">
+      </a>
+    </div>
+
+    <div class="col-xs-6 col-md-3">
+      <a href="https://elementary.io/" class="thumbnail">
+        <img src="https://elementary.io/images/brand/logomark.png">
+      </a>
+    </div>
+
+    <div class="col-xs-6 col-md-3">
+      <a href="https://getsol.us/" class="thumbnail">
+        <img src="https://getsol.us/imgs/solus.png">
+      </a>
+    </div>
+
+    <div class="col-xs-6 col-md-3">
+      <a href="https://www.voidlinux.org/" class="thumbnail">
+      <img src="https://a-hel-fi.m.voidlinux.org/logos/void.svg">
+      </a>
+    </div>
+  </div>
+
+  You can find a more exhaustive list on [Distrowatch].  For virtualization
+  software, [Virtualbox] is a popular choice.
+
+  ### Docker
+
+  For extra credit, you are to demonstrate your [Homework 07] code running
+  inside a [Docker] container (**hint**: you can use the
+  `pbui/cse-20289-sp21-assignments` image, which is what is used to test your
+  code on [GitHub]).
+
+  This means you need to use [Docker] to spin up a **container** environment
+  that has your code and you run `make test` from inside that container.
+
+  <div class="alert alert-info" markdown="1">
+  #### <i class="fa fa-check"></i> Verification
+
+  To get credit for this Guru Point, you must show either the instructor or TA
+  a demonstration of your [Linux] setup or your code running in a [Docker]
+  container (or attached a video / screenshot to your Pull Request with
+  identifying information such as your name or netid).  You have up until **one
+  week after** this assignment is due to verify your Guru Point.
+
+  </div>
+
+  <div class="alert alert-success" markdown="1">
+  #### <i class="fa fa-calendar"></i> <strike>Self-Service Extension</strike>
+
+  <strike>
+  Remember that you can always **forgo** this Guru Point for **two extra days**
+  to do the homework.  That is, if you need an extension, you can simply skip
+  the Guru Point and you will automatically have until Monday to complete the
+  assignment for full credit.
+
+  Just leave a note on your **Pull Request** of your intensions.
+  </strike>
+
+  **Everyone gets two extra days to do the homework with no penalty now to
+  accommodate those in adverse learning environments.**
+
+  </div>
+
+  [Linux]:          https://www.kernel.org/
+  [Distrowatch]:    http://distrowatch.com/
+  [Virtualbox]:     https://www.virtualbox.org/
+  [virtual machine]:https://en.wikipedia.org/wiki/Virtual_machine
+  [Raspberry Pi]:   https://www.raspberrypi.org/
+  [Docker]:         https://www.docker.com/
+
+  ## Submission
+
+  To submit your assignment, please commit your work to the `homework07` folder
+  of your `homework07` branch in your **assignments** [GitHub] repository.
+  Your `homework07` folder should **only** contain the following files:
+
+  - `Makefile`
+  - `README.md`
+  - `answers.json`
+  - `library.c`
+  - `main.c`
+  - `str.h`
+
+  **Note**: You do not need to commit the test scripts because the `Makefile`
+  automatically downloads them.
+
+      :::bash
+      #--------------------------------------------------
+      # BE SURE TO DO THE PREPARATION STEPS IN ACTIVITY 0
+      #--------------------------------------------------
+
+      $ cd homework07                           # Go to Homework 06 directory
+      ...
+      $ git add Makefile                        # Mark changes for commit
+      $ git add library.c                       # Mark changes for commit
+      $ git add str.h                           # Mark changes for commit
+      $ git commit -m "homework07: Activity 1"  # Record changes
+      ...
+      $ git add Makefile                        # Mark changes for commit
+      $ git add main.c                          # Mark changes for commit
+      $ git commit -m "homework07: Activity 2"  # Record changes
+      ...
+      $ git add answers.json                    # Mark changes for commit
+      $ git commit -m "homework07: Activity 3"  # Record changes
+      $ git push -u origin homework07           # Push branch to GitHub
+
+  <div class="alert alert-danger" markdown="1">
+  #### <i class="fa fa-github"></i> Pull Request
+  Remember to create a **Pull Request** and assign the appropriate TA from the
+  [Reading 09 TA List].
+
+  **DO NOT MERGE** your own **Pull Request**.  The TAs use open **Pull Requests**
+  to keep track of which assignments to grade.  Closing them yourself will
+  cause a delay in grading and confuse the TAs.
+  </div>
+
+  [Markdown]:   https://daringfireball.net/projects/markdown/
+  [git]:    https://git-scm.com/
+  [clone]:  https://git-scm.com/docs/git-clone
+  [commit]: https://git-scm.com/docs/git-commit
+  [push]:   https://git-scm.com/docs/git-push
+  [branching]:   https://git-scm.com/docs/git-branch
+  [code review]: https://en.wikipedia.org/wiki/Code_review
+  [GitHub]: https://github.com
+  [Reading 01]: reading01.html
+  [Reading 09]: reading09.html
+  [Reading 09 TA List]: reading09_tas.html
