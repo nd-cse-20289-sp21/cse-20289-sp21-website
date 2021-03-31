@@ -863,8 +863,10 @@ body:       |
   - `main.c`
   - `str.h`
 
+  <div class="alert alert-warning" markdown="1">
   **Note**: You do not need to commit the test scripts because the `Makefile`
   automatically downloads them.
+  </div>
 
       :::bash
       #--------------------------------------------------
@@ -907,3 +909,4 @@ body:       |
   [Reading 01]: reading01.html
   [Reading 09]: reading09.html
   [Reading 09 TA List]: reading09_tas.html
+  [Homework 07]: homework07.html
