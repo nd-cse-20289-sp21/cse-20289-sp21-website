@@ -261,6 +261,9 @@
 
       - date:           Fri 04/09
         topics:         Debugging (GDB, Valgrind)
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1xX0Y4Gm-4_cqt081QXaRvmV4bHTAUgouRTonkdaVVnc/edit?usp=sharing
 
       - date:           Sat 04/10
         topics:         C-String Library
