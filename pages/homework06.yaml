@@ -631,10 +631,10 @@ body:       |
 
       :::bash
       # Brute-force MD5 hashed passwords of length 7 with lowercase letters and digits
-      $ hashcat -a 3 -m 0 -1 ?l?d -o passwords.7 hashes.txt '?1?1?1?1?1?1?1'
+      $ hashcat -a 3 -m 0 -1 '?l?d' -o passwords.7 --potfile-disable hashes.txt '?1?1?1?1?1?1?1'
 
       # Brute-force MD5 hashed passwords of length 8 with lowercase letters and digits
-      $ hashcat -a 3 -m 0 -1 ?l?d -o passwords.8 hashes.txt '?1?1?1?1?1?1?1?1'
+      $ hashcat -a 3 -m 0 -1 '?l?d' -o passwords.8 --potfile-disable hashes.txt '?1?1?1?1?1?1?1?1'
 
   <div class="alert alert-success" markdown="1">
   **Note**: for **macOS** users, you may wish to install [hashcat] via
