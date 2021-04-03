@@ -357,6 +357,11 @@ body:       |
   **Note**: Use the [strstr] function to search for strings (you do not need to
   support [regular expressions]).
   </div>
+  
+  <div class="alert alert-danger" markdown="1">
+  **Note**: Make sure you return with an **non-zero** exit code if the
+  `PATTERN` is not found in the input stream.
+  </div>
 
   [strstr]: http://man7.org/linux/man-pages/man3/strstr.3.html
   [regular expressions]: https://en.wikipedia.org/wiki/Regular_expression
