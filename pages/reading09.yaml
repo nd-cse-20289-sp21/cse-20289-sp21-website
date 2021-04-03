@@ -154,7 +154,7 @@ body:       |
 
   ### Questions
 
-  Given the following [C] program, `sum.c`, which computes the sum of all the
+  Given the following [C] program, [sum.c], which computes the sum of all the
   integers read from [standard input]:
 
       :::c
@@ -202,7 +202,7 @@ body:       |
           return EXIT_SUCCESS;
       }
 
-  And the following [C] program, `cat.c`, which implements the [cat] command:
+  And the following [C] program, [cat.c], which implements the [cat] command:
 
       :::c
       /* cat.c */
@@ -289,6 +289,8 @@ body:       |
   [Google]: https://www.google.com/
   [StackOverflow]: https://stackoverflow.com/
   [Hands-On Imperative]: https://en.wikipedia.org/wiki/Hacker_ethic#Hands-On_Imperative
+  [sum.c]: https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/reading09/sum.c
+  [cat.c]: https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/reading09/cat.c
 
   Record the answers to the following [Reading 09 Quiz] questions in your
   `reading09` branch:
