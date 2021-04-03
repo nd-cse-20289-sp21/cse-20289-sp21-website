@@ -619,6 +619,8 @@ body:       |
       }
   </div>
 
+  If you need a review of `enum`, checkout [Chapter 22. Enumerated Types: enum](https://beej.us/guide/bgc/html/index-wide.html#enumerated-types-enum).
+
   [bitmask]:    https://en.wikipedia.org/wiki/Mask_(computing)
   [enumerate]:  https://en.wikipedia.org/wiki/Enumerated_type#C
   [bit field]:  https://en.wikipedia.org/wiki/Bit_field
