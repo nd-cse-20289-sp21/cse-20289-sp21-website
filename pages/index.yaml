@@ -248,6 +248,8 @@ body:       |
                       {% set item['label'] = 'warning' %}
                     {% elif item['name'].lower().startswith('panopto') %}
                       {% set item['label'] = 'info' %}
+                    {% elif item['name'].lower().startswith('notebook') %}
+                      {% set item['label'] = 'success' %}
                     {% elif item['name'].lower().startswith('twitch') %}
                       {% set item['label'] = 'info' %}
                     {% else %}
