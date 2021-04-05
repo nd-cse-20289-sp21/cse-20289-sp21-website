@@ -252,6 +252,8 @@
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1qvdywatR3B1MNGahVrMMObGKAnRUBiWmzuXbRTGz8WA/edit?usp=sharing
+          - name:       Panopto
+            link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=c2d3eaae-8050-463a-b33a-ad01012ab505
 
       - date:           Wed 04/07
         topics:         Debugging (GDB, Valgrind)
