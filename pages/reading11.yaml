@@ -163,9 +163,23 @@ body:       |
       `root` directory and print out the name and size of each *regular file*.
 
       <div class="alert alert-success" markdown="1">
-      **Note**: The code has a few `____` placeholders.  You will need to
-        replace these placeholders with the appropriate **functions** and
-        **variables** to complete the program.
+      #### <i class="fa fa-code"></i> Fill in the Blanks
+      
+      The code has a few `____` placeholders.  You will need to replace these
+      placeholders with the appropriate **functions** and **variables** to
+      complete the program.
+
+      Here is a list of some possible **functions** and **variables** you may wish to use:
+
+      - [opendir](https://man7.org/linux/man-pages/man3/opendir.3.html)
+      - [readdir](https://man7.org/linux/man-pages/man3/readdir.3.html)
+      - [closedir](https://man7.org/linux/man-pages/man3/closedir.3.html)
+      - [strerror](https://man7.org/linux/man-pages/man3/strerror.3.html)
+      - [sprintf](https://man7.org/linux/man-pages/man3/printf.3.html)
+      - [stat](https://man7.org/linux/man-pages/man2/lstat.2.html)
+      - `e->d_type`
+      - `e->d_name`
+      - `s.st_size`
       </div>
 
       Once you have a working `walk.c`, you should be able to build and run it:
