@@ -247,23 +247,23 @@
 - name:     "Pointers, Arrays, Strings"
   days:
       - date:           Mon 04/05
-        topics:         Compiling and Building
-        assignment:     Reading 09
-        items:
-          - name:       Slides
-            link:       https://docs.google.com/presentation/d/1-IfpHy3rX2kQ2a5zwBzJauK2G6378dQNXKo74gJKmso/edit?usp=sharing
-
-      - date:           Wed 04/07
         topics:         Pointers, Arrays, Strings
+        assignment:     Reading 09
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1qvdywatR3B1MNGahVrMMObGKAnRUBiWmzuXbRTGz8WA/edit?usp=sharing
 
-      - date:           Fri 04/09
+      - date:           Wed 04/07
         topics:         Debugging (GDB, Valgrind)
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1xX0Y4Gm-4_cqt081QXaRvmV4bHTAUgouRTonkdaVVnc/edit?usp=sharing
+
+      - date:           Fri 04/09
+        topics:         Memory Allocation
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1UwP3DH_kp-A8Rn-Hvma3cZKhtRB4r8-8pnodist912w/edit?usp=sharing
 
       - date:           Sat 04/10
         topics:         C-String Library
@@ -273,16 +273,13 @@
   days:
       - date:           Mon 04/11
         assignment:     Reading 10
-        topics:         Memory Allocation
-        items:
-          - name:       Slides
-            link:       https://docs.google.com/presentation/d/1UwP3DH_kp-A8Rn-Hvma3cZKhtRB4r8-8pnodist912w/edit?usp=sharing
-
-      - date:           Wed 04/13
         topics:         Structs, Unions
 
-      - date:           Fri 04/15
+      - date:           Wed 04/13
         topics:         Linked Data Structures
+
+      - date:           Fri 04/15
+        topics:         I/O
 
 - name:     "File System"
   days:
