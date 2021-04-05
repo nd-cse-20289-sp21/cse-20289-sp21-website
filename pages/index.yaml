@@ -301,7 +301,7 @@ body:       |
             <tbody>
                 <tr>
                     <td><span class="label label-primary">Readings</span> Weekly reading assignments.</td>
-                    <td class="text-center">11 &times; 4</td>
+                    <td class="text-center">10 &times; 4</td>
                 </tr>
                 <tr>
                     <td><span class="label label-caution">Homeworks</span> Weekly homework assignments.</td>
