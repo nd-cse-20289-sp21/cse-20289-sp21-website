@@ -1,0 +1,21 @@
+{
+    "q01": {
+        "type": "blank",
+        "question": "\n<p>On a typical Unix system, we are presented with two key storage\nabstractions.  The first is the <b>(1)</b> ____, which is just a linear\narray of bytes that you can <b>(2)</b> ____ or <b>(3)</b> ____. Associated\nwith each of these is an <b>(4)</b> ____ number, which is its low-level\nname.</p>\n\n<p>The second abstraction is the <b>(5)</b> ____, which is a list of pairs\ncontaining the user-readable name of the data, and its assocated low-level\nidentifier.</p>\n"
+    },
+    "q02": {
+        "type": "order",
+        "question": "\n<p>Identify the <b>system call</b> you should use to accomplish the\nfollowing tasks:</p>\n\n<p>\n<ol>\n  <li>Create a file.</li>\n  <li>Load the contents of a file into memory.</li>\n  <li>Store data in memory to a file.</li>\n  <li>Move to a particular offset within a file.</li>\n  <li>Flush data in memory to disk.</li>\n</ol>\n</p>\n",
+        "responses": {
+            "open": "open",
+            "read": "read",
+            "write": "write",
+            "fsync": "fsync",
+            "lseek": "lseek"
+        }
+    },
+    "q03": {
+        "type": "blank",
+        "question": "\n<p>Identify the key <b>system call</b> you should use to implement the\nfollowing Unix command-line utility:</p>\n\n<p>\n<ol>\n  <li><tt>mkdir</tt>: <b>____</b></li>\n  <li><tt>rmdir</tt>: <b>____</b></li>\n  <li><tt>stat</tt>: <b>____</b></li>\n  <li><tt>chmod</tt>: <b>____</b></li>\n  <li><tt>kill</tt>: <b>____</b></li>\n\n  <li><tt>cd</tt>: <b>____</b></li>\n  <li><tt>mv</tt>: <b>____</b></li>\n  <li><tt>rm</tt>: <b>____</b></li>\n  <li><tt>ln</tt>: <b>____</b></li>\n  <li><tt>touch</tt>: <b>____</b></li>\n</ol>\n</p>\n"
+    }
+}
