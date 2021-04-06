@@ -1,0 +1,976 @@
+title:      "Homework 08: Memory Management, File System"
+icon:       fa-code
+navigation: []
+internal:
+external:
+body:       |
+
+  The goal of this homework assignment is to allow you to practice managing
+  [dynamic memory] in [C] by building fundamental [data structures] and
+  navigating the [file system] using low-level functions and [system calls].
+  The first activity involves implementing a [hash table] library, while the
+  second activity requires you to use this library to build a `duplicates`
+  utility that determines if there are any duplicate files by computing the
+  [checksum] of each argument.
+
+  For this assignment, record your source code and any responses to the
+  following activities in the `homework08` folder of your **assignments**
+  GitHub repository and push your work by **noon, Saturday, April 24**.
+
+  [arrays]:             https://en.wikipedia.org/wiki/C_(programming_language)#Arrays
+  [C]:                  https://en.wikipedia.org/wiki/C_(programming_language)#C
+  [uniq]:               http://man7.org/linux/man-pages/man1/uniq.1.html
+  [C]:                  https://en.wikipedia.org/wiki/C_(programming_language)
+  [standard library]:   https://en.wikipedia.org/wiki/C_standard_library
+  [singly-linked list]: https://en.wikipedia.org/wiki/Linked_list#Singly_linked_list
+  [dynamic memory]:     https://en.wikipedia.org/wiki/C_dynamic_memory_allocation
+  [benchmark]:          https://en.wikipedia.org/wiki/Benchmark_(computing)
+  [data structure]:     https://en.wikipedia.org/wiki/Data_structure
+  [data structures]:    https://en.wikipedia.org/wiki/Data_structure
+  [algorithms]:         https://en.wikipedia.org/wiki/Algorithm
+  [hash table]:         https://en.wikipedia.org/wiki/Hash_table
+  [checksum]:           https://en.wikipedia.org/wiki/Checksum
+  [file system]:        https://en.wikipedia.org/wiki/File_system
+  [map]:                https://en.wikipedia.org/wiki/Associative_array
+  [system calls]:       https://en.wikipedia.org/wiki/System_call
+  [Python]:             https://python.org
+
+  ## Activity 0: Preparation
+
+  Before starting this homework assignment, you should first perform a `git pull`
+  to retrieve any changes in your remote [GitHub] repository:
+
+      :::bash
+      $ cd path/to/repository                   # Go to assignments repository
+
+      $ git checkout master                     # Make sure we are in master branch
+
+      $ git pull --rebase                       # Get any remote changes not present locally
+
+  Next, create a new branch for this assignment:
+
+      $ git checkout -b homework08              # Create homework08 branch and check it out
+
+  You are now ready to work on the activities below.
+
+  <div class="alert alert-info" markdown="1">
+  #### <i class="fa fa-question"></i> Frequently Asked Questions
+  <div class="text-center">
+  <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vSnpGBp8K1gphEeolrEqOVfJAyM4PXmrwPgvepmEniMfJGhR1m1QHxQaOcrlbyTvAapAUwyulCKsgzG/embed?start=false&loop=false&delayms=3000" frameborder="0" width="480" height="389" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+  </div>
+  </div>
+
+  ## Activity 1: Table Library (8 Points)
+
+  As discussed in your **data structures** class, a [map] is a container that
+  allows the user to associate **keys** to **values**.  This enables users to
+  easily lookup values by a non-numeric key such as a string in an efficient
+  manner.  Maps (aka [dict] in [Python]) are used in many applications and
+  scripts.  For instance, whenever we used [JSON], we were accessing a [map].
+
+  Of course, being a *bare bones* language, [C] does not have a built-in [map]
+  in its [standard library].  Because of this, we will build our own [map]
+  container by implementing a [hash table] using the [separate chaining]
+  technique to manage [collisions].
+
+  [dict]:       https://docs.python.org/3/library/stdtypes.html#dict
+  [JSON]:       http://www.json.org/
+  [hash table]: https://en.wikipedia.org/wiki/Hash_table
+  [separate chaining]: https://en.wikipedia.org/wiki/Hash_table#Separate_chaining
+  [collisions]: https://en.wikipedia.org/wiki/Collision_(computer_science)#In_theoretical_computer_science
+  [collision]:  https://en.wikipedia.org/wiki/Collision_(computer_science)#In_theoretical_computer_science
+  [array]:      https://en.wikipedia.org/wiki/C_(programming_language)#Arrays
+  [hash]:       https://en.wikipedia.org/wiki/Hash_function#Hash_tables
+  [hash function]: https://en.wikipedia.org/wiki/Hash_function
+  [FNV-1a]:     https://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function
+  [integer]:    https://en.wikipedia.org/wiki/Integer_(computer_science)
+  [integers]:   https://en.wikipedia.org/wiki/Integer_(computer_science)
+  [strings]:    https://en.wikipedia.org/wiki/C_string_handling
+  [string]:     https://en.wikipedia.org/wiki/C_string_handling
+  [doubles]:    https://en.wikipedia.org/wiki/Double-precision_floating-point_format
+  [set]:        https://en.wikipedia.org/wiki/Set_(abstract_data_type)
+
+  #### Separate Chaining Hash Table
+
+  Fundamentally, a [hash table] is just an [array].  Normal [arrays] in [C],
+  unfortunately, can only be indexed by an [integer].  As we discussed last
+  week, this is due to the fact that the **name* of an [array] is really just a
+  *label* for the base **address** of a contiguous chunk of memory.  Therefore,
+  an **index** operation is equivalent to the following:
+
+      :::c
+      A[i] = *(A + i) // Index i of a is the same as access the location in memory at A + i
+
+  This is fine if we only need to search our elements by [integer] values,
+  since we can use the [integer] value as an offset into our chunk of memory.
+  However, if we wanted to quickly lookup values by [strings] or [doubles], we
+  would instead have to scan linearly through our [array] to find the
+  appropriate element.  This, of course, is inefficient, so we need another way
+  of storing non-[integer] values in a way that allows us to quickly find them
+  again.
+
+  To work around this limitation in [arrays], we can use a [hash function] such
+  as [FNV-1a] to deterministicly compute an [integer] value for any sequence of
+  binary data:
+
+      :::text
+      FNV-1A-Hash(data) -> Integer
+
+  Therefore, using a [hash function] allows us to utilize non-[integer] values
+  such as [strings] or [doubles] to lookup elements in a normal [array].  The
+  use of a [hash function] in this manner is the core concept behind the [data
+  structure] know as a [hash table], which can be used to implement either the
+  [set] or [map] **abstract data types**.
+
+  For this activity, you will be implementing a [map] based on a [hash table]
+  that uses [separate chaining] to handle [collisions] as shown below:
+
+  <div class="thumbnail">
+    <img src="static/img/homework08_ht_sc.png" class="img-responsive">
+  </div>
+
+  In this design, the [hash table] starts with a structure that contains the
+  following fields:
+
+  1. **Buckets**: This is the [array] of **Pairs**, each of which consists of a
+  **key**, a **value**, and a reference to the **next** **Pair** in the chain.
+
+  2. **Capacity**: This is the size of the [array] of **Pairs** (ie. number of
+  **Buckets**).
+
+  3. **Size**: This is the number of valid **Pair** we are storing in our
+  [hash table].
+
+  In the example in the diagram above, we have a [hash table] with an [array]
+  of `8` **Buckets**.  Each **Bucket** is actually a [singly-linked list] where
+  we store the **Pairs** in our [hash table].  Because the **Bucket** is an
+  actual **Pair** and not just a reference to one, this means that our
+  [singly-linked list] uses a [dummy or sentinel node].
+
+  For instance, the first **Pair**  at the top has a **key** of `0` and a
+  **value** of "Dog".  Because `0` maps to **Bucket** `0` we simply have the
+  **Pair** structure at **Buckets[0]** reference this **Pair**.  Because
+  there are no other **Pairs** that map to `0`, this top **Pair**'s next
+  reference is simply `NULL`.
+
+  At the bottom, we have two **Pairs** that map to **Bucket** `5`.  When
+  multiple elements map to the same **Bucket**, we call this a [collision].  In
+  [separate chaining], we handle this situation by simply adding the additional
+  **Pair** to our [singly-linked list] as shown in the diagram.  Here, we have
+  one **Pair** with the **key** `5` and the **value** "Log" followed by a
+  second **Pair** with the **key** `13` and the **value** "Rock".  The former
+  has a reference to the latter to form a [singly-linked list].
+
+  The remainder of this document details how you are to build a [map] that
+  follows this overall design.
+
+  [sequence container]:     https://en.wikipedia.org/wiki/List_(abstract_data_type)
+  [dummy or sentinel node]: https://en.wikipedia.org/wiki/Linked_list#Using_sentinel_nodes
+
+  #### Skeleton Code
+
+  To help you get started, the instructor has provided you with the following [skeleton code]:
+
+      :::bash
+      # Go to assignments repository
+      $ cd path/to/assignments/repository
+
+      # ------------------------------------------------
+      # MAKE SURE YOU ARE NOT INSIDE homework08
+      # MAKE SURE YOU ARE AT THE TOP-LEVEL DIRECTORY
+      # ------------------------------------------------
+
+      # Download skeleton code tarball
+      $ curl -LO https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework08/homework08.tar.gz
+
+      # Extract skeleton code tarball
+      $ tar xzvf homework08.tar.gz
+
+  Once downloaded and extracted, you should see the following files in your
+  `homework08` directory:
+
+      :::bash
+      homework08
+          \_ Makefile               # This is the Makefile for building all the project artifacts
+          \_ README.md              # This is the README file for recording your responses
+          \_ bin                    # This contains the binary executables and test scripts
+            \_ test_duplicates.sh   # This is the shell script for testing the duplicates tool
+            \_ test_hash.sh         # This is the shell script for testing the hash functions
+            \_ test_pair.sh         # This is the shell script for testing the Pair structure
+            \_ test_table.sh        # This is the shell script for testing the Table structure
+          \_ include                # This contains the header files
+            \_ hash.h               # This is the C header file for hash functions
+            \_ macros.h             # This is the C header file for macros
+            \_ pair.h               # This is the C header file for Pair structure
+            \_ table.h              # This is the C header file for Table structure
+          \_ lib                    # This contains the library files
+          \_ src                    # This contains the C implementation files
+            \_ duplicates.c         # This is the C implementation file for the duplicates tool
+            \_ pair.c               # This is the C implementation file for the Pair structure
+            \_ hash.c               # This is the C implementation file for the hash functions
+            \_ table.c              # This is the C implementation file for the Table structure
+          \_ tests                  # This contains the unit test C implementation files
+            \_ unit_hash.c          # This is the C implementation file for the hash unit est
+            \_ unit_pair.c          # This is the C implementation file for the Pair unit test
+            \_ unit_table.c         # This is the C implementation file for the Table unit test
+
+  The details on what you need to implement are described in the following
+  sections.
+
+  [skeleton code]:  https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework08/homework08.tar.gz
+  [union]:          https://en.wikipedia.org/wiki/Union_type
+  [enumeration]:    http://en.cppreference.com/w/c/language/enum
+
+  ### Task 0: Headers
+
+  The following is a description of the [header] files included in the
+  [skeleton code].
+
+  #### `include/pair.h`
+
+  The `include/pair.h` file is the [header] file for `Pair` [struct].  In
+  addition to the function prototypes, this [header] defines the following
+  types:
+
+      :::c
+      typedef union {
+          int64_t  number;
+          char    *string;
+      } Value;
+
+  This defines a `Value` [union] type consisting of either a `64`-bit [integer]
+  or a [string].
+
+      :::c
+      typedef enum {
+          NUMBER,
+          STRING,
+      } Type;
+
+  This defines an [enumeration] that defines the constants `NUMBER` and `STRING`.
+
+      :::c
+      typedef struct Pair Pair;
+      struct Pair {
+          char   *key;
+          Value   value;
+          Type    type;
+          Pair   *next;
+      };
+
+  This defines a `Pair` [struct], which follows from our design described
+  above.  In addition to having a `key`, `value`, and `next` reference, the
+  `Pair` also records the `type` of its `value` (ie. `NUMBER` or `STRING`).
+  This will be useful in choosing between the `number` and `string` fields of
+  the `value` [union].
+
+  #### `include/table.h`
+
+  The `include/table.h` file is the [header] file for `Table` [struct].  In
+  addition to the function prototypes, this [header] defines the following
+  types:
+
+      :::c
+      typedef struct {
+          Pair    *buckets;
+          size_t   capacity;
+          size_t   size;
+      } Table;
+
+  This defines the `Table` [struct], which follows from our design described
+  above.
+
+  <div class="alert alert-info" markdown="1">
+  #### <i class="fa fa-code"></i> Type Definitions
+
+  The use of `typedef` in this [header] file allow us to simply say `Table *t`
+  rather than `struct Table *t`.  While there is some
+  [controversary](https://google.github.io/styleguide/cppguide.html#Aliases)
+  over whether or not this is good practice, we will use these [type
+  definitions] to make our code clearer and more compact.
+
+  </div>
+
+  #### `include/macros.h`
+
+  Finally, the `include/macros.h` [header] file provides a `debug` [macro] that
+  you can use to insert debugging statements into your code (rather than
+  [printf]):
+
+      :::c
+      debug("foo = d", foo);
+
+  The advantage of using this [macro] is that it displays the file name, line
+  number, and function name where the command is called in its output, along
+  with the formatted message you specified.
+
+  Likewise, the [header] file also provides a `streq` [macro] that you can use
+  instead of [strcmp]:
+
+      :::c
+      if (streq(source, target)) {
+          ...
+      }
+
+  For this task, you do not need to modify these [header] files. Instead, you
+  should review them and ensure you understand the provided code.
+
+  [struct]:     https://en.wikipedia.org/wiki/Struct_(C_programming_language)
+  [header]:     https://en.wikipedia.org/wiki/Include_directive#C.2FC.2B.2B
+  [prototypes]: https://en.wikipedia.org/wiki/Function_prototype
+  [type definitions]: https://en.wikipedia.org/wiki/Typedef
+  [macro]:      https://en.wikipedia.org/wiki/C_preprocessor#Macro_definition_and_expansion
+  [strcmp]:     http://man7.org/linux/man-pages/man3/strcmp.3.html
+
+  ### Task 1: `Makefile`
+
+  Once again, the `Makefile` contains all the rules or recipes for building the
+  project artifacts (e.g. `libtable.a`, `duplicates`, etc.).  Although the
+  provided `Makefile` contains most of the variable definitions and `test`
+  recipes, you must add the appropriate rules for `libtable.a`, `unit_hash`,
+  `unit_pair`, `unit_table`, `duplicates`, and any intermediate objects.  The
+  dependencies for these targets are shown in the [DAG] below:
+
+  <div class="thumbnail">
+    <img src="static/img/homework08_makefile.png" class="img-responsive">
+  </div>
+
+
+  [DAG]: https://en.wikipedia.org/wiki/Directed_acyclic_graph
+  [static library]: https://en.wikipedia.org/wiki/Static_library#Creating_static_libraries_in_C.2FC.2B.2B
+  [object]: https://en.wikipedia.org/wiki/Object_file
+  [rules]:  https://www.gnu.org/software/make/manual/html_node/Rules.html
+
+  <div class="alert alert-info" markdown="1">
+  #### <i class="fa fa-cogs"></i> Makefile Variables
+
+  You **must** use the `CC`, `CFLAGS`, `LD`, `LDFLAGS`, `AR`, and `ARFLAGS`
+  variables when appropriate in your [rules].
+
+    - **Note**: Although we are producing a [static library] in the form of
+      `libtable.a`, we will **not** be statically linking our executables.
+      Instead, we will use the `libtable.a` as another [object] file when we
+      **link** our executables.
+
+    - **Note**: The binary executables must go in the `bin` folder.
+
+  </div>
+
+  Once you have a working `Makefile`, you should be able to run the following
+  commands:
+
+      :::bash
+      # Build all TARGETS
+      $ make
+      Compiling src/duplicates.o...
+      Compiling src/hash.o...
+      Compiling src/pair.o...
+      Compiling src/table.o...
+      Linking lib/libtable.a...
+      Linking bin/duplicates...
+
+      # Run all tests
+      $ make test
+      Compiling tests/unit_hash.o...
+      Linking bin/unit_hash...
+      Testing hash...
+      ...
+
+      # Simulate build with tracing output
+      $ make -n
+      echo Compiling src/duplicates.o...
+      gcc -g -Wall -std=gnu99 -Iinclude -c -o src/duplicates.o src/duplicates.c
+      echo Compiling src/hash.o...
+      gcc -g -Wall -std=gnu99 -Iinclude -c -o src/hash.o src/hash.c
+      echo Compiling src/pair.o...
+      gcc -g -Wall -std=gnu99 -Iinclude -c -o src/pair.o src/pair.c
+      echo Compiling src/table.o...
+      gcc -g -Wall -std=gnu99 -Iinclude -c -o src/table.o src/table.c
+      echo Linking lib/libtable.a...
+      ar rcs lib/libtable.a src/hash.o src/pair.o src/table.o
+      echo Linking bin/duplicates...
+      gcc -Llib -o bin/duplicates src/duplicates.o lib/libtable.a -lcrypto
+
+  Depending on your compiler, you may see some warnings with the initial
+  [skeleton code].  Likewise, the test programs will all fail in some fashion.
+
+  [make]: https://www.gnu.org/software/make/
+  [gdb]:                https://www.gnu.org/software/gdb/
+  [atoi]:               http://man7.org/linux/man-pages/man3/atoi.3.html
+  [strtol]:             http://man7.org/linux/man-pages/man3/strtol.3.html
+  [strdup]:             http://man7.org/linux/man-pages/man3/strdup.3.html
+  [qsort]:              http://man7.org/linux/man-pages/man3/qsort.3.html
+  [templates]:          https://en.wikipedia.org/wiki/Template_(C%2B%2B)
+  [recursion]:          https://en.wikipedia.org/wiki/Recursion
+  [stack overflow]:     https://en.wikipedia.org/wiki/Stack_overflow
+
+  ### Task 2: `src/hash.c`
+
+  The `src/hash.c` file contains the [C] implementation for the [FNV-1a] hash
+  function and the [MD5] checksum function. For this task, you will need to
+  implement the following functions:
+
+  1. `uint64_t      hash_from_data(const void *data, size_t n)`
+
+      > This function uses the [FNV-1a] algorithm to compute a [hash] on the
+      given `data` which consists of `n` bytes.
+
+      To implement this function, you may follow the pseudo-code below:
+
+          :::text
+          function FNV-Hash(data):
+              hash = FNV_OFFSET_BASIS
+              for each byte in data:
+                  hash = hash ^ byte of data
+                  hash = hash x FNV_PRIME
+              return hash
+
+      <div class="alert alert-success" markdown="1">
+      **Note**: Remember that you can use [type casting] to interpret a chunk
+      of bytes in any format you wish.
+      </div>
+
+  2. `bool        hash_from_file(const char *path, char hexdigest[HEX_DIGEST_LENGTH])`
+
+      > This function computes the [MD5] checksum on the contents of the file
+      specified by `path` and stores the result in `hexdigest`.
+
+      To implement this function, you will need to use the [MD5 functions] from
+      the [OpenSSL] library.
+
+      <div class="alert alert-success" markdown="1">
+      **Note**: You may adapt the code described in this [StackOverflow
+      question](https://stackoverflow.com/questions/3395690/md5sum-of-file-in-linux-c).
+      </div>
+
+  As you implement `src/hash.c`, you can test it by running the `test-hash`
+  target:
+
+      :::bash
+      # Run test-hash target
+      $ make test-hash
+      Compiling tests/unit_hash.o...
+      Compiling src/hash.o...
+      Compiling src/pair.o...
+      Compiling src/table.o...
+      Linking lib/libtable.a...
+      Linking bin/unit_hash...
+      Testing hash...
+       hash_from_data                           ... Success
+       hash_from_file                           ... Success
+
+         Score 1.00
+
+      # Run unit_hash manually
+      $ ./bin/unit_hash 0
+          wake me up inside = 0x7d9454fa584a0a56
+                        123 = 0x456fc2181822c4db
+                    deadool = 0x7d517630945dadbb
+                  wolverine = 0x874d0d8868f684c8
+
+      $ ./bin/unit_hash 1
+             include/hash.h = 12da1bb257a7e9a5e6b78f42a3c93bfe
+           include/macros.h = 9331940d9bd8af21f9c0663b1d892530
+             include/pair.h = f376c4ec109ce551bbecb38a5a77cc75
+            include/table.h = a4bf553a658ee3e668c0e043fe177b24
+
+  [type casting]:   http://beej.us/guide/bgc/output/html/multipage/morestuff.html#cast
+  [MD5]:            https://en.wikipedia.org/wiki/MD5
+  [MD5 functions]:  https://www.openssl.org/docs/man1.0.2/man3/MD5_Init.html
+  [openssl]:        https://www.openssl.org/
+
+  ### Task 3: `src/pair.c`
+
+  The `src/pair.c` file contains the [C] implementation for the **Pair
+  structure**.  For this task, you will need to implement the following
+  functions:
+
+  1. `Pair *       pair_create(const char *key, const Value value, Pair *next, Type type)`
+
+        > This function allocates a new `Pair`, sets its `key`, `value`,
+        `next` and `type` fields, and returns the allocated structure.
+
+        <div class="alert alert-success" markdown="1">
+        **Note**:
+
+        - You must check if allocation fails.
+
+        - You must allocate and copy the `key` (consider [strdup]).
+
+        - You must allocate and copy the `value` if the `type` is set to `STRING`.
+
+        - You may wish to use the `pair_update` function to implement part of
+          this function (to avoid *code duplication*).
+        </div>
+
+  2. `Pair *       pair_delete(Pair *p, bool recursive)`
+
+        > This function deallocates the given `Pair` and any previously
+        allocated fields such as the `key` and `value`.  If `recursive` is
+        `true`, then this function will also deallocate the `next` `Pair` and
+        any of its successors.
+
+        <div class="alert alert-success" markdown="1">
+        **Note**: You can use [recursion] for this if you wish since the
+        [singly-linked list] should never be too long.
+        </div>
+
+  3. `void          pair_update(Pair *p, const Value value, Type type)`
+
+        > This function updates the `value` field of the specified `Pair`.
+
+        <div class="alert alert-success" markdown="1">
+        **Note**: Special care must be given to both the old `value` `type` and the
+        new `value` `type`.
+
+        - If the old `value` is of `type` `STRING`, then you must deallocate it.
+
+        - If the new `value` is of `type` `STRING`, then you must allocate and copy it.
+
+        Failure to do so will lead to memory errors.
+        </div>
+
+  4. `void          pair_format(Pair *p, FILE *stream)`
+
+        > This function prints the `Pair`'s `key` and `value` fields to the
+        specified `stream` in the format "{key}\t{value}\n".
+
+  As you implement `src/pair.c`, you can test it by running the `test-pair`
+  target:
+
+      :::bash
+      # Run test-pair target
+      $ make test-pair
+      Compiling tests/unit_pair.o...
+      Linking bin/unit_pair...
+      Testing pair...
+       pair_create                              ... Success
+       pair_delete                              ... Success
+       pair_update                              ... Success
+       pair_format                              ... Success
+
+         Score 2.00
+
+      # Run unit_pair manually
+      $ ./bin/unit_pair 0
+
+  ### Task 4: `src/table.c`
+
+  The `src/table.c` file contains the [C] implementation for the core [hash
+  table] data structure. For this task, you will need to implement the
+  following functions:
+
+  1. `Table *         table_create(size_t capacity)`
+
+      > This function allocates a new `Table`, sets its `capacity`, and `size`
+      fields, allocates `buckets` of `Pair` structures, and returns the
+      allocated structure.
+
+      <div class="alert alert-success" markdown="1">
+      **Note**:
+
+      - If `capacity` is `0`, then it should use the `DEFAULT_CAPACITY` instead.
+
+      - The `buckets` field is an [array] of `Pair` structures.
+      </div>
+
+  2. `Table *         table_delete(Table *m)`
+
+      > This function deallocates the given `Table` along with its `buckets` of
+      `Pair` structures.
+
+      <div class="alert alert-success" markdown="1">
+
+      **Note**: Consider using the `recursive` argument to `pair_delete`.
+
+      </div>
+
+  3. `void          table_insert(Table *m, const char *key, const Value value, Type type)`
+
+      > This function inserts a new `Pair` into the `Table` if the `key` does
+      not exist yet.  If it does, then pre-existing `Pair`'s `value` is
+      updated to the given `value`.
+
+      <div class="alert alert-success" markdown="1">
+
+      **Note**: It doesn't matter where you insert the `Pair` in the
+      corresponding [singly-linked list].  That is, you can either add to the
+      *front* or the *back*, it is up to you.
+
+      </div>
+
+  4. `Value *       table_search(Table *m, const char *key)`
+
+      > This function searches the `Table` for an `Pair` with the given `key`.
+      If found then a reference to the corresponding `Value` is returned,
+      otherwise `NULL.`
+
+      <div class="thumbnail">
+      <img src="static/img/homework08_ht_search.png" class="img-responsive">
+      </div>
+
+  5. `bool          table_remove(Table *m, const char *key)`
+
+      > This function removes the `Pair` with the given `key` from the `Table`
+      and returns whether or not the removal was successful (ie. an `Pair`
+      with the `key` was in fact in the `Table`).
+
+      <div class="thumbnail">
+      <img src="static/img/homework08_ht_remove.png" class="img-responsive">
+      </div>
+
+      <div class="alert alert-success" markdown="1">
+      **Note**: Special care must be given to *bridge* the gap between the
+      previous `Pair` and the next `Pair` during removal.
+      </div>
+
+  6. `void          table_format(Table *m, FILE *stream)`
+
+      > This function formats all the `Pairs` in the `Table` to the specified
+      `stream`.
+
+  As you implement `src/table.c`, you can test it by running the `test-table`
+  target:
+
+      :::bash
+      # Run test-table target
+      $ make test-table
+      Compiling tests/unit_table.o...
+      Linking bin/unit_table...
+      Testing table...
+       table_create                             ... Success
+       table_delete                             ... Success
+       table_insert                             ... Success
+       table_search                             ... Success
+       table_remove                             ... Success
+       table_format                             ... Success
+
+         Score 5.00
+
+      # Run unit_table manually
+      $ ./bin/unit_table 0
+
+  ## Activity 2: Duplicates (6 Points)
+
+  Once you have a working [hash table] library, you are to complete the
+  `src/duplicates.c` program:
+
+      :::bash
+      # Display usage
+      $ ./bin/duplicates -h
+      Usage: ./bin/duplicates paths...
+          -c     Only display total number of duplicates
+          -q     Do not write anything (exit with 0 if duplicate found)
+
+      # Check files and directories for duplicates
+      $ cp README.md COPY.md
+
+      $ ./bin/duplicates README.md Makefile bin COPY.md
+      COPY.md is duplicate of README.md
+
+      # Check files and directories for duplicates (counts only)
+      $ ./bin/duplicates -c README.md Makefile bin COPY.md
+      1
+
+      # Check files and directories for duplicates (quiet)
+      $ ./bin/duplicates -q README.md Makefile bin COPY.md
+
+      $ echo $?
+      0
+
+  The `bin/duplicates` program proceses the files and directories passed to the
+  program as arguments.  It computes the [MD5] checksum of each file and stores
+  it in a `Table` structure in order to keep track if it has seen the contents
+  of each file before.
+
+  If a duplicate is found, then a message is displayed informing the user of
+  the found duplicate (and the original file).
+
+  If the `-c` flag is set, then only a final count of the total number of
+  duplicates found is reported to the user.
+
+  If the `-q` flag is set, then the program exits with `0` as soon as it
+  detects a duplicate, otherwise, it exits with a non-zero value.
+
+  [standard input]: https://en.wikipedia.org/wiki/Standard_streams#Standard_input_.28stdin.29
+
+  ### Task 1: `src/duplicates.c`
+
+  The `src/duplicates.c` file contains the [C] implementation of the duplicates
+  tool described above.
+
+  In addition to implementing command line parsing in the `main` function and you
+  will need to implement the following functions:
+
+  1. `bool is_directory(const char *path)`
+
+      > This function returns `true` if `path` is a directory, otherwise it returns `false`.
+
+      <div class="alert alert-success" markdown="1">
+      **Note**: Consider using the [stat] system call.
+      </div>
+
+  2. `size_t check_file(const char *path, Table *checksums, Options *options)`
+
+      > This function checks if the [MD5] checksum of the contents in the file
+      specified by `path` is in the `checksums` `Table`.  If so, it will return
+      `1`.  Otherwise, it will return `0`.
+
+      <div class="alert alert-success" markdown="1">
+      **Note**:
+
+      - If `quiet` is `true`, then `exit` if file is in `checksums` `Table`.
+
+      - If `count` is `false`, then print duplicate association if file is in `checksums` `Table`.
+
+      </div>
+
+  3. `size_t check_directory(const char *root, Table *checksums, Options *options)`
+
+      > This function determines how many duplicates are in contained in the
+      `root` directory by traversing all the entries.  If the entry is a
+      directory, then it recursively calls itself on the entry.  Otherwise, it
+      calls `check_file` on the entry.  At the end, it should return the total
+      numer of duplicates that was found while traversing the directory.
+
+      <div class="alert alert-success" markdown="1">
+      **Note**:
+
+      - You should skip "." and "..".
+
+      - You should use the **full path** of the `entry` when recursing.
+
+      </div>
+
+  As you implement `src/duplicates.c`, you can test it by running the `test-duplicates`
+  target:
+
+      :::bash
+      # Run test-duplicates target
+      $ make test-duplicates
+      Compiling src/duplicates.o...
+      Linking bin/duplicates...
+      Testing duplicates...
+       duplicates -h                            ... Success
+       duplicates none                          ... Success
+       duplicates none (valgrind)               ... Success
+       duplicates none -c                       ... Success
+       duplicates none -c (valgrind)            ... Success
+       duplicates none -q                       ... Success
+       duplicates none -q (valgrind)            ... Success
+       duplicates one                           ... Success
+       duplicates one (valgrind)                ... Success
+       duplicates one -c                        ... Success
+       duplicates one -c (valgrind)             ... Success
+       duplicates one -q                        ... Success
+       duplicates one -q (valgrind)             ... Success
+       duplicates two                           ... Success
+       duplicates two (valgrind)                ... Success
+       duplicates two -c                        ... Success
+       duplicates two -c (valgrind)             ... Success
+       duplicates two -q                        ... Success
+       duplicates two -q (valgrind)             ... Success
+       duplicates none dirs                     ... Success
+       duplicates none dirs (valgrind)          ... Success
+       duplicates none dirs -c                  ... Success
+       duplicates none dirs -c (valgrind)       ... Success
+       duplicates none dirs -q                  ... Success
+       duplicates none dirs -q (valgrind)       ... Success
+       duplicates one dirs                      ... Success
+       duplicates one dirs (valgrind)           ... Success
+       duplicates one dirs -c                   ... Success
+       duplicates one dirs -c (valgrind)        ... Success
+       duplicates one dirs -q                   ... Success
+       duplicates one dirs -q (valgrind)        ... Success
+       duplicates two dirs                      ... Success
+       duplicates two dirs (valgrind)           ... Success
+       duplicates two dirs -c                   ... Success
+       duplicates two dirs -c (valgrind)        ... Success
+       duplicates two dirs -q                   ... Success
+       duplicates two dirs -q (valgrind)        ... Success
+
+         Score 6.00
+
+      # Run test_duplicates.sh manually
+      $ ./bin/test_duplicates.sh
+
+  [memory leaks]:           https://en.wikipedia.org/wiki/Memory_leak
+  [uninitialized values]:   http://valgrind.org/docs/manual/mc-manual.html#mc-manual.uninitvals
+  [invalid accesses]:       http://valgrind.org/docs/manual/mc-manual.html#mc-manual.badrw
+  [valgrind]:               http://valgrind.org/
+  [dynamic executable]:     https://en.wikipedia.org/wiki/Dynamic_linker
+  [static executable]:      https://en.wikipedia.org/wiki/Static_library
+  [stat]:                   http://man7.org/linux/man-pages/man2/stat.2.html
+
+  ## Activity 3: Quiz
+
+  Once you have completed all the activities above, you are to complete the
+  following **reflection quiz**:
+
+  <div id="quiz-questions"></div>
+
+  <div id="quiz-responses"></div>
+
+  <script src="static/js/dredd-quiz.js"></script>
+  <script>
+  loadQuiz('static/json/homework08.json');
+  </script>
+
+  <pre style="display: none;" id="dr-container" class="codehilite"><code id="dredd-response"></code></pre>
+
+  As with [Reading 01], you will need to store your answers in a
+  `homework08/answers.json` file.  You can use the form above to generate the
+  contents of this file, or you can write the [JSON] by hand.
+
+  To test your quiz, you can use the `check.py` script:
+
+      :::bash
+      $ ./check.py
+      Checking homework08 quiz ...
+           Q01 0.10
+           Q02 0.10
+           Q03 1.20
+           Q04 0.20
+           Q05 0.40
+         Score 2.00 / 2.00
+        Status Success
+
+  ## Guru Point: Easter Egg (1 Point)
+
+  Although Easter was a couple of weeks ago, it is always fun to find 
+  [Easter Eggs] in programs and services.  For instance, here is the 
+  first video game [easter egg] (as discussed in [History of Computing]):
+
+  <div class="embed-responsive embed-responsive-16by9 thumbnail">
+    <iframe class="embed-responsive-item" width="854" height="480" src="https://www.youtube.com/embed/Xk7Mg3aqpzM" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  </div>
+
+  For extra credit, you are to add an [easter egg] to your `duplicates` program
+  that does any of the following:
+
+  1. Display scrolling your favorite song, quote, or poem.
+
+  2. Run a mini-game (ie. [rogue], [nethack], or any of the [BSD games]).
+
+  3. Display some sort of animation (ala [cmatrix] or [chad_stride]).
+
+  For instance, the instructor's version of `duplicates` on the student
+  machines contains the following easter egg:
+
+      :::bash
+      $ ~pbui/pub/bin/duplicates -c -s
+
+  [easter eggs]: https://en.wikipedia.org/wiki/Easter_egg_(media)
+  [easter egg]: https://en.wikipedia.org/wiki/Easter_egg_(media)
+  [History of Computing]: https://www3.nd.edu/~pbui/teaching/cse.40850.sp18/
+  [rogue]: https://en.wikipedia.org/wiki/Rogue_(video_game)
+  [nethack]: https://en.wikipedia.org/wiki/NetHack
+  [BSD games]: https://github.com/vattam/BSDGames
+  [cmatrix]: https://github.com/abishekvashok/cmatrix
+  [chad_stride]: https://github.com/sambattalio/chad_stride
+
+  <div class="alert alert-info" markdown="1">
+  #### <i class="fa fa-check"></i> Verification
+
+  To get credit for this Guru Point, you must show either the instructor or TA
+  a demonstration of your [easter egg] in action (or attach a video / screenshot
+  to your **Pull Request**).  You have up until **one week after** this
+  assignment is due to verify your Guru Point.
+
+  </div>
+
+  <div class="alert alert-success" markdown="1">
+  #### <i class="fa fa-calendar"></i> Self-Service Extension
+
+  Remember that you can always **forgo** this Guru Point for **two extra days**
+  to do the homework.  That is, if you need an extension, you can simply skip
+  the Guru Point and you will automatically have until Monday to complete the
+  assignment for full credit.
+
+  Just leave a note on your **Pull Request** of your intensions.
+
+  </div>
+
+  [GitHub]: https://www.github.com
+
+  ## Submission
+
+  To submit your assignment, please commit your work to the `homework08` folder
+  in your **assignments** [GitHub] repository.  Your `homework08` folder should
+  only contain at the following files:
+
+  - `Makefile`
+  - `README.md`
+  - `answers.json`
+  - `bin/test_duplicates.sh`
+  - `bin/test_hash.sh`
+  - `bin/test_pair.sh`
+  - `bin/test_table.sh`
+  - `include/hash.h`
+  - `include/macros.h`
+  - `include/pair.h`
+  - `include/table.h`
+  - `lib/.gitkeep`
+  - `src/duplicates.c`
+  - `src/hash.c`
+  - `src/pair.c`
+  - `src/table.c`
+  - `tests/unit_pair.c`
+  - `tests/unit_hash.c`
+  - `tests/unit_table.c`
+
+  <div class="alert alert-warning" markdown="1">
+  **Note**: You must not modify any of the provided test scripts or unit tests.
+  </div>
+
+      :::bash
+      #--------------------------------------------------
+      # BE SURE TO DO THE PREPARATION STEPS IN ACTIVITY 0
+      #--------------------------------------------------
+
+      $ cd homework08                           # Go to Homework 07 directory
+      ...
+      $ git add Makefile                        # Mark changes for commit
+      $ git add bin/*.sh bin/*.py               # Mark changes for commit
+      $ git add include/*.h                     # Mark changes for commit
+      $ git add lib/.gitkeep                    # Mark changes for commit
+      $ git add tests/*.c                       # Mark changes for commit
+      $ git commit -m "homework08: import"      # Record changes
+      ...
+      $ git add src/hash.c                      # Mark changes for commit
+      $ git commit -m "homework08: hash"        # Record changes
+      ...
+      $ git add src/pair.c                      # Mark changes for commit
+      $ git commit -m "homework08: pair"        # Record changes
+      ...
+      $ git add src/table.c                     # Mark changes for commit
+      $ git commit -m "homework08: table"       # Record changes
+      ...
+      $ git add src/duplicates.c                # Mark changes for commit
+      $ git commit -m "homework08: duplicates"  # Record changes
+      ...
+      $ git add answers.json                    # Mark changes for commit
+      $ git commit -m "homework08: quiz"        # Record changes
+      $ git push -u origin homework08           # Push branch to GitHub
+
+  <div class="alert alert-danger" markdown="1">
+  #### <i class="fa fa-github"></i> Pull Request
+  Remember to create a **Pull Request** and assign the appropriate TA from the
+  [Reading 11 TA List].
+
+  **DO NOT MERGE** your own **Pull Request**.  The TAs use open **Pull
+  Requests** to keep track of which assignments to grade.  Closing them
+  yourself will cause a delay in grading and confuse the TAs.
+  </div>
+
+  [Markdown]:   https://daringfireball.net/projects/markdown/
+  [git]:    https://git-scm.com/
+  [clone]:  https://git-scm.com/docs/git-clone
+  [commit]: https://git-scm.com/docs/git-commit
+  [push]:   https://git-scm.com/docs/git-push
+  [branching]:   https://git-scm.com/docs/git-branch
+  [code review]: https://en.wikipedia.org/wiki/Code_review
+  [GitHub]: https://github.com
+  [Reading 01]: reading01.html
+  [Reading 11 TA List]: reading11_tas.html
+  [Reading 11]: reading11.html

@@ -1,0 +1,42 @@
+{
+    "q01": {
+        "type": "single",
+        "question": "\n<p>In <tt>include/hash.h</tt>, we defined <tt>HEX_DIGEST_LENGTH</tt> as\n<tt>((MD5_DIGEST_LENGTH<<1) + 1)</tt>.  What is the value of\n<tt>HEX_DIGEST_LENGTH</tt>?</p>\n",
+        "responses": {
+            "16": 16,
+            "17": 17,
+            "32": 32,
+            "33": 33,
+            "64": 64,
+            "65": 65
+        }
+    },
+    "q02": {
+        "type": "single",
+        "question": "\n<p>Why do we need the extra character in <tt>HEX_DIGEST_LENGTH</tt>?</p>\n",
+        "responses": {
+            "align": "We need it for alignment.",
+            "term": "We need it for the <tt>NUL</tt> character.",
+            "ssl": "We need it for the OpenSSL function to work correctly.",
+            "dont": "We don't actually need it."
+        }
+    },
+    "q03": {
+        "type": "blank",
+        "question": "\n<p>Given the following statements (inside a <tt>main</tt> function), fill\nin the table below to identify how much memory (in bytes) is allocated in\neach memory segment (ie.  <b>stack</b>, <b>heap</b>, <b>data</b>) for the\ncorresponding variable declaration:</p>\n\n<table class=\"table table-striped\">\n  <thead>\n    <th>Code</th>\n    <th>Stack</th>\n    <th>Heap</th>\n    <th>Data</th>\n  </thead>\n  <tbody>\n    <tr>\n      <td><tt>char *s = \"pikachu\";</tt></td>\n      <td><tt>____ ( 1)</tt></td>\n      <td><tt>____ ( 2)</tt></td>\n      <td><tt>____ ( 3)</tt></td>\n    </tr>\n    <tr>\n      <td><tt>Value v = {.string=s};</tt></td>\n      <td><tt>____ ( 4)</tt></td>\n      <td><tt>____ ( 5)</tt></td>\n      <td><tt>____ ( 6)</tt></td>\n    </tr>\n\n    <tr>\n      <td><tt>Pair *p = pair_create(s, v, NULL, STRING);</tt></td>\n      <td><tt>____ ( 7)</tt></td>\n      <td><tt>____ ( 8)</tt></td>\n      <td><tt>____ ( 9)</tt></td>\n    </tr>\n\n    <tr>\n      <td><tt>Table *t = table_create(8);</tt></td>\n      <td><tt>____ (10)</tt></td>\n      <td><tt>____ (11)</tt></td>\n      <td><tt>____ (12)</tt></td>\n    </tr>\n\n  </tbody>\n</table>\n\n<p>Assume this program is compiled on a 64-bit Linux machine (ie. the\n<b>student</b> machines).</p>\n"
+    },
+    "q04": {
+        "type": "multiple",
+        "question": "\n<p>In <tt>check_file</tt>, the function receives an <tt>options</tt>\nargument.  Which of the following are valid ways to check the\n<tt>quiet</tt> attribute of the <tt>options</tt> (select all that\napply)?</p>\n",
+        "responses": {
+            "a": "<tt>options.count</tt>",
+            "b": "<tt>options->count</tt>",
+            "c": "<tt>(*options).count</tt>",
+            "d": "<tt>(*options)->count</tt>"
+        }
+    },
+    "q05": {
+        "type": "blank",
+        "question": "\n<p>On the <b>student machines</b>, run <tt>strace</tt> on\n<tt>./bin/duplicates Makefile README.md bin src</tt> a few times and answer\nthe following questions:</p>\n\n<ol>\n    <li>Which system call is called the most often? ____</li>\n    <li>Which system call took the most total time? ____</li>\n    <li>Which system call had the most usec/call? ____</li>\n    <li>Which system call had at least one error, but the lowest total number of errors? ____</li>\n</ol>\n"
+    }
+}
