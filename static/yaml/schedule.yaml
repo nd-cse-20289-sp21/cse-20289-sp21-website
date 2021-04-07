@@ -262,6 +262,10 @@
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1xX0Y4Gm-4_cqt081QXaRvmV4bHTAUgouRTonkdaVVnc/edit?usp=sharing
+          - name:       Notebook
+            link:       https://docs.google.com/presentation/d/16XA78Cxi9bRt26meq37Z72__r6q2kG5qVk0UIaVPHWg/edit?usp=sharing
+          - name:       Panopto
+            link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=ba6adf6e-23c6-4d15-ae51-ad03012e56f0
 
       - date:           Fri 04/09
         topics:         Memory Allocation
