@@ -284,6 +284,9 @@
       - date:           Mon 04/11
         assignment:     Reading 10
         topics:         Structs, Unions
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1yGQdxTItJEiFzFGtslOhxhgE1nhA5jFFHFpLyrpLQ6c/edit?usp=sharing
 
       - date:           Wed 04/13
         topics:         Linked Data Structures
