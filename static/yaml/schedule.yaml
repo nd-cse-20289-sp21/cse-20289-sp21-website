@@ -296,6 +296,9 @@
 
       - date:           Fri 04/15
         topics:         I/O
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/16L7vNkvRha2aUnsFndyr5pbcICuVTdLhv7rLrZA0h4Y/edit?usp=sharing
 
 - name:     "File System"
   days:
