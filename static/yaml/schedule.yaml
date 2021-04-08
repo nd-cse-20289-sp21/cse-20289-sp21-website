@@ -290,6 +290,9 @@
 
       - date:           Wed 04/13
         topics:         Linked Data Structures
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1noEiss7jk_a9kWKp9SIXcoZBQ_K4GU7AIDPssCdTA0Q/edit?usp=sharing
 
       - date:           Fri 04/15
         topics:         I/O
