@@ -67,6 +67,9 @@ body:       |
 
       # Download Reading 12 Makefile
       $ curl -LO https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/reading12/Makefile
+      
+      # Download Starter code
+      $ curl -LO https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/reading12/ncat.c
 
       # Download, build, and execute tests
       $ make test
