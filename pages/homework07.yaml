@@ -600,6 +600,8 @@ body:       |
 
   <div class="alert alert-warning" markdown="1">
   **Note**: You should apply the filters in the order specified above.
+  Overall, the flow for each line of input should be: **chomp**, **translate**,
+  apply **filters**, and then **print** result.
   </div>
 
   <div class="alert alert-success" markdown="1">
