@@ -274,6 +274,10 @@
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1UwP3DH_kp-A8Rn-Hvma3cZKhtRB4r8-8pnodist912w/edit?usp=sharing
+          - name:       Notebook
+            link:       https://docs.google.com/presentation/d/1UizDwqdiZ8xsEW85BJg-X3GRNqlUMh5dE3DGb3Nmc3c/edit?usp=sharing
+          - name:       Panopto
+            link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=0f70e763-c6dd-42ca-90db-ad05012b5708
 
       - date:           Sat 04/10
         topics:         C-String Library
