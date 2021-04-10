@@ -835,10 +835,14 @@ body:       |
          Score 2.00 / 2.00
         Status Success
 
-  ## Guru Point: Easter Egg (1 Point)
+  ## Guru Point: Easter Egg and Sorting (3 Points)
 
-  Although Easter was a couple of weeks ago, it is always fun to find 
-  [Easter Eggs] in programs and services.  For instance, here is the 
+  For this week, there are two Guru Point opportunities.
+
+  ### Easter Egg (1 Point)
+
+  Although Easter was a couple of weeks ago, it is always fun to find
+  [Easter Eggs] in programs and services.  For instance, here is the
   first video game [easter egg] (as discussed in [History of Computing]):
 
   <div class="embed-responsive embed-responsive-16by9 thumbnail">
@@ -879,13 +883,49 @@ body:       |
 
   </div>
 
+  ### Sorting (2 Points)
+
+  Since the instructor has heard that **Data Structures** is your favorite
+  class this semester, you can have the opportunity to further flex your **Data
+  Structures** muscles on an old **Systems Programming** assignment: [lsort].
+
+  <div class="thumbnail">
+    <img src="https://www3.nd.edu/~pbui/teaching/cse.20289.sp17/static/img/linked-list.png" class="img-responsive">
+  </div>
+
+  In this project, you are to implement the [sort] utility by using a
+  [singly-linked list] and the [merge sort] algorithm.
+
+  To get started, **fork** the project repository using this link:
+
+  > [https://classroom.github.com/a/LEAI-vNA](https://classroom.github.com/a/LEAI-vNA)
+
+  You will then need to **clone** your private repository and then create a new
+  branch (ie. `gp8`) to begin your work.  Details about the project are
+  provided in the `README.md`.
+
+  <div class="alert alert-info" markdown="1">
+  #### <i class="fa fa-check"></i> Verification
+
+  To get credit for this Guru Point, you must create a **Pull Request** on your
+  [lsort] project repository and assign it to the **instructor** (of course,
+  you must pass all the tests).  You have up until **one week after** this
+  assignment is due to verify your Guru Point.
+
+  </div>
+
+  [lsort]: https://github.com/nd-cse-20289-sp21/cse-20289-sp21-lsort
+  [sort]: https://man7.org/linux/man-pages/man1/sort.1.html
+  [singly-linked list]: https://en.wikipedia.org/wiki/Linked_list#Singly_linked_list
+  [merge sort]: https://en.wikipedia.org/wiki/Merge_sort
+
   <div class="alert alert-success" markdown="1">
   #### <i class="fa fa-calendar"></i> Self-Service Extension
 
-  Remember that you can always **forgo** this Guru Point for **two extra days**
-  to do the homework.  That is, if you need an extension, you can simply skip
-  the Guru Point and you will automatically have until Monday to complete the
-  assignment for full credit.
+  Remember that you can always **forgo** these Guru Points for **two extra
+  days** to do the homework.  That is, if you need an extension, you can simply
+  skip the Guru Points and you will automatically have until Monday to complete
+  the assignment for full credit.
 
   Just leave a note on your **Pull Request** of your intensions.
 
