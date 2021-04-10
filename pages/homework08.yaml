@@ -210,7 +210,7 @@ body:       |
             \_ hash.c               # This is the C implementation file for the hash functions
             \_ table.c              # This is the C implementation file for the Table structure
           \_ tests                  # This contains the unit test C implementation files
-            \_ unit_hash.c          # This is the C implementation file for the hash unit est
+            \_ unit_hash.c          # This is the C implementation file for the hash unit test
             \_ unit_pair.c          # This is the C implementation file for the Pair unit test
             \_ unit_table.c         # This is the C implementation file for the Table unit test
 
@@ -968,7 +968,7 @@ body:       |
       # BE SURE TO DO THE PREPARATION STEPS IN ACTIVITY 0
       #--------------------------------------------------
 
-      $ cd homework08                           # Go to Homework 07 directory
+      $ cd homework08                           # Go to Homework 08 directory
       ...
       $ git add Makefile                        # Mark changes for commit
       $ git add bin/*.sh bin/*.py               # Mark changes for commit
