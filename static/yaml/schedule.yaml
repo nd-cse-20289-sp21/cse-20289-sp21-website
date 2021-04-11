@@ -285,20 +285,20 @@
 
 - name:     "Memory Management"
   days:
-      - date:           Mon 04/11
+      - date:           Mon 04/12
         assignment:     Reading 10
         topics:         Structs, Unions
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1yGQdxTItJEiFzFGtslOhxhgE1nhA5jFFHFpLyrpLQ6c/edit?usp=sharing
 
-      - date:           Wed 04/13
+      - date:           Wed 04/14
         topics:         Linked Data Structures
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1noEiss7jk_a9kWKp9SIXcoZBQ_K4GU7AIDPssCdTA0Q/edit?usp=sharing
 
-      - date:           Fri 04/15
+      - date:           Fri 04/16
         topics:         I/O
         items:
           - name:       Slides
