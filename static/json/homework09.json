@@ -1,0 +1,67 @@
+{
+    "q01": {
+        "type": "order",
+        "question": "\n<p>Because <tt>thor</tt> is a <b>client</b> application, it makes a\n<b>HTTP</b> request by performing the following <b>system calls</b>:\n<tt>getaddrinfo</tt>, <tt>socket</tt>, <tt>connect</tt>, <tt>write</tt>,\n<tt>read</tt>, <tt>close</tt>.</p>\n\n<p>Now consider <tt>loki.py</tt>, which is a <b>HTTP</b> server.  What is\norder of the <b>system calls</b> it must perform to handle a <b>HTTP</b>\nrequest and send back response?</p>\n",
+        "responses": {
+            "socket": "socket",
+            "write": "write",
+            "close": "close",
+            "bind": "bind",
+            "getaddrinfo": "getaddrinfo",
+            "read": "read",
+            "accept": "accept",
+            "listen": "listen"
+        }
+    },
+    "q02": {
+        "type": "multiple",
+        "question": "\n<p>Because <tt>connect</tt> is a <b>system call</b>, it can fail.  Which of\nthe following are reasons why it can fail (select all that apply)?</p>\n",
+        "responses": {
+            "refused": "The remote machine is not listening at specified address.",
+            "interrupt": "The system call was interrupted by a signal.",
+            "insecure": "The connection is insecure due to lack of encryption.",
+            "unreach": "The network is unreachable.",
+            "timedout": "The connection timed out because the server was too busy."
+        }
+    },
+    "q03": {
+        "type": "multiple",
+        "question": "\n<p>Because <tt>fork</tt> is a <b>system call</b>, it can fail.  Which of\nthe following are reasons why it can fail (select all that apply)?</p>\n",
+        "responses": {
+            "kernel": "There is not enough memory to allocate the necessary kernel structures.",
+            "perms": "The user does not have permissions to fork.",
+            "pids": "The maximum number of PIDs has been reached system-wide.",
+            "rlimit": "The user has reached the maximum number of processes they can have.",
+            "notfound": "The code to execute cannot be found."
+        }
+    },
+    "q04": {
+        "type": "blank",
+        "question": "\n<p>On the <b>student machines</b>, use <tt>strace</tt> to monitor the\n<b>system calls</b> used by <tt>thor</tt> on\n<tt>http://example.com</tt>:</p>\n\n<pre>\n$ strace ./bin/thor -n 4 http://example.com > /dev/null\n</pre>\n\n<p>Examine the output of <tt>strace</tt> and answer the following questions:</p>\n\n<p>\n<ol>\n<li>When a child process terminates, the parent process receives this signal: <tt>____</tt></li>\n<li>Internally, <tt>fork</tt> uses this <b>system call</b>: <tt>____</tt></li>\n<li>Internally, <tt>wait</tt> uses this <b>system call</b>: <tt>____</tt></li>\n</ol>\n</p>\n"
+    },
+    "q05": {
+        "type": "multiple",
+        "question": "\n<p>If done correctly, <tt>thor</tt> should be able to create multiple child\n<b>processes</b> using <tt>fork</tt>, while avoiding having <b>zombies</b>\nappear for too long.  Which of the following statements regarding\n<b>zombies</b> are true (select all that apply)?</p>\n",
+        "responses": {
+            "defunct": "A zombie process has completed execution but remains in the kernel's process table.",
+            "wait": "A parent can reap a zombie child by using <tt>wait</tt>.",
+            "kill": "A parent can reap a zombie child by using <tt>kill</tt>.",
+            "init": "If a parent dies, then the zombie will be adopted and reaped by <tt>init</tt>.",
+            "persist": "If a parent dies, then the zombie will persist until system reboot."
+        }
+    },
+    "q06": {
+        "type": "multiple",
+        "question": "\n<p>For this question, you are to run the provided <tt>loki.py</tt>\n<b>HTTP</b> server on one <b>student</b> machine and then <b>hammer</b> it\nusing <tt>thor</tt> from a <b>different student</b> machine to perform a\nseries of experiments.</p>\n\n<p>Before running the experiments, let's first create a <b>one gigabyte</b>\nfile in the <tt>/tmp</tt> directory:</p>\n\n<pre>\n# Make HTTP root directory in /tmp\n$ mkdir /tmp/loki-$USER\n\n# Make one gigabyte file\n$ dd if=/dev/urandom of=/tmp/loki-$USER/data bs=1M count=1024 status=progress\n1020264448 bytes (1.0 GB) copied, 6.015389 s, 170 MB/s\n1024+0 records in\n1024+0 records out\n1073741824 bytes (1.1 GB) copied, 6.33893 s, 169 MB/s\n</pre>\n\n<p>Once you have the <tt>data</tt> file, you are to run the\n<tt>loki.py</tt> in the default <b>sequential</b> (ie. one connection at a\ntime) mode:</p>\n\n<pre>\n# Start loki.py on student machine with data file\n$ ./bin/loki.py --port 9999 --directory /tmp/loki-$USER\n\n# NOTE: You may need to try a different port if port 9999 is already\n# in-use.  You must pick a port between 9000 - 9999, otherwise the firewall\n# on the student machine will block any incoming connections.\n</pre>\n\n<p>On the <b>other student</b> machine, you are then to use <tt>thor</tt>\nto <b>hammer</b> <tt>loki.py</tt> on the original <b>student</b>\nmachine:</p>\n\n<pre>\n# Hammer loki.py using thor from another student machine\n$ ./bin/thor -n 4 studentXX.cse.nd.edu:9999/data > /dev/null\n\n# NOTE: Update the command above with the appropriate student machine and port.\n</pre>\n\n<p>Note the bandwidth and elapsed times <tt>thor</tt> reports and then kill\nthe <tt>loki.py</tt> web server (ie. <tt>Control-C</tt> should work).  Next,\nrun <tt>loki.py</tt> in the <b>concurrent</b> <b>forking</b> (ie. one\nprocess per connection) mode:</p>\n\n<pre>\n# Start loki.py on student machine with data file in forking mode\n$ ./bin/loki.py --forking --port 9999 --directory /tmp/loki-$USER\n</pre>\n\n<p>Once again, use <tt>thor</tt> from another <b>student</b> machine to\n<b>hammer</b> the <tt>loki.py</tt> <b>HTTP</b> server and monitor the\nbandwidth and elapsed times.</p>\n\n<p>When you are done running these experiments, kill the <tt>loki.py</tt>\nweb server and delete the data directory:</p>\n\n<pre>\n# Cleanup data directory\n$ rm -fr /tmp/loki-$USER\n</pre>\n\n<p>Reflect on the bandwidth and elapsed times you found during your\nexperiements.  Which of the following statments are true (select all that\napply)?</p>\n",
+        "responses": {
+            "bandwidth_1": "The student machines have about <tt>1MB/s</tt> of bandwidth.",
+            "bandwidth_10": "The student machines have about <tt>10MB/s</tt> of bandwidth.",
+            "bandwidth_100": "The student machines have about <tt>100MB/s</tt> of bandwidth.",
+            "bandwidth_1000": "The student machines have about <tt>1000MB/s</tt> of bandwidth.",
+            "server_bandwidth": "Enabling concurrency on the server improves the bandwidth for the clients.",
+            "server_latency": "Enabling concurrency on the server improves the latency for the clients.",
+            "server_fairness": "Enabling concurrency on the server leads to more equal distribution of system resources.",
+            "server_time": "Enabling concurrency on the server drastically decreases the elapsed time for the client."
+        }
+    }
+}

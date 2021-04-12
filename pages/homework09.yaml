@@ -1,0 +1,980 @@
+title:      "Homework 09: Thor's Hammer"
+icon:       fa-code
+navigation: []
+internal:
+external:
+body:       |
+
+  <img src="static/img/homework09-hammer.png" class="pull-right" width="128px">
+
+  The goal of this homework assignment is to allow you to practice
+  communicating across the [Internet] via [sockets] and performing parallel
+  computing with multiple [processes] in [C].  The first activity involves
+  implementing a [HTTP] library, while the second activity requires you to use
+  this library to build a `thor` utility that resembles [curl] (except with the
+  ability to make many requests using multiple [processes]).
+
+  For this assignment, record your source code and any responses to the
+  following activities in the `homework09` folder of your **assignments**
+  GitHub repository and push your work by **noon, Saturday, May 08**.
+
+  [C]:                  https://en.wikipedia.org/wiki/C_(programming_language)
+  [Internet]:           https://en.wikipedia.org/wiki/Internet
+  [socket]:             https://en.wikipedia.org/wiki/Network_socket
+  [sockets]:            https://en.wikipedia.org/wiki/Network_socket
+  [TCP]:                https://en.wikipedia.org/wiki/Transmission_Control_Protocol
+  [processes]:          https://en.wikipedia.org/wiki/Process_(computing)
+  [system calls]:       https://en.wikipedia.org/wiki/System_call
+  [HTTP]:               https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol
+  [curl]:               https://man7.org/linux/man-pages/man1/curl.1.html
+  [Python]:             https://python.org
+
+  ## Activity 0: Preparation
+
+  Before starting this homework assignment, you should first perform a `git pull`
+  to retrieve any changes in your remote [GitHub] repository:
+
+      :::bash
+      $ cd path/to/repository                   # Go to assignments repository
+
+      $ git checkout master                     # Make sure we are in master branch
+
+      $ git pull --rebase                       # Get any remote changes not present locally
+
+  Next, create a new branch for this assignment:
+
+      $ git checkout -b homework09              # Create homework09 branch and check it out
+
+  You are now ready to work on the activities below.
+
+  <div class="alert alert-info" markdown="1">
+  #### <i class="fa fa-question"></i> Frequently Asked Questions
+  <div class="text-center">
+  <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vRF4RNJVkIRCsCoGRWyn4VKgpwmNAVV4iJJjDfOcaSYztFibfwsXZbBiZcCx0F4ush_qkdStegyQbGP/embed?start=false&loop=false&delayms=3000" frameborder="0" width="480" height="389" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+  </div>
+  </div>
+
+  ## Activity 1: HTTP Library (7 Points)
+
+  As discussed in class, web **clients** such as your **web browser** utilize
+  [HTTP] to request data from remote web **servers**.  This communication
+  involves the **client** using a [TCP] or streaming [socket] to connect to a
+  **server** to send a **request** that looks something like this:
+
+      :::text
+      GET /path HTTP/1.0
+      Host: domain.com
+
+  The first line of the **request** specifies the operation (ie. `GET`)
+  followed by the resource being request (ie. `/PATH`) and then the protocol
+  spoken by the client (ie. `HTTP/1.0`).  After this first line, comes a series
+  of **headers**, one of which is the `Host` or the name of the machine we are
+  **requesting** the resource from.  To terminate the **headers**, the
+  **client** writes a **blank line**.
+
+  <div class="alert alert-danger" markdown="1">
+  #### <i class="fa fa-code"></i> DOS Line Endings
+
+  It turns out that the [HTTP] protocol uses our friend, [DOS line endings].
+  This means that each line in the [HTTP] request and response is terminated by
+  `\r\n` or `CRLF`.  Keep this in mind when writing your **request** and
+  reading the **response**.
+  </div>
+
+  [DOS line endings]: https://en.wikipedia.org/wiki/Newline#Representation
+
+  <div class="thumbnail">
+    <img src="static/img/homework09-overview.png" class="img-responsive">
+  </div>
+
+  Once the **request** has been written to the **server**, the **client** then
+  waits to read back the **response**, which looks something like this:
+
+      :::text
+      HTTP/1.1 200 OK
+      Content-Length: 1983
+
+      <html>
+      ...
+      </html>
+
+  The first line of the **response** contains the status of the **request**.
+  Successful **requests** have `200 OK` while non-successful **requests** will
+  have different [status codes] such as `301 Moved Permanently` or `404 Not
+  Found`.  After this first line, the **response** will contain a series of
+  **headers**, one of which is the `Content-Length` that tells the **client**
+  how large the contents of the **response** body should be.  Following the
+  **headers** is a **blank line**, and then the **contents** of the
+  **response**.  This is usually the file or resource that was requested (ie.
+  [HTML] or image data).
+
+  <div class="alert alert-warning" markdown="1">
+  **Note**: Not all [HTTP] servers will return a `Content-Length`, so keep that
+    in mind when implementing your [HTTP] client.
+  </div>
+
+  [status codes]: https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+  [HTML]: https://en.wikipedia.org/wiki/HTML
+
+  The overall goal of this assignment is for you to build your own version
+  [curl] that speaks basic [HTTP] using [TCP] sockets as described above.
+  Additionally, your version of a [HTTP] **client** will support **hammering**
+  the [HTTP] server by using multiple child [processes] to make concurrent
+  [HTTP] requests.
+
+  The remainder of this document details how you are to first build a library
+  that supports communicating via [HTTP] and then the `thor` utility that
+  provides a command-line interface to the library's functionality.
+
+  #### Skeleton Code
+
+  To help you get started, the instructor has provided you with the following [skeleton code]:
+
+      :::bash
+      # Go to assignments repository
+      $ cd path/to/assignments/repository
+
+      # ------------------------------------------------
+      # MAKE SURE YOU ARE NOT INSIDE homework09
+      # MAKE SURE YOU ARE AT THE TOP-LEVEL DIRECTORY
+      # ------------------------------------------------
+
+      # Download skeleton code tarball
+      $ curl -LO https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework09/homework09.tar.gz
+
+      # Extract skeleton code tarball
+      $ tar xzvf homework09.tar.gz
+
+  Once downloaded and extracted, you should see the following files in your
+  `homework09` directory:
+
+      :::bash
+      homework09
+          \_ Makefile               # This is the Makefile for building all the project artifacts
+          \_ README.md              # This is the README file for recording your responses
+          \_ bin                    # This contains the binary executables and test scripts
+            \_ loki.py              # This is the Python script that implements a HTTP server
+            \_ test_http.sh         # This is the shell script for testing the HTTP functions
+            \_ test_socket.sh       # This is the shell script for testing the socket functions
+            \_ test_thor.sh         # This is the shell script for testing the thor utility
+            \_ test_timestamp.sh    # This is the shell script for testing the timestamp functions
+            \_ test_url.sh          # This is the shell script for testing the URL structure
+          \_ include                # This contains the header files
+            \_ hammer.h             # This is the C header file for hammer functions
+            \_ http.h               # This is the C header file for HTTP functions
+            \_ macros.h             # This is the C header file for macros
+            \_ socket.h             # This is the C header file for socket functions
+            \_ timestamp.h          # This is the C header file for timestamp functions
+            \_ url.h                # This is the C header file for URL structure
+          \_ lib                    # This contains the library files
+          \_ src                    # This contains the C implementation files
+            \_ hammer.c             # This is the C implementation file for the hammer functions
+            \_ http.c               # This is the C implementation file for the HTTP functions
+            \_ socket.c             # This is the C implementation file for the socket functions
+            \_ thor.c               # This is the C implementation file for the thor utility
+            \_ timestamp.c          # This is the C implementation file for the timestamp functions
+            \_ url.c                # This is the C implementation file for the URL structure
+          \_ tests                  # This contains the unit test C implementation files
+            \_ unit_http.c          # This is the C implementation file for the HTTP unit test
+            \_ unit_socket.c        # This is the C implementation file for the socket unit test
+            \_ unit_timestamp.c     # This is the C implementation file for the timestamp unit test
+            \_ unit_url.c           # This is the C implementation file for the URL unit test
+
+  The details on what you need to implement are described in the following
+  sections.
+
+  [skeleton code]:  https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework09/homework09.tar.gz
+  [union]:          https://en.wikipedia.org/wiki/Union_type
+  [enumeration]:    http://en.cppreference.com/w/c/language/enum
+
+  ### Task 0: Headers
+
+  The following is a description of the [header] files included in the
+  [skeleton code].
+
+  #### `include/url.h`
+
+  The `include/url.h` file is the [header] file for the `URL` [struct].  In
+  addition to the function prototypes, this [header] defines the following
+  type:
+
+      ::c
+      typedef struct {
+          char *host;     /* Parsed URL host */
+          char *port;     /* Parsed URL port */
+          char *path;     /* Parsed URL path */
+      } URL;
+
+  This defines a `URL` [struct] type consisting of three [string]s:
+
+  1. `host` contains the **host** component of a [URL].
+  2. `port` contains the **port** component of a [URL].
+  3. `path` contains the **path** component of a [URL].
+
+  <div class="thumbnail">
+    <img src="static/img/homework09-url.png" class="img-responsive">
+  </div>
+
+  As shown above, a [URL] may contain **five** different components:
+    **protocol**, **host**, **port**, **path**, and **query string**.  The
+    `URL` [struct] only needs to store the `host`, `port`, and `path` of any
+    [URL] provided by the user.
+
+  <div class="alert alert-warning" markdown="1">
+  #### <i class="fa fa-link"></i> Missing URL Components
+
+  **Note**: Not all [URL]s will specify every component explicitly.  Some may
+    be missing the **protocol** or the **port** or even the **path** (the
+    **host** must always be given).
+
+  For instance, here are some valid [URL]s you will need to support:
+
+  - `example.com`
+  - `http://example.com`
+  - `http://example.com:8888`
+  - `http://example.com/data`
+  - `example.com:9999/data`
+
+  If the **port** is not specified, then you are to assume the default [HTTP]
+  port: `80`.  If a **path** is not specified, then you can assume an empty
+  path: `""`.
+
+  </div>
+
+  [URL]: https://en.wikipedia.org/wiki/URL
+
+  #### `include/hammer.h`, `include/http.h`, `include/socket.h`, `include/timestamp.h`
+
+  The `include/hammer.h`, `include/http.h`, `include/socket.h`, and
+  `include/timestamp.h` [header] files contain function prototypes but do not
+  introduce any new types or [structs].
+
+  More details on how to implement the functions declared in these [header]
+  files is provided below.
+
+  #### `include/macros.h`
+
+  Finally, the `include/macros.h` [header] file provides a `debug` [macro] that
+  you can use to insert debugging statements into your code (rather than
+  [printf]):
+
+      :::c
+      debug("foo = d", foo);
+
+  The advantage of using this [macro] is that it displays the file name, line
+  number, and function name where the command is called in its output, along
+  with the formatted message you specified.
+
+  Likewise, the [header] file also provides a `streq` [macro] that you can use
+  instead of [strcmp]:
+
+      :::c
+      if (streq(source, target)) {
+          ...
+      }
+
+  For this task, you do not need to modify these [header] files. Instead, you
+  should review them and ensure you understand the provided code.
+
+
+  [struct]:     https://en.wikipedia.org/wiki/Struct_(C_programming_language)
+  [header]:     https://en.wikipedia.org/wiki/Include_directive#C.2FC.2B.2B
+  [prototypes]: https://en.wikipedia.org/wiki/Function_prototype
+  [type definitions]: https://en.wikipedia.org/wiki/Typedef
+  [macro]:      https://en.wikipedia.org/wiki/C_preprocessor#Macro_definition_and_expansion
+  [strcmp]:     http://man7.org/linux/man-pages/man3/strcmp.3.html
+
+  ### Task 1: `Makefile`
+
+  Once again, the `Makefile` contains all the rules or recipes for building the
+  project artifacts (e.g. `libthor.a`, `thor`, etc.).  Although the provided
+  `Makefile` contains most of the variable definitions and `test` recipes, you
+  must add the appropriate rules for `libthor.a`, `unit_http`, `unit_socket`,
+  `unit_timestamp`, `unit_url`, `thor`, and any intermediate objects.  The
+  dependencies for these targets are shown in the [DAG] below:
+
+  <div class="thumbnail">
+    <img src="static/img/homework09-makefile.png" class="img-responsive">
+  </div>
+
+  [DAG]: https://en.wikipedia.org/wiki/Directed_acyclic_graph
+  [static library]: https://en.wikipedia.org/wiki/Static_library#Creating_static_libraries_in_C.2FC.2B.2B
+  [object]: https://en.wikipedia.org/wiki/Object_file
+  [rules]:  https://www.gnu.org/software/make/manual/html_node/Rules.html
+
+  <div class="alert alert-info" markdown="1">
+  #### <i class="fa fa-cogs"></i> Makefile Variables
+
+  You **must** use the `CC`, `CFLAGS`, `LD`, `LDFLAGS`, `AR`, and `ARFLAGS`
+  variables when appropriate in your [rules].
+
+    - **Note**: Although we are producing a [static library] in the form of
+      `libthor.a`, we will **not** be statically linking our executables.
+      Instead, we will use the `libthor.a` as another [object] file when we
+      **link** our executables.
+
+    - **Note**: The binary executables must go in the `bin` folder.
+
+  </div>
+
+  Once you have a working `Makefile`, you should be able to run the following
+  commands:
+
+      :::bash
+      # Build all TARGETS
+      $ make
+      Compiling src/thor.o...
+      Compiling src/url.o...
+      Compiling src/socket.o...
+      Compiling src/http.o...
+      Compiling src/timestamp.o...
+      Compiling src/hammer.o...
+      Linking lib/libthor.a...
+      Linking bin/thor...
+
+
+      # Run all tests
+      $ make test
+      Compiling tests/unit_url.o...
+      Linking bin/unit_url...
+      Testing url...
+
+      # Simulate build with tracing output
+      $ make -n
+      echo Compiling src/thor.o...
+      gcc -g -Wall -std=gnu99 -Iinclude -c -o src/thor.o src/thor.c
+      echo Compiling src/url.o...
+      gcc -g -Wall -std=gnu99 -Iinclude -c -o src/url.o src/url.c
+      echo Compiling src/socket.o...
+      gcc -g -Wall -std=gnu99 -Iinclude -c -o src/socket.o src/socket.c
+      echo Compiling src/http.o...
+      gcc -g -Wall -std=gnu99 -Iinclude -c -o src/http.o src/http.c
+      echo Compiling src/timestamp.o...
+      gcc -g -Wall -std=gnu99 -Iinclude -c -o src/timestamp.o src/timestamp.c
+      echo Compiling src/hammer.o...
+      gcc -g -Wall -std=gnu99 -Iinclude -c -o src/hammer.o src/hammer.c
+      echo Linking lib/libthor.a...
+      ar rcs lib/libthor.a src/url.o src/socket.o src/http.o src/timestamp.o src/hammer.o
+      echo Linking bin/thor...
+      gcc -Llib -o bin/thor src/thor.o lib/libthor.a
+
+  Depending on your compiler, you may see some warnings with the initial
+  [skeleton code].  Likewise, the test programs will all fail in some fashion.
+
+  [make]: https://www.gnu.org/software/make/
+  [gdb]:                https://www.gnu.org/software/gdb/
+  [atoi]:               http://man7.org/linux/man-pages/man3/atoi.3.html
+  [strtol]:             http://man7.org/linux/man-pages/man3/strtol.3.html
+  [strdup]:             http://man7.org/linux/man-pages/man3/strdup.3.html
+  [qsort]:              http://man7.org/linux/man-pages/man3/qsort.3.html
+  [templates]:          https://en.wikipedia.org/wiki/Template_(C%2B%2B)
+  [recursion]:          https://en.wikipedia.org/wiki/Recursion
+  [stack overflow]:     https://en.wikipedia.org/wiki/Stack_overflow
+
+  ### Task 2: `src/url.c`
+
+  The `src/url.c` file contains the [C] implementation for the `URL` [struct].
+  For this task, you will need to implement the following functions:
+
+  1. `URL * url_parse(const char *url_string)`
+
+      > This function allocates a new `URL` [struct], sets its `host`, `port`,
+      and `path` fields based on the components in the given `url_string`, and
+      returns the allocated [struct].
+
+      <div class="alert alert-success" markdown="1">
+      **Note**:
+
+      - You must check if allocation fails.
+
+      - You must allocate and copy `host`, `port`, and `path` (consider [strdup]).
+
+      - You may wish to copy the `url_string` to a local **buffer** that you
+        can manipulate.
+
+      - You may wish to use [strstr] and [strchr] to search the local
+        **buffer** for the appropriate **delimiters** (e.g. `HOST_DELIMITER`,
+        `PATH_DELIMITER`, and `PORT_DELIMITER`) and split the string into
+        different components.
+
+      </div>
+
+  2. `void url_delete(URL *url)`
+
+      > This function deallocates the given `URL` [struct] and any previously
+      allocated fields such as `host`, `port`, and `path`.
+
+  As you implement `src/url.c`, you can test it by running the `test-url`
+  target:
+
+      :::bash
+      # Run test-url target
+      $ make test-url
+      Compiling tests/unit_url.o...
+      Linking bin/unit_url...
+      Testing url...
+       url_parse                                          ... Success
+       url_delete                                         ... Success
+
+         Score 2.50
+
+      # Run unit_url manually
+      $ bin/unit_url 0
+
+  [strstr]: https://man7.org/linux/man-pages/man3/strstr.3.html
+  [strchr]: https://man7.org/linux/man-pages/man3/strchr.3.html
+
+  ### Task 3: `src/socket.c`
+
+  The `src/socket.c` file contains the [C] implementation for the [socket]
+  functions.  For this task, you will need to implement the following
+  function:
+
+  1. `FILE *socket_dial(const char *host, const char *port)`
+
+      > This function uses [socket] to connect to the given `host` and `port`
+      using [TCP] and returns a **read/writable** `FILE` stream corresponding
+      to the [socket].
+
+      <div class="alert alert-success" markdown="1">
+      **Note**:
+
+      - You must check if any of the [system calls] fail.
+
+      - You may wish to use [getaddrinfo], [socket], [connect], [freeaddrinfo],
+        and [fdopen].
+      </div>
+
+  As you implement `src/socket.c`, you can test it by running the `test-socket`
+  target:
+
+      :::bash
+      # Run test-socket target
+      $ make test-socket
+      Compiling tests/unit_socket.o...
+      Linking bin/unit_socket...
+      Testing socket...
+       socket_dial_success                                ... Success
+       socket_dial_failure                                ... Success
+
+         Score 1.00
+
+      # Run unit_socket manually
+      $ bin/unit_socket 0
+
+  [getaddrinfo]: http://man7.org/linux/man-pages/man3/getaddrinfo.3.html
+  [socket]: http://man7.org/linux/man-pages/man2/socket.2.html
+  [connect]: http://man7.org/linux/man-pages/man2/connect.2.html
+  [freeaddrinfo]: http://man7.org/linux/man-pages/man3/getaddrinfo.3.html
+  [fdopen]: https://man7.org/linux/man-pages/man3/fopen.3.html
+
+  ### Task 4: `src/http.c`
+
+  The `src/http.c` file contains the [C] implementation for time related
+  functions.  For this task, you will need to implement the following function:
+
+  1. `ssize_t http_get(const URL *url, FILE *stream)`
+
+      > This function makes a [HTTP] request to the given `url` using
+      `socket_dial` and writes the response **body** to the given `stream`.  It
+      returns the number of bytes written to the output `stream` or `-1` if any
+      error was experienced during the [HTTP] request.
+
+      <div class="alert alert-success" markdown="1">
+      **Note**:
+
+      - You must check if any of the [system calls] fail.
+
+      - You will want to follow the [HTTP] transaction steps described above
+        and outlined below:
+
+            1. Connect to remote host and port.
+            2. Send [HTTP] request to remote server.
+            3. Read response status and verify success.
+            4. Read response headers (until there is an empty line).
+            5. Read response body and copy to `stream`.
+            6. Close connection.
+            7. <p>Return number of bytes written to `stream`.</p>
+
+      - Remember that [HTTP] uses [DOS line endings] and terminates each line
+        with `\r\n`.
+
+      - You may wish to use [strstr] to check the response status.
+
+      - You may wish to use [sscanf] to parse the response headers for the
+        value of `Content-Length`.
+
+      - You may wish to use [fgets] to read the response status and headers.
+
+      - You must use [fread] and [fwrite] to read the response body since it
+        may contain binary data.
+
+      - If the server provides a `Content-Length` and the number of bytes
+        written to `steam` does not match, then the function should return `-1`
+        to indicate an error.  Otherwise, if there is no `Content-Length` or
+        the number of bytes written matches, then it should return the number
+        of bytes written.
+
+      </div>
+
+  As you implement `src/http.c`, you can test it by running the `test-http`
+  target:
+
+      :::bash
+      # Run test-http target
+      $ make test-http
+      Compiling tests/unit_http.o...
+      Linking bin/unit_http...
+      Testing http...
+       http_get_success                                   ... Success
+       http_get_failure                                   ... Success
+
+         Score 3.00
+
+      # Run unit_http manually
+      $ bin/unit_http 0
+
+  [fgets]: https://man7.org/linux/man-pages/man3/fgetc.3.html
+  [fread]: https://man7.org/linux/man-pages/man3/fread.3.html
+  [fwrite]: https://man7.org/linux/man-pages/man3/fread.3.html
+  [sscanf]: https://man7.org/linux/man-pages/man3/scanf.3.html
+
+  ### Task 5: `src/timestamp.c`
+
+  The `src/timestamp.c` file contains the [C] implementation for time related
+  functions.  For this task, you will need to implement the following function:
+
+  1. `double timestamp()`
+
+      > This function returns a `double` that corresponds to the current time
+      in **seconds**.
+
+      <div class="alert alert-success" markdown="1">
+      **Note**:
+
+      - You must check if any of the [system calls] fail.
+
+      - You must use [gettimeofday] to account for both **seconds** and
+        **microseconds** using this formula:
+
+              :::c
+              timestamp = seconds + (microseconds / 1000000.0).
+
+      </div>
+
+  As you implement `src/timestamp.c`, you can test it by running the `test-timestamp`
+  target:
+
+      :::bash
+      # Run test-timestamp target
+      $ make test-timestamp
+      Compiling tests/unit_timestamp.o...
+      Linking bin/unit_timestamp...
+      Testing timestamp...
+       timestamp                                          ... Success
+
+         Score 0.50
+
+      # Run unit_timestamp manually
+      $ bin/unit_timestamp 0
+
+  [gettimeofday]: https://man7.org/linux/man-pages/man2/gettimeofday.2.html
+
+  ### Task 6: `src/hammer.c`
+
+  The `src/hammer.c` file contains the [C] implementation for `hammer`
+  function.  For this task, you will need to implement the following function:
+
+  1. `bool hammer(const URL *url, FILE *stream, size_t n)`
+
+      > This function uses [fork] to first create `n` [processes] where each
+      child [process] performs a [HTTP] request using the `http_get()` function
+      on the given `url` and `stream`, and then displays the computed
+      **bandwidth** for that individual request.  Afterwards, the parent
+      [process] must [wait] on each child [process] and displays the total
+      **elapsed time** for the whole function.  It will return `true` if all
+      child [processes] reported success, otherwise `false`.
+
+      <div class="alert alert-success" markdown="1">
+      **Note**:
+
+      - You must check if any of the [system calls] fail.
+
+      - The parent must [fork] all the child [processes] and then [wait] for
+        them.  It will need to use the `timestamp()` function to compute the
+        overall **elapsed time** for the function.
+
+      - Each child must compute the bandwidth by using the following formula:
+
+              :::C
+              bandwidth = bytes_written / 1048576.0 / (end_time - start_time)
+
+          `bytes_written` will be returned from `http_get()` while `end_time` and
+          `start_time` can be retrieved from `timestamp()`.
+
+      </div>
+
+  To test the `hammer` function, you will need to implement the `thor` utility,
+  which will call this function.
+
+  [fork]: https://man7.org/linux/man-pages/man2/fork.2.html
+  [wait]: https://man7.org/linux/man-pages/man2/wait.2.html
+
+  ## Activity 2: Thor (7 Points)
+
+  Once you have a working [HTTP] library, you are to complete the
+  `src/thor.c` program:
+
+      :::bash
+      # Display usage
+      $ ./bin/thor -h
+      Usage: ./bin/thor [options] URL
+          -n N   How many times to hammer the URL
+
+  The `bin/thor` program takes the given `URL` and makes `N` requests to it
+  using multiple [processes] which write their responses to **standard
+  output**.  If `N` is not specified, then it defaults to `1`.
+
+  ### Task 1: `src/thor.c`
+
+  The `src/thor.c` file contains the [C] implementation of the `thor`
+  tool described above.
+
+  To complete this program, you will need to do the following:
+
+  1. **Parse** the command-line arguments.
+  2. **Parse** the given [URL] with `url_parse()`.
+  3. **Hammer** the given [URL] with `hammer()`.
+
+  As you implement `src/thor.c`, you can test it by running the `test-thor`
+  target:
+
+      :::bash
+      # Run test-thor target
+      $ make test-thor
+      Compiling src/thor.o...
+      Linking bin/thor...
+      Testing thor...
+       thor                                               ... Success
+       thor -h                                            ... Success
+       thor -?                                            ... Success
+       thor http://nd.edu                                 ... Success
+       thor -n 1 http://nd.edu                            ... Success
+       thor http://example.com                            ... Success
+       thor -n 2 http://example.com                       ... Success
+       thor http://h4x0r.space:9898/appa.png              ... Success
+       thor -n 3 http://h4x0r.space:9898/appa.png         ... Success
+       thor h4x0r.space:9898/walden.txt                   ... Success
+       thor -n 4 h4x0r.space:9898/walden.txt              ... Success
+
+         Score 7.00
+
+      # Run test_thor.sh manually
+      $ bin/test_thor.sh
+
+  ## Activity 3: Quiz (2 Points)
+
+  Once you have completed all the activities above, you are to complete the
+  following **reflection quiz**:
+
+  <div id="quiz-questions"></div>
+
+  <div id="quiz-responses"></div>
+
+  <script src="static/js/dredd-quiz.js"></script>
+  <script>
+  loadQuiz('static/json/homework09.json');
+  </script>
+
+  <pre style="display: none;" id="dr-container" class="codehilite"><code id="dredd-response"></code></pre>
+
+  As with [Reading 01], you will need to store your answers in a
+  `homework09/answers.json` file.  You can use the form above to generate the
+  contents of this file, or you can write the [JSON] by hand.
+
+  To test your quiz, you can use the `check.py` script:
+
+      :::bash
+      $ ./check.py
+      Checking homework09 quiz ...
+           Q01 0.40
+           Q02 0.40
+           Q03 0.30
+           Q04 0.30
+           Q05 0.30
+           Q06 0.30
+         Score 2.00 / 2.00
+        Status Success
+
+  ## Guru Point: TROLL, IRC Bot, VPS (3 Points)
+
+  For this week, there are three Guru Point opportunities.
+
+  <div class="alert alert-success" markdown="1">
+  #### <i class="fa fa-calendar"></i> Self-Service Extension
+
+  Remember that you can always **forgo** these Guru Points for **two extra
+  days** to do the homework.  That is, if you need an extension, you can simply
+  skip the Guru Points and you will automatically have until Monday to complete
+  the assignment for full credit.
+
+  Just leave a note on your **Pull Request** of your intensions.
+
+  </div>
+
+  ### TROLL (1 Point)
+
+  For extra credit, you are to use [C] and [system calls] to implement your own
+  version of the `TROLL` from [Homework 01].  Recall, that the `TROLL` was a
+  process that intercepted signals such as `SIGINT` and `SIGTERM` and taunted
+  you when you tried to terminate it. Your version of the `TROLL` should do
+  something similar (prevent easy termination)... but its taunts and other
+  aesthetic details are up to you.
+
+  [Homework 01]: homework01.html
+
+  <div class="alert alert-info" markdown="1">
+  #### <i class="fa fa-check"></i> Verification
+
+  To get credit for this Guru Point, you must show either the instructor or TA
+  a demonstration of your `TROLL` in action (or attach a video / screenshot to
+  your **Pull Request**).  You have up until **one week after** this assignment
+  is due to verify your Guru Point.
+
+  </div>
+
+  ### IRC Bot (1 Point)
+
+  For extra credit, you are to use [Python] and [sockets] to implement your own
+  version of [bobbit], an [IRC] chat bot.  Your bot should connect to the
+  [chat.ndlug.org] server and join the `#bots` channel.  It should be able to
+  respond to at least one type of command or message.  The particular operation
+  is up to you.
+
+  To help you get started, here are some resources:
+
+  - [Internet Relay Chat - Specifications](https://ircdocs.horse/specs/)
+  - [Modern IRC Client Protocol](https://modern.ircdocs.horse/)
+
+  <div class="alert alert-warning" markdown="1">
+  #### <i class="fa fa-linux"></i> NDLUG IRC
+
+  To connect to the [NDLUG] server yourself, you can register via
+  [regserv.ndlug.org], which will setup a [Lounge] and [IRC] account for you.
+
+  The [Lounge] is a web-based [IRC] client that you can use from any web
+  browser, but you are free to connect to the [IRC] server from any [IRC]
+  client such as [Weechat], [Hexchat], or [Textual] using `chat.ndlug.org` as
+  the hostname and `6697` as the port.
+
+  </div>
+
+  A basic [IRC] client session looks like this:
+
+      :::text
+      USER ircle-pbui 0 * :pbui's bot
+      NICK ircle-pbui
+      JOIN #bots
+      PRIVMSG #bots :I've fallen and I can't get up!
+
+  1. The `USER` command sets the users real name and registers the user.
+
+  2. The `NICK` command sets the users nickname.
+
+  3. The `JOIN` command allows the user to join in a channel (in this case `#bots`).
+
+  4. The `PRIVMSG` command allows the user to send a message (in this case to
+  the channel `#bots`).
+
+  Here is a basic skeleton, [ircle.py], that you can start with:
+
+      :::python
+      import asyncio
+      import os
+      import sys
+
+      # Constants
+
+      HOST = 'chat.ndlug.org'
+      PORT = 6697
+      NICK = f'ircle-{os.environ["USER"]}'
+
+      # Functions
+
+      async def ircle():
+          reader, writer = await asyncio.open_connection(HOST, PORT, ssl=True)
+
+          # Identify ourselves
+          writer.write(f'USER {NICK} 0 * :{NICK}\r\n'.encode())
+          writer.write(f'NICK {NICK}\r\n'.encode())
+          await writer.drain()
+
+          # Join #bots channel
+          writer.write(f'JOIN #bots\r\n'.encode())
+          await writer.drain()
+
+          # Write message to channel
+          writer.write(f"PRIVMSG #bots :I've fallen and I can't get up!\r\n".encode())
+          await writer.drain()
+
+          # Read and display
+          while True:
+              message = (await reader.readline()).decode().strip()
+              print(message)
+
+      # Main execution
+
+      def main():
+          asyncio.run(ircle())
+
+      if __name__ == '__main__':
+          main()
+
+  <div class="alert alert-success" markdown="1">
+  #### <i class="fa fa-code"></i> Asynchronous Python
+
+  The [ircle.py] example code uses the new [asyncio] features of [Python] 3 to
+  perform event-driven and concurrent programming.  You will learn more about
+  this style of programming in **Programming Paradigms**.
+
+  </div>
+
+  [bobbit]: https://github.com/pbui/bobbit/
+  [IRC]: https://en.wikipedia.org/wiki/Internet_Relay_Chat
+  [chat.ndlug.org]: https://chat.ndlug.org
+  [ircle.py]: https://yld.me/ajcJ
+  [asyncio]: https://docs.python.org/3/library/asyncio.html
+  [NDLUG]: https://ndlug.org/
+  [regserv.ndlug.org]: https://regserv.ndlug.org/
+  [Lounge]: https://thelounge.chat/
+  [weechat]: https://weechat.org/
+  [hexchat]: https://hexchat.github.io/
+  [textual]: https://www.codeux.com/textual/
+
+  <div class="alert alert-info" markdown="1">
+  #### <i class="fa fa-check"></i> Verification
+
+  To get credit for this Guru Point, you must have your [IRC] bot join the
+  `#bots` channel on the [chat.ndlug.org] server and demonstrate its
+  functionality.  You have up until **one week after** this assignment is due
+  to verify your Guru Point.
+
+  </div>
+
+  ### VPS (1 Point)
+
+  For extra extra credit, you are to sign up for [virtual private server] on a
+  service such as [Digital Ocean], [Linode], [Amazon Web Services], [Microsoft Azure],
+  [Google Cloud], or [Vultr] and run the `loki.py` [HTTP] server from that [VPS].
+
+  <div class="alert alert-info" markdown="1">
+  #### <i class="fa fa-check"></i> Verification
+
+  To get credit for this Guru Point, you must show either the instructor or TA
+  a demonstration of using `thor` to hammer `loki.py` running on your [VPS] (or
+  attach a video / screenshot to your **Pull Request**).  You have up until
+  **one week after** this assignment is due to verify your Guru Point.
+
+  </div>
+
+  [virtual private server]: https://en.wikipedia.org/wiki/Virtual_private_server
+  [VPS]: https://en.wikipedia.org/wiki/Virtual_private_server
+  [Digital Ocean]: https://www.digitalocean.com/
+  [Linode]: https://www.linode.com/
+  [Amazon Web Services]: https://aws.amazon.com/free/
+  [Microsoft Azure]: https://azure.microsoft.com/en-us/free
+  [Google Cloud]: https://cloud.google.com/
+  [Vultr]: https://vultr.com/
+
+  ## Submission
+
+  To submit your assignment, please commit your work to the `homework09` folder
+  in your **assignments** [GitHub] repository.  Your `homework09` folder should
+  only contain at the following files:
+
+  - `Makefile`
+  - `README.md`
+  - `answers.json`
+  - `bin/loki.py`
+  - `bin/test_http.sh`
+  - `bin/test_socket.sh`
+  - `bin/test_thor.sh`
+  - `bin/test_timestamp.sh`
+  - `bin/test_url.sh`
+  - `include/hammer.h`
+  - `include/http.h`
+  - `include/macros.h`
+  - `include/socket.h`
+  - `include/timestamp.h`
+  - `include/url.h`
+  - `lib/.gitkeep`
+  - `src/hammer.c`
+  - `src/http.c`
+  - `src/socket.c`
+  - `src/thor.c`
+  - `src/timestamp.c`
+  - `src/url.c`
+  - `tests/unit_http.c`
+  - `tests/unit_socket.c`
+  - `tests/unit_timestamp.c`
+  - `tests/unit_url.c`
+
+  <div class="alert alert-warning" markdown="1">
+  **Note**: You must not modify any of the provided test scripts or unit tests.
+  </div>
+
+      :::bash
+      #--------------------------------------------------
+      # BE SURE TO DO THE PREPARATION STEPS IN ACTIVITY 0
+      #--------------------------------------------------
+
+      $ cd homework09                           # Go to Homework 09 directory
+      ...
+      $ git add Makefile                        # Mark changes for commit
+      $ git add bin/*.sh bin/*.py               # Mark changes for commit
+      $ git add include/*.h                     # Mark changes for commit
+      $ git add lib/.gitkeep                    # Mark changes for commit
+      $ git add tests/*.c                       # Mark changes for commit
+      $ git commit -m "homework09: import"      # Record changes
+      ...
+      $ git add src/url.c                       # Mark changes for commit
+      $ git commit -m "homework09: url"         # Record changes
+      ...
+      $ git add src/socket.c                    # Mark changes for commit
+      $ git commit -m "homework09: socket"      # Record changes
+      ...
+      $ git add src/timestamp.c                 # Mark changes for commit
+      $ git commit -m "homework09: timestamp"   # Record changes
+      ...
+      $ git add src/hammer.c                    # Mark changes for commit
+      $ git commit -m "homework09: hammer"      # Record changes
+      ...
+      $ git add src/thor.c                      # Mark changes for commit
+      $ git commit -m "homework09: thor"        # Record changes
+      ...
+      $ git add answers.json                    # Mark changes for commit
+      $ git commit -m "homework09: quiz"        # Record changes
+      $ git push -u origin homework09           # Push branch to GitHub
+
+  <div class="alert alert-danger" markdown="1">
+  #### <i class="fa fa-github"></i> Pull Request
+  Remember to create a **Pull Request** and assign the appropriate TA from the
+  [Reading 13 TA List].
+
+  **DO NOT MERGE** your own **Pull Request**.  The TAs use open **Pull
+  Requests** to keep track of which assignments to grade.  Closing them
+  yourself will cause a delay in grading and confuse the TAs.
+  </div>
+
+  [Markdown]:   https://daringfireball.net/projects/markdown/
+  [git]:    https://git-scm.com/
+  [clone]:  https://git-scm.com/docs/git-clone
+  [commit]: https://git-scm.com/docs/git-commit
+  [push]:   https://git-scm.com/docs/git-push
+  [branching]:   https://git-scm.com/docs/git-branch
+  [code review]: https://en.wikipedia.org/wiki/Code_review
+  [GitHub]: https://github.com
+  [Reading 01]: reading01.html
+  [Reading 13 TA List]: reading13_tas.html
+  [Reading 13]: reading13.html
+  [JSON]: https://www.json.org/
