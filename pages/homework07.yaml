@@ -753,7 +753,7 @@ body:       |
   There are two extra credit opportunities: install a [Linux] distribution or
   utilize [docker] containers.  You may do one or both for extra credit.
 
-  ### Installation
+  ### Installation (1 Point)
 
   For extra credit, install a [Linux] distribution either on a partition on
   your laptop, in a [virtual machine], or on a [Raspberry Pi].
@@ -826,25 +826,37 @@ body:       |
   <iframe width="560" height="315" src="https://www.youtube.com/embed/sfMUFDRVeb0?start=2582" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
   </div>
   </div>
+  
+  <div class="alert alert-info" markdown="1">
+  #### <i class="fa fa-check"></i> Verification
 
-  ### Docker
+  To get credit for this Guru Point, you must show either the instructor or TA
+  a demonstration of your [Linux] setup (or attached a video / screenshot to
+  your Pull Request with identifying information such as your name or netid).
+  You have up until **one week after** this assignment is due to verify your
+  Guru Point.
+
+  </div>
+
+  ### Docker (1 Point)
 
   For extra credit, you are to demonstrate your [Homework 07] code running
   inside a [Docker] container (**hint**: you can use the
   `pbui/cse-20289-sp21-assignments` image, which is what is used to test your
   code on [GitHub]).
 
-  This means you need to use [Docker] to spin up a **container** environment
-  that has your code and you run `make test` from inside that container.
+  This means you need to use [Docker] (**on your own machine**) to spin up a
+  **container** environment that has your code and you run `make test` from
+  inside that container.
 
   <div class="alert alert-info" markdown="1">
   #### <i class="fa fa-check"></i> Verification
 
   To get credit for this Guru Point, you must show either the instructor or TA
-  a demonstration of your [Linux] setup or your code running in a [Docker]
-  container (or attached a video / screenshot to your Pull Request with
-  identifying information such as your name or netid).  You have up until **one
-  week after** this assignment is due to verify your Guru Point.
+  a demonstration of your code running in a [Docker] container (or attached a
+  video / screenshot to your Pull Request with identifying information such as
+  your name or netid).  You have up until **one week after** this assignment is
+  due to verify your Guru Point.
 
   </div>
 
