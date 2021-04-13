@@ -298,7 +298,7 @@ body:       |
   [printf]):
 
       :::c
-      debug("foo = d", foo);
+      debug("foo = %d", foo);
 
   The advantage of using this [macro] is that it displays the file name, line
   number, and function name where the command is called in its output, along
