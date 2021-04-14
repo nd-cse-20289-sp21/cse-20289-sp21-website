@@ -301,6 +301,10 @@
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1noEiss7jk_a9kWKp9SIXcoZBQ_K4GU7AIDPssCdTA0Q/edit?usp=sharing
+          - name:       Notebook
+            link:       https://docs.google.com/presentation/d/1VtSbFldn1-TnZu-KFogg3uMqdpo3YtgiVWdNkkujtaE/edit?usp=sharing
+          - name:       Panopto
+            link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=e1eb8109-e013-49a6-a9f2-ad0a012bee9b
 
       - date:           Fri 04/16
         topics:         I/O
