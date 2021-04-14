@@ -583,8 +583,7 @@ body:       |
   **GTX 980** in a desktop machine, cracking all passwords of length `8` took
   about **20 minutes**.  On the other hand, with an **integrated** [Intel] 620
   in a laptop, cracking all passwords of length `8` had a time estimate of
-  about `2` days. However, the new [Apple Silicon M1] takes an estimated 30 minutes 
-  to crack length 8.
+  about `2` days.
 
   This is still dramatically better than using say **hundreds** of machines for
   **hours** to crack passwords (which is what we have done in the past).
@@ -614,7 +613,6 @@ body:       |
   [OpenCL]:     https://www.khronos.org/opencl/
   [shell]:      https://en.wikipedia.org/wiki/Unix_shell
   [homebrew]:   https://brew.sh/
-  [Apple Silicon M1]: https://en.wikipedia.org/wiki/Apple_M1
 
   ### SSH Keys
 
@@ -706,4 +704,3 @@ body:       |
   [Reading 07]: reading07.html
   [doctests]:   https://docs.python.org/3/library/doctest.html
   [JSON]:       https://www.json.org
-  [
