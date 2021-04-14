@@ -128,6 +128,8 @@ body:       |
             <ol class="list-inline">
                 <li><em><i class="fa fa-lightbulb-o"></i> Think</em></li>
                 <li><small><i class="fa fa-arrow-right"></i></small></li>
+                <li><em><i class="fa fa-google"></i> Google</em></li>
+                <li><small><i class="fa fa-arrow-right"></i></small></li>
                 <li><strong><i class="fa fa-slack"></i> Slack</strong></li>
                 <li><small><i class="fa fa-arrow-right"></i></small></li>
                 <li><em><i class="fa fa-lightbulb-o"></i> Think</em></li>
