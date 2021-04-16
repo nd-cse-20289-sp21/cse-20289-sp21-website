@@ -311,6 +311,10 @@
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/16L7vNkvRha2aUnsFndyr5pbcICuVTdLhv7rLrZA0h4Y/edit?usp=sharing
+          - name:       Notebook
+            link:       https://docs.google.com/presentation/d/1U-Zlh8pYlP6k10IRTk9Tkpuxlig-3hmYyAINpdtkU1A/edit?usp=sharing
+          - name:       Panopto
+            link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=17ed9258-5536-42ec-b023-ad0c01286510
 
 - name:     "File System"
   days:
