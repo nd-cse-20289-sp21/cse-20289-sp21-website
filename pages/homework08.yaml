@@ -972,7 +972,7 @@ body:       |
       $ cd homework08                           # Go to Homework 08 directory
       ...
       $ git add Makefile                        # Mark changes for commit
-      $ git add bin/*.sh bin/*.py               # Mark changes for commit
+      $ git add bin/*.sh                        # Mark changes for commit
       $ git add include/*.h                     # Mark changes for commit
       $ git add lib/.gitkeep                    # Mark changes for commit
       $ git add tests/*.c                       # Mark changes for commit
