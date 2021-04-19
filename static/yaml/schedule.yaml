@@ -378,6 +378,9 @@
 
       - date:           Fri 05/07
         topics:         VPS
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1NOnFKnH2AQgx0-Ib10b4EtRkhCFCpNHg5qNT6mF1-_8/edit?usp=sharing
 
       - date:           Sat 05/08
         topics:         "Thor's Hammer"
