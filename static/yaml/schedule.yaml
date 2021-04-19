@@ -321,12 +321,20 @@
       - date:           Mon 04/19
         assignment:     Reading 11
         topics:         Files, Directories
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/16L7vNkvRha2aUnsFndyr5pbcICuVTdLhv7rLrZA0h4Y/edit?usp=sharing
+          - name:       Notebook
+            link:       https://docs.google.com/presentation/d/1U-Zlh8pYlP6k10IRTk9Tkpuxlig-3hmYyAINpdtkU1A/edit?usp=sharing
 
       - date:           Wed 04/21
         topics:         Mini-Break
 
       - date:           Fri 04/23
-        topics:         TCP/IP
+        topics:         TCP/IP, URLs, Sockets
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1DpMYvlxawaG_iOMEEXFrtoDEWsYOwdItzzbhplojkDI/edit?usp=sharing
 
       - date:           Sat 04/24
         topics:         Detecting Duplicates
@@ -335,26 +343,41 @@
 - name:     "Networking"
   days:
       - date:           Mon 04/26
-        topics:         Sockets
+        topics:         HTTP Client
         assignment:     Reading 12
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1DpMYvlxawaG_iOMEEXFrtoDEWsYOwdItzzbhplojkDI/edit?usp=sharing
 
       - date:           Wed 04/28
-        topics:         HTTP
+        topics:         HTTP Server
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1DpMYvlxawaG_iOMEEXFrtoDEWsYOwdItzzbhplojkDI/edit?usp=sharing
 
       - date:           Fri 04/30
-        topics:         VPS
+        topics:         Processes
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1NZek__BOU6tqGpqEYlY1LJSnMzCsY9fl_K2m3VFcCNc/edit?usp=sharing
 
 - name:     "Processes"
   days:
       - date:           Mon 05/03
-        topics:         Processes
+        topics:         Signals
         assignment:     Reading 13
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1NZek__BOU6tqGpqEYlY1LJSnMzCsY9fl_K2m3VFcCNc/edit?usp=sharing
 
       - date:           Wed 05/05
-        topics:         Signals
+        topics:         Concurrent HTTP Server
+        items:
+          - name:       Slides
+            link:       https://docs.google.com/presentation/d/1NZek__BOU6tqGpqEYlY1LJSnMzCsY9fl_K2m3VFcCNc/edit?usp=sharing
 
       - date:           Fri 05/07
-        topics:         Pipes
+        topics:         VPS
 
       - date:           Sat 05/08
         topics:         "Thor's Hammer"
@@ -363,7 +386,7 @@
 - name:     "Exam 03"
   days:
       - date:           Mon 05/10
-        topics:         Review
+        topics:         Chaos Trials
 
       - date:           Tue 05/18
         topics:         Exam 03
