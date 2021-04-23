@@ -337,6 +337,10 @@
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1DpMYvlxawaG_iOMEEXFrtoDEWsYOwdItzzbhplojkDI/edit?usp=sharing
+          - name:       Notebook
+            link:       https://docs.google.com/presentation/d/1A8dckgCUbB9n4hpEe9X59Ghy_7y-vsnkIXUi2wa_8p4/edit?usp=sharing
+          - name:       Panopto
+            link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=94972555-0cc3-48ad-95da-ad130127c5c6
 
       - date:           Sat 04/24
         topics:         Detecting Duplicates
@@ -345,20 +349,20 @@
 - name:     "Networking"
   days:
       - date:           Mon 04/26
-        topics:         HTTP Client
+        topics:         HTTP Client / Server
         assignment:     Reading 12
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1DpMYvlxawaG_iOMEEXFrtoDEWsYOwdItzzbhplojkDI/edit?usp=sharing
 
       - date:           Wed 04/28
-        topics:         HTTP Server
+        topics:         Processes
         items:
           - name:       Slides
-            link:       https://docs.google.com/presentation/d/1DpMYvlxawaG_iOMEEXFrtoDEWsYOwdItzzbhplojkDI/edit?usp=sharing
+            link:       https://docs.google.com/presentation/d/1NZek__BOU6tqGpqEYlY1LJSnMzCsY9fl_K2m3VFcCNc/edit?usp=sharing
 
       - date:           Fri 04/30
-        topics:         Processes
+        topics:         Signals
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1NZek__BOU6tqGpqEYlY1LJSnMzCsY9fl_K2m3VFcCNc/edit?usp=sharing
@@ -366,23 +370,20 @@
 - name:     "Processes"
   days:
       - date:           Mon 05/03
-        topics:         Signals
+        topics:         Concurrent HTTP Server
         assignment:     Reading 13
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1NZek__BOU6tqGpqEYlY1LJSnMzCsY9fl_K2m3VFcCNc/edit?usp=sharing
 
       - date:           Wed 05/05
-        topics:         Concurrent HTTP Server
-        items:
-          - name:       Slides
-            link:       https://docs.google.com/presentation/d/1NZek__BOU6tqGpqEYlY1LJSnMzCsY9fl_K2m3VFcCNc/edit?usp=sharing
-
-      - date:           Fri 05/07
         topics:         VPS
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1NOnFKnH2AQgx0-Ib10b4EtRkhCFCpNHg5qNT6mF1-_8/edit?usp=sharing
+
+      - date:           Fri 05/07
+        topics:         Review
 
       - date:           Sat 05/08
         topics:         "Thor's Hammer"
