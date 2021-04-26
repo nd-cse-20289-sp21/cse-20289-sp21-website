@@ -1,0 +1,599 @@
+title:      Checklist 03
+icon:       fa-check-square-o
+navigation: []
+internal:   []
+external:   []
+body:       |
+
+    This is a general outline of the **key** concepts (arranged by topic) that
+    you should know for the **Exam 03**.
+
+    ## Format
+
+    The exam will have the following format:
+
+    A. **Scripting**
+
+      1. [Shell] Scripting (*multiple choice*).
+
+      2. [Python] Scripting (*multiple choice*).
+
+      3. [Unix Philosophy] (*multiple choice*).
+
+    B. **C**
+
+      4. **Compiling and Building** (*multiple choice*, *fill-in-the-blank*).
+
+      5. **Pointers, Arrays, Strings** (*multiple choice*, *fill-in-the-blank*).
+
+      6. **Memory Allocations** (*multiple choice*, *fill-in-the-blank*).
+
+      7. **Memory Management**: (*multiple choice*, *fill-in-the-blank*).
+
+    C. **System Calls**
+
+      8. **File System** (*multiple choice*, *fill-in-the-blank*).
+
+      9. **Networking** (*multiple choice*, *fill-in-the-blank*).
+
+      10. **Processes** (*multiple choice*, *fill-in-the-blank*).
+
+      11. **Programming**: Write a [C] program that uses [system calls] (*coding
+        on the computer*).
+
+    All portions of the exam will take place online. Parts **A**, **B**, and
+    **C. 1 - 3** will be an **online quiz** while Part **C. 4** will require
+    submitting code to your **assignments** repository.
+
+    <div class="alert alert-warning" markdown="1">
+    #### <i class="fa fa-warning"></i> Representative, but not Exhaustive
+
+    The final exam will be a **comprehrensive** assessment. This means that
+    **everything** we have discussed this semester is considered fair game.
+
+    That said, the **majority** of the test will cover the **last third** of the
+    class, as detailed below.
+
+    This check list is meant to be representative, rather than exhaustive (ie.
+    there may be questions that show up on the exam that are not shown below).
+
+    </div>
+
+    [Unix Philosophy]:      https://en.wikipedia.org/wiki/Unix_philosophy
+    [C]:                    https://en.wikipedia.org/wiki/C_(programming_language)
+    [shell]:                https://en.wikipedia.org/wiki/Unix_shell
+    [system call]:          https://en.wikipedia.org/wiki/System_call
+    [system calls]:         https://en.wikipedia.org/wiki/System_call
+    [Python]:               https://www.python.org/
+    [compiling]:            https://en.wikipedia.org/wiki/Compiler
+    [compiler pipeline]:    https://en.wikipedia.org/wiki/Compiler
+    [makefiles]:            https://en.wikipedia.org/wiki/Makefile
+    [pointers]:             https://en.wikipedia.org/wiki/Pointer_(computer_programming)
+    [arrays]:               https://en.wikipedia.org/wiki/Array_data_structure
+    [strings]:              https://en.wikipedia.org/wiki/C_string_handling
+    [memory]:               https://en.wikipedia.org/wiki/Computer_memory
+    [i/o]:                  https://en.wikipedia.org/wiki/Input/output
+    [files]:                https://en.wikipedia.org/wiki/Computer_file
+    [directories]:          https://en.wikipedia.org/wiki/Directory_(computing)
+    [processes]:            https://en.wikipedia.org/wiki/Process_(computing)
+    [networking]:           https://en.wikipedia.org/wiki/Computer_network
+    [data representation]:  https://en.wikipedia.org/wiki/Data_(computing)
+
+    <hr>
+
+    ## Scripting
+
+    1. What is [Unix]?
+
+        - What are the **three tenets** of the [Unix Philosophy]?
+
+        - What are [filters]?  What do they do and how are they related to the [Unix Philosophy]?
+
+    2. What are the principles of [functional programming]?
+
+        - How does [functional programming] compare to [procedural programming]?
+
+        - How is [functional programming] related to the [Unix Philosophy]?
+
+    3. What is [concurrency] and what is [parallelism]?
+
+        - What makes [concurrency] challenging?
+
+        - What are the different forms of [parallelism]?
+
+    [Unix]:                         https://en.wikipedia.org/wiki/Unix
+    [filters]:                      https://en.wikipedia.org/wiki/Filter_(software)
+    [functional programming]:       https://en.wikipedia.org/wiki/Functional_programming
+    [concurrency]:                  https://en.wikipedia.org/wiki/Concurrency_(computer_science)
+    [parallelism]:                  https://en.wikipedia.org/wiki/Parallel_computing
+    [procedural programming]:       https://en.wikipedia.org/wiki/Procedural_programming
+
+    <hr>
+
+    ### Shell
+
+    How do you construct a [unix pipeline] to do the following:
+
+    1. Extract a fields or characters.
+
+    2. Search based on a pattern.
+
+    3. Count the number of lines.
+
+    4. Search a directory based on a pattern or file attribute.
+
+    5. List the processes on the current machine.
+
+    #### Sample Question
+
+    Which of the following pipelines counts all the "Permission denied" errors
+    encountered when recursively searching file names under the "/etc"
+    directory?
+
+    - `find /etc > /dev/null | wc -l`
+    - `find /etc 2>&1 > /dev/null | wc -l`
+    - `find /etc 2> /dev/null | wc -l`
+    - <p>`find /etc > /dev/null 2>&1 | wc -l`</p>
+
+    <hr>
+
+    ### Python
+
+    1. How do you use [map], [filter], and [lambda]?
+
+    2. How do you use [list comprehensions]?
+
+    3. How do you use [generator expressions]?
+
+    3. How do you split and join strings?
+
+    [map]:                  https://docs.python.org/3/library/functions.html#map
+    [filter]:               https://docs.python.org/3/library/functions.html#filter
+    [lambda]:               https://docs.python.org/3/tutorial/controlflow.html#lambda-expressions
+    [list comprehensions]:  https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions
+    [generator expressions]: https://www.python.org/dev/peps/pep-0289/
+    [unix pipeline]:        https://en.wikipedia.org/wiki/Pipeline_(Unix)
+
+    #### Sample Question
+
+    Given a `list` of integers called `numbers`, produce a new `list` called
+    `fives` which consist only of the multiples of `5` by using `filter` and
+    `lambda`.
+
+    Then, do the same thing using **list comprehensions**.
+
+    <div class="alert alert-success" markdown="1">
+    #### <i class="fa fa-light-bulb-o"></i> Exam 01 and 02
+
+    You may wish to review **Exam 01** and **Exam 02**, along with previous
+    **quizzes** assocated with those exams.
+
+    </div>
+
+    <hr>
+
+    ## C
+
+    1. Why bother with [C]?  Why not just [Python] or [C++]?
+
+    2. Why is [C] considered a **systems programming language**?
+
+    3. What is [C]'s relationship to [Unix]?
+
+    [C]:    https://en.wikipedia.org/wiki/C_(programming_language)
+    [C++]:  https://isocpp.org/
+
+    <hr>
+
+    ### Compiling and Makefiles
+
+    1. What is the [compiler pipeline]?
+
+        - What exactly happens when you compile a program (ie. describe the
+          [compiler pipeline])?
+
+        - What is the difference between a **dynamic executable** and a
+          **static executable**?
+
+        - What is the difference between a [shared library] and a [static library]?
+
+    2. How do you write a [Makefile] that utilizes **rules** and **variables**
+    for a program that consists of multiple files?
+
+    [shared library]:       https://en.wikipedia.org/wiki/Library_(computing)#Shared_libraries
+    [static library]:       https://en.wikipedia.org/wiki/Static_library
+    [Makefile]:             https://en.wikipedia.org/wiki/Makefile
+
+    #### Sample Questions
+
+    1. Why is it important to specify all the dependencies of a **target** in a
+    `Makefile` rule?
+
+    2. What is the difference between **compiling** and **linking**?  What are
+    some common errors that can occur in each phase?
+
+    3. Write a `Makefile` for a project that outputs a [shared library], a
+    [static library], a **dynamic executable**, and a **static executable**.
+
+    <hr>
+
+    ### Pointers, Arrays, Strings
+
+    1. What exactly is a [pointer]? [array]? [string]?  How are they related?
+
+    2. What does it mean to **dereference** a [pointer]?
+
+    3. How do we get the **address** of a variable?
+
+    4. What are multiple ways to access an element of an [array] or [string]?
+
+    5. What is the difference between [little-endian] and [big-endian]?
+
+    #### Sample Question
+
+    Given the following code:
+
+        :::c
+        int main(int argc, char *argv[]) {  // | Label | Address | Value |
+            int  n   = 16;                  // |       | 0xF     |       |
+            int  a[] = {n};                 // | n     | 0xE     | 0x10  |
+            int *p   = a;                   // |       | 0xD     |       |
+            return 0;                       // |       | 0xC     |       |
+        }                                   // |       | 0xB     |       |
+
+    Assuming a **little-endian 16-bit machine** where each integer is 2 bytes,
+    each character is 1 byte, and each pointer is 2 bytes, fill in the **stack
+    frame** to the right by recording the location of the variables above and
+    their values at the appropriate addresses.
+
+    The variable `n` is done for you; you need to add `p` and `a` to the
+    **stack frame**.
+
+    Distinguish between the character `0` and the integer `0` by using
+    **hexadecimal for integers**.
+
+    <hr>
+
+    ### Memory Allocation
+
+    1. What is the difference between a [struct] and a [union]?
+
+    2. How much memory is allocated when we declare an `int`, `float`,
+    `double`, `char`, [array], [string], or [pointer]?
+
+    3. When we declare a variable, where is the data allocated ([stack],
+    [heap], **data**, **code**)?
+
+    #### Sample Question
+
+    Given the following [C] program:
+
+        :::C
+        typedef struct {
+            char key;
+            int  value;
+        } Pair;
+
+        int main(int argc, char* argv[]) {
+            char    c = 'k';
+            int     v = 2;
+
+            Pair   p0 = {c, v};
+            Pair  *p1 = malloc(sizeof(Pair));
+            Pair  *p2 = calloc(v, sizeof(Pair));
+            Pair **p3 = calloc(v, sizeof(Pair *));
+            return 0;
+        }
+
+    How much memory was allocated on the [stack], [heap], and **data** for each
+    of the variables in the `main` function?
+
+    <div class="alert alert-success" markdown="1">
+    #### <i class="fa fa-lightbulb-o"></i> Big Brain
+
+    Review [Reading 10](reading10.html): Memory Management.
+
+    </div>
+
+    <hr>
+
+    ### Memory Management
+
+    1. How do we [dynamically allocate] memory?  How do we deallocate that
+    memory?
+
+    2. When should we allocate on the [stack]? [heap]? **data**?  What are the
+    advantages and disadvantages of utilizing each memory segment?
+
+    3. How do we detect and fix memory errors such as: [segmentation faults],
+    invalid reads, uninitialized memory, and [memory leaks]?
+
+    4. What is [singly-linked list]?
+
+        - How would we **insert** an entry into a [linked list]?
+
+        - How would we **search** for an entry in a [linked list]?
+
+        - How would we **remove** an entry in a [linked list]?
+
+        - What are the time and space [complexities] of the **insert**,
+          **search**, and **remove** operations?
+
+    5. What is [hash table]?
+
+        - What is a [collision]?
+
+        - How does [separate chaining] handle a [collision]?
+
+        - How does [load factor] impact the performance of a [hash table]?
+
+        - What are the time and space [complexities] of the **insert**,
+          **search**, and **remove** operations?
+
+    #### Sample Questions
+
+    1. Given the following [C] program:
+
+            :::C
+            typedef struct Node {
+                int value; 
+                struct Node *next; 
+            } Node;
+
+            typedef struct {
+                Node *head;
+            } List;
+
+            void list_fprint(List *l, FILE *stream) {
+                for (Node *c = l->head; c; c = c->next)
+                    fprintf(stream, "%d\n", c->stream);
+            }
+
+            bool list_remove(List *l, int v) {
+                // TODO
+            }
+
+            int main(int argc, char *argv[]) {
+                  List l;
+                  char buffer[BUFSIZ];
+
+                  while (fgets(buffer, BUFSIZ, stdin)) {
+                        Node *next  = calloc(1, sizeof(Node));
+                        next->value = atoi(buffer);
+                        next->next  = l.head;
+                        l.head      = next;
+                    }
+
+
+                    list_fprint(&l, stdout);
+                    list_remove(&l, 42);
+                    return 0;
+            }
+
+        Given the linked list code above, implement the `list_remove` function
+        which removes **all nodes** that contain the specified value.  Return
+        whether or not any node was removed.
+
+    2. An **anagram** is a word formed by rearranging the letters of another word.
+    For instance, *cinema* is an **anagram** of *iceman*.  The following
+    function determines if the two given strings are anagrams:
+
+            :::c
+            bool is_anagram(const char *s1, const char *s2) {
+                int max = 0;
+
+                for (const char *c = s1; c; c++) { if (*c > max) max = *c; }
+                for (const char *c = s2; c; c++) { if (*c > max) max = *c; }
+
+                int *counts1 = malloc(max * sizeof(int)), *counts2 = malloc(max * sizeof(int));
+
+                for (const char *c = s1; c; c++) { counts1[(int)*c]++; }
+                for (const char *c = s2; c; c++) { counts2[(int)*c]++; }
+
+                for (int i = 0; i <= max; i++) if (counts1[i] != counts2[i]) { return false; }
+                free(counts1); free(counts2);
+                return true;
+            }
+
+        This function has the following memory errors: [segmentation fault],
+          invalid read, uninitialized memory, and [memory leak].  Briefly
+          describe how you would fix these errors.
+
+    [singly-linked list]:   https://en.wikipedia.org/wiki/Linked_list#Singly_linked_lists
+    [linked list]:          https://en.wikipedia.org/wiki/Linked_list
+    [complexities]:         https://en.wikipedia.org/wiki/Computational_complexity_theory
+    [hash table]:           https://en.wikipedia.org/wiki/Hash_table
+    [collision]:            https://en.wikipedia.org/wiki/Collision_(computer_science)
+    [separate chaining]:    https://en.wikipedia.org/wiki/Hash_table#Separate_chaining
+    [load factor]:          https://en.wikipedia.org/wiki/Hash_table#Key_statistics
+
+    [struct]:       https://en.wikipedia.org/wiki/Record_(computer_science)
+    [union]:        https://en.wikipedia.org/wiki/Union_type
+    [array]:        https://en.wikipedia.org/wiki/Array_data_type
+    [string]:       https://en.wikipedia.org/wiki/C_string_handling
+    [pointer]:      https://en.wikipedia.org/wiki/Pointer_(computer_programming)
+    [stack]:        https://en.wikipedia.org/wiki/Call_stack
+    [heap]:         https://en.wikipedia.org/wiki/Memory_management#HEAP
+    [dynamically allocate]:     https://en.wikipedia.org/wiki/Memory_management#Dynamic_memory_allocation
+    [memory leak]: https://en.wikipedia.org/wiki/Memory_leak
+    [memory leaks]: https://en.wikipedia.org/wiki/Memory_leak
+    [segmentation fault]:  https://en.wikipedia.org/wiki/Segmentation_fault
+    [segmentation faults]:  https://en.wikipedia.org/wiki/Segmentation_fault
+    [little-endian]:    https://en.wikipedia.org/wiki/Endianness#Little
+    [big-endian]:       https://en.wikipedia.org/wiki/Endianness#Big
+
+
+    <hr>
+
+    ## System Calls
+
+    1. What exactly are [system calls]?
+
+        - What is the difference between [user mode] and [kernel mode]?
+
+        - What happens when an application performs a [system call]?
+
+    2. What are some reasons why [system calls] related to [files],
+    [processes], and [networking] would fail?
+
+        - How do we check these failures?
+
+        - How do we get the error message related to these failures?
+
+    [user mode]:    https://en.wikipedia.org/wiki/User_space
+    [kernel mode]:  https://en.wikipedia.org/wiki/Protection_ring#SUPERVISOR-MODE
+
+    <hr>
+
+    ### Files
+
+    1. What is the difference between [open] and [fopen]?
+
+    2. What exactly is a [file descriptor] and what [system calls] can we do with
+    one?
+
+    3. How do we get the [inode] information for a file?
+
+    [file descriptor]:      https://en.wikipedia.org/wiki/File_descriptor
+    [inode]:                https://en.wikipedia.org/wiki/Inode
+    [open]:                 http://man7.org/linux/man-pages/man2/open.2.html
+    [fopen]:                http://man7.org/linux/man-pages/man3/fopen.3.html
+
+    #### Sample Question
+
+    How would you use [system calls] in [C] to accomplish the following tasks:
+
+    - Display the contents of a file?
+
+    - Copy the contents of a file?
+
+    - Check if a file is a regular file, directory, or symlink?
+
+    - Check if a file is a readable, writable, or executable?
+
+    - Check the size of the file?
+
+    - Check the last modification time?
+
+    - List the contents of a directory? in sorted order?
+
+    <div class="alert alert-success" markdown="1">
+    #### <i class="fa fa-lightbulb-o"></i> Big Brain
+
+    Review [Reading 11](reading11.html): using [system calls] to manipulate
+    files and directories.
+
+    </div>
+
+    <hr>
+
+    ### Networking
+
+    1. What is [networking]?
+
+        - What is [bandwidth] and [latency] and how do we measure them?
+
+        - What is an [IP address] and what is a [domain name]?
+
+        - What is a [network port]?
+
+        - What is the basic difference between [TCP] and [UDP]?
+
+    2. What is a [URL] and what are its components?
+
+    3. How are [sockets] like [files]? How are they different?
+
+    4. What is [HTTP]?
+
+        - What [system calls] does a typical [HTTP] **client** perform?  What
+          messages does it send and receive?
+
+        - What [system calls] does a typical [HTTP] **server** perform?  What
+          messages does it send and receive?
+
+    #### Sample Question
+
+    Modify [http_client.c] to implement a [port scanner] (ie. `nc -z`).
+
+    <div class="alert alert-success" markdown="1">
+    #### <i class="fa fa-lightbulb-o"></i> Big Brain
+
+    Review [Reading 12](reading12.html): using [sockets] to connect to another
+    machine.
+
+    </div>
+
+    ### Processes
+
+    1. What is a [process]?
+
+        - What attributes or components does it have?
+
+        - What [system calls] can you do with them?
+
+    2. What happens during the life cycle of a typical [process]?
+
+        - After a [fork], how does a [process] determine if they are the
+          **child** or **parent**?
+
+        - After a [fork], who executes first: **parent** or **child**?
+
+        - What happens when a process performs [exec]?
+
+        - Why is it necessary to perform a [wait]?
+
+        - What is the purpose of [exit]?
+
+    3. How do we prevent a [fork bomb]?
+
+        - How do we prevent [zombies]?
+
+        - Why would we want to prevent these situations?
+
+    4. What is a [signal]?
+
+        - What does a [signal] do to a [process]?
+
+        - How do we send a [signal] to another [process]?
+
+        - How do we catch a [signal] and handle them?
+
+        - What happens to [system calls] if a [signal] interrupts them?
+
+    [fork]:                 http://man7.org/linux/man-pages/man2/fork.2.html
+    [exec]:                 http://man7.org/linux/man-pages/man3/exec.3.html
+    [wait]:                 http://man7.org/linux/man-pages/man2/waitpid.2.html
+    [exit]:                 http://man7.org/linux/man-pages/man3/exit.3.html
+    [process]:              https://en.wikipedia.org/wiki/Process_(computing)
+    [signal]:               https://en.wikipedia.org/wiki/Unix_signal
+    [fork bomb]:            https://en.wikipedia.org/wiki/Fork_bomb
+    [zombies]:              https://en.wikipedia.org/wiki/Zombie_process
+
+    #### Sample Question
+
+    Draw a diagram of the typical life cycle of a process.
+
+    [system]: http://man7.org/linux/man-pages/man3/system.3.html
+
+    <div class="alert alert-success" markdown="1">
+    #### <i class="fa fa-lightbulb-o"></i> Big Brain
+
+    Review [Reading 13](reading13.html): using [fork], [exec], and [wait].
+    </div>
+
+    <hr>
+
+
+    [bandwidth]:        https://en.wikipedia.org/wiki/Bandwidth_(computing)
+    [latency]:          https://en.wikipedia.org/wiki/Latency_(engineering)
+    [IP address]:       https://en.wikipedia.org/wiki/IP_address
+    [domain name]:      https://en.wikipedia.org/wiki/Domain_name
+    [network port]:     https://en.wikipedia.org/wiki/Port_(computer_networking)
+    [TCP]:              https://en.wikipedia.org/wiki/Transmission_Control_Protocol
+    [UDP]:              https://en.wikipedia.org/wiki/User_Datagram_Protocol
+    [URL]:              https://en.wikipedia.org/wiki/URL
+    [sockets]:          https://en.wikipedia.org/wiki/Network_socket
+    [HTTP]:             https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol
+    [http_client.c]:    https://github.com/nd-cse-20289-sp21/cse-20289-sp21-examples/blob/master/lecture20/http_client.c
+    [port scanner]:     https://en.wikipedia.org/wiki/Port_scanner
+    [Data Representation]: https://en.wikipedia.org/wiki/Data_(computing)
