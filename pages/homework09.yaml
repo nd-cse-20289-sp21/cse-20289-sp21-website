@@ -877,11 +877,11 @@ body:       |
       Testing ./thor.py...
       Functions                                                        ... Success
 
-      Usage                                                           
+      Usage
           no arguments                                                 ... Success
           bad arguments                                                ... Success
 
-      Single Hammer                                                   
+      Single Hammer
           https://example.com                                          ... Success
           https://example.com (-v)                                     ... Success
           https://yld.me                                               ... Success
@@ -889,7 +889,7 @@ body:       |
           https://yld.me/izE?raw=1                                     ... Success
           https://yld.me/izE?raw=1 (-v)                                ... Success
 
-      Single Hammer, Multiple Throws                                  
+      Single Hammer, Multiple Throws
           https://example.com (-t 4)                                   ... Success
           https://example.com (-t 4 -v)                                ... Success
           https://yld.me (-t 4)                                        ... Success
@@ -897,7 +897,7 @@ body:       |
           https://yld.me/izE?raw=1 (-t 4)                              ... Success
           https://yld.me/izE?raw=1 (-t 4 -v)                           ... Success
 
-      Multiple Hammers                                                
+      Multiple Hammers
           https://example.com (-h 2)                                   ... Success
           https://example.com (-h 2 -v)                                ... Success
           https://yld.me (-h 2)                                        ... Success
@@ -905,14 +905,14 @@ body:       |
           https://yld.me/izE?raw=1 (-h 2)                              ... Success
           https://yld.me/izE?raw=1 (-p 2 -v)                           ... Success
 
-      Multiple Hammers, Multiple Throws                               
+      Multiple Hammers, Multiple Throws
           https://example.com (-h 2 -t 4)                              ... Success
           https://example.com (-h 2 -t 4 -v)                           ... Success
           https://yld.me (-h 2 -t 4)                                   ... Success
           https://yld.me (-h 2 -t 4 -v)                                ... Success
           https://yld.me/izE?raw=1 (-h 2 -t 4)                         ... Success
           https://yld.me/izE?raw=1 (-h 2 -t 4 -v)                      ... Success
-  
+
   <div class="alert alert-info" markdown="1">
   #### <i class="fa fa-check"></i> Verification
 
@@ -926,7 +926,7 @@ body:       |
   [requests]: http://docs.python-requests.org/en/master/
   [concurrent.futures]: https://docs.python.org/3/library/concurrent.futures.html
   [thor.py]: https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework09/thor.py
-  [test_thor_py.sh]: https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework09/test_thor_py.sh 
+  [test_thor_py.sh]: https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework09/test_thor_py.sh
 
   ### TROLL (1 Point)
 
