@@ -707,9 +707,9 @@ body:       |
          Score 2.00 / 2.00
         Status Success
 
-  ## Guru Point: TROLL, IRC Bot, VPS (3 Points)
+  ## Guru Point: Thor.py, TROLL, IRC Bot, VPS (4 Points)
 
-  For this week, there are three Guru Point opportunities.
+  For this week, there are four Guru Point opportunities.
 
   <div class="alert alert-success" markdown="1">
   #### <i class="fa fa-calendar"></i> Self-Service Extension
@@ -722,6 +722,211 @@ body:       |
   Just leave a note on your **Pull Request** of your intensions.
 
   </div>
+
+  ### Thor.py (1 Point)
+
+  Now that you have an idea of how [sockets] and [processes] work at the
+  [system call] level, let's return to [Python] and consider how we can use
+  these mechanisms at a higher level.
+
+  For extra credit, you are to use [Python] along with [requests] and
+  [concurrent.futures] to implement a version of `thor` (called `thor.py`) with
+  the following usage:
+
+      ::text
+      # Display help message
+      $ ./thor.py
+      Usage: thor.py [-h HAMMERS -t THROWS] URL
+          -h  HAMMERS     Number of hammers to utilize (1)
+          -t  THROWS      Number of throws per hammer  (1)
+          -v              Display verbose output
+
+  #### Skeleton
+
+  Here is a basic skeleton, [thor.py], that you can start with:
+
+      :::python
+      import concurrent.futures
+      import os
+      import requests
+      import sys
+      import time
+
+      # Functions
+
+      def usage(status=0):
+          progname = os.path.basename(sys.argv[0])
+          print(f'''Usage: {progname} [-h HAMMERS -t THROWS] URL
+          -h  HAMMERS     Number of hammers to utilize (1)
+          -t  THROWS      Number of throws per hammer  (1)
+          -v              Display verbose output
+          ''')
+          sys.exit(status)
+
+      def hammer(url, throws, verbose, hid):
+          ''' Hammer specified url by making multiple throws (ie. HTTP requests).
+
+          - url:      URL to request
+          - throws:   How many times to make the request
+          - verbose:  Whether or not to display the text of the response
+          - hid:      Unique hammer identifier
+
+          Return the average elapsed time of all the throws.
+          '''
+          return 0
+
+      def do_hammer(args):
+          ''' Use args tuple to call `hammer` '''
+          return hammer(*args)
+
+      def main():
+          hammers = 1
+          throws  = 1
+          verbose = False
+
+          # Parse command line arguments
+          pass
+
+          # Create pool of workers and perform throws
+          pass
+
+      # Main execution
+
+      if __name__ == '__main__':
+          main()
+
+  #### Examples
+
+  Below are some examples of `thor.py` in action:
+
+      :::bash
+      # Perform single throw
+      $ ./thor.py http://example.com
+      Hammer: 0, Throw:   0, Elapsed Time: 0.03
+      Hammer: 0, AVERAGE   , Elapsed Time: 0.03
+      TOTAL AVERAGE ELAPSED TIME: 0.03
+
+      # Perform 10 throws
+      $ ./thor.py -t 10 http://example.com
+      Hammer: 0, Throw:   0, Elapsed Time: 0.03
+      Hammer: 0, Throw:   1, Elapsed Time: 0.03
+      Hammer: 0, Throw:   2, Elapsed Time: 0.03
+      Hammer: 0, Throw:   3, Elapsed Time: 0.03
+      Hammer: 0, Throw:   4, Elapsed Time: 0.03
+      Hammer: 0, Throw:   5, Elapsed Time: 0.03
+      Hammer: 0, Throw:   6, Elapsed Time: 0.03
+      Hammer: 0, Throw:   7, Elapsed Time: 0.03
+      Hammer: 0, Throw:   8, Elapsed Time: 0.03
+      Hammer: 0, Throw:   9, Elapsed Time: 0.03
+      Hammer: 0, AVERAGE   , Elapsed Time: 0.03
+      TOTAL AVERAGE ELAPSED TIME: 0.03
+
+      # Perform 5 throws requests with 2 hammers
+      $ ./thor.py -t 5 -h 2 http://example.com
+      Hammer: 1, Throw:   0, Elapsed Time: 0.03
+      Hammer: 0, Throw:   0, Elapsed Time: 0.03
+      Hammer: 1, Throw:   1, Elapsed Time: 0.03
+      Hammer: 0, Throw:   1, Elapsed Time: 0.03
+      Hammer: 1, Throw:   2, Elapsed Time: 0.03
+      Hammer: 0, Throw:   2, Elapsed Time: 0.03
+      Hammer: 1, Throw:   3, Elapsed Time: 0.03
+      Hammer: 0, Throw:   3, Elapsed Time: 0.03
+      Hammer: 1, Throw:   4, Elapsed Time: 0.03
+      Hammer: 1, AVERAGE   , Elapsed Time: 0.03
+      Hammer: 0, Throw:   4, Elapsed Time: 0.03
+      Hammer: 0, AVERAGE   , Elapsed Time: 0.03
+      TOTAL AVERAGE ELAPSED TIME: 0.03
+
+      # Perform single throw with verbose output
+      $ ./thor.py -v http://example.com
+      <!doctype html>
+      ...
+      </html>
+
+      Hammer: 0, Throw:   0, Elapsed Time: 0.03
+      Hammer: 0, AVERAGE   , Elapsed Time: 0.03
+      TOTAL AVERAGE ELAPSED TIME: 0.03
+
+  <div class="alert alert-success" markdown="1">
+  #### <i class="fa fa-light-bulb-o"></i> Hints
+
+  - Parse the command line options to set the `hammers`, `throws`, and `verbose` variables.
+
+  - Use [concurrent.futures.ProcessPoolExecutor] to create a pool of processes.
+
+  - Use the `map` method of the [ProcessPoolExecutor] to have each process
+    execute the `do_hammer` function on a sequence of arguments.
+
+  - The `hammer` method should perform multiple [HTTP] `get` requests by performing
+    [requests.get] on the `URL`. Each request should be timed using `time.time` and
+    the average elapsed request time should be returned by this function.
+
+  </div>
+
+  [concurrent.futures.ProcessPoolExecutor]: https://docs.python.org/3/library/concurrent.futures.html#processpoolexecutor
+  [ProcessPoolExecutor]: https://docs.python.org/3/library/concurrent.futures.html#processpoolexecutor
+  [requests.get]: https://docs.python-requests.org/en/master/user/quickstart/#make-a-request
+  [time.time]: https://docs.python.org/3/library/time.html#time.time
+
+  #### Testing
+
+  To verify that your `thor.py` works, you can use the provided
+  [test_thor_py.sh] script:
+
+      :::bash
+      Testing ./thor.py...
+      Functions                                                        ... Success
+
+      Usage                                                           
+          no arguments                                                 ... Success
+          bad arguments                                                ... Success
+
+      Single Hammer                                                   
+          https://example.com                                          ... Success
+          https://example.com (-v)                                     ... Success
+          https://yld.me                                               ... Success
+          https://yld.me (-v)                                          ... Success
+          https://yld.me/izE?raw=1                                     ... Success
+          https://yld.me/izE?raw=1 (-v)                                ... Success
+
+      Single Hammer, Multiple Throws                                  
+          https://example.com (-t 4)                                   ... Success
+          https://example.com (-t 4 -v)                                ... Success
+          https://yld.me (-t 4)                                        ... Success
+          https://yld.me (-t 4 -v)                                     ... Success
+          https://yld.me/izE?raw=1 (-t 4)                              ... Success
+          https://yld.me/izE?raw=1 (-t 4 -v)                           ... Success
+
+      Multiple Hammers                                                
+          https://example.com (-h 2)                                   ... Success
+          https://example.com (-h 2 -v)                                ... Success
+          https://yld.me (-h 2)                                        ... Success
+          https://yld.me (-h 2 -v)                                     ... Success
+          https://yld.me/izE?raw=1 (-h 2)                              ... Success
+          https://yld.me/izE?raw=1 (-p 2 -v)                           ... Success
+
+      Multiple Hammers, Multiple Throws                               
+          https://example.com (-h 2 -t 4)                              ... Success
+          https://example.com (-h 2 -t 4 -v)                           ... Success
+          https://yld.me (-h 2 -t 4)                                   ... Success
+          https://yld.me (-h 2 -t 4 -v)                                ... Success
+          https://yld.me/izE?raw=1 (-h 2 -t 4)                         ... Success
+          https://yld.me/izE?raw=1 (-h 2 -t 4 -v)                      ... Success
+  
+  <div class="alert alert-info" markdown="1">
+  #### <i class="fa fa-check"></i> Verification
+
+  To get credit for this Guru Point, you must show either the instructor or TA
+  a demonstration of your `thor.py` in action (or attach a video / screenshot to
+  your **Pull Request**).  You have up until **one week after** this assignment
+  is due to verify your Guru Point.
+
+  </div>
+
+  [requests]: http://docs.python-requests.org/en/master/
+  [concurrent.futures]: https://docs.python.org/3/library/concurrent.futures.html
+  [thor.py]: https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework09/thor.py
+  [test_thor_py.sh]: https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework09/test_thor_py.sh 
 
   ### TROLL (1 Point)
 
