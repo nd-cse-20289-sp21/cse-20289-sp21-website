@@ -364,6 +364,10 @@
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1DpMYvlxawaG_iOMEEXFrtoDEWsYOwdItzzbhplojkDI/edit?usp=sharing
+          - name:       Notebook
+            link:       https://docs.google.com/presentation/d/1A8dckgCUbB9n4hpEe9X59Ghy_7y-vsnkIXUi2wa_8p4/edit?usp=sharing
+          - name:       Panopto
+            link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=975d1efb-fa4f-4b16-879e-ad18012a639f
 
       - date:           Fri 04/30
         topics:         Processes
