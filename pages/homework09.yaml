@@ -707,9 +707,17 @@ body:       |
          Score 2.00 / 2.00
         Status Success
 
-  ## Guru Point: Thor.py, TROLL, IRC Bot, VPS (4 Points)
+  ## <strike>Guru Point: Thor.py, TROLL, IRC Bot, VPS (4 Points)</strike>
 
-  For this week, there are four Guru Point opportunities.
+  <strike>For this week, there are four Guru Point opportunities.</strike>
+
+  <div class="alert alert-danger" markdown="1">
+  #### <i class="fa fa-bell-slash"></i> Academic Dishonesty
+
+  Due to the rampant **academic dishonesty** surrounding recent **Guru
+  Points**, **none** of these opportunities will be available.
+
+  </div>
 
   <div class="alert alert-success" markdown="1">
   #### <i class="fa fa-calendar"></i> Self-Service Extension
@@ -723,7 +731,7 @@ body:       |
 
   </div>
 
-  ### Thor.py (1 Point)
+  ### <strike>Thor.py (1 Point)</strike>
 
   Now that you have an idea of how [sockets] and [processes] work at the
   [system call] level, let's return to [Python] and consider how we can use
@@ -928,7 +936,7 @@ body:       |
   [thor.py]: https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework09/thor.py
   [test_thor_py.sh]: https://raw.githubusercontent.com/nd-cse-20289-sp21/cse-20289-sp21-assignments/master/homework09/test_thor_py.sh
 
-  ### TROLL (1 Point)
+  ### <strike>TROLL (1 Point)</strike>
 
   For extra credit, you are to use [C] and [system calls] to implement your own
   version of the `TROLL` from [Homework 01].  Recall, that the `TROLL` was a
@@ -949,7 +957,7 @@ body:       |
 
   </div>
 
-  ### IRC Bot (1 Point)
+  ### <strike>IRC Bot (1 Point)</strike>
 
   For extra credit, you are to use [Python] and [sockets] to implement your own
   version of [bobbit], an [IRC] chat bot.  Your bot should connect to the
@@ -1067,7 +1075,7 @@ body:       |
 
   </div>
 
-  ### VPS (1 Point)
+  ### <strike>VPS (1 Point)</strike>
 
   For extra extra credit, you are to sign up for [virtual private server] on a
   service such as [Digital Ocean], [Linode], [Amazon Web Services], [Microsoft Azure],
