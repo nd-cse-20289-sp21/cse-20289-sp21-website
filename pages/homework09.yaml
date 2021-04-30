@@ -636,6 +636,41 @@ body:       |
   using multiple [processes] which write their responses to **standard
   output**.  If `N` is not specified, then it defaults to `1`.
 
+  #### Examples
+
+  Here are some examples of `bin/thor` in action:
+
+      :::bash
+      # Throw one hammer at example.com
+      $ ./bin/thor example.com
+      <!doctype html>
+          <title>Example Domain</title>
+      ...
+      </body>
+      </html>
+      Bandwidth: 0.05 MB/s
+      Elapsed Time: 0.02 seconds
+
+      # Throw two hammers at example.com
+      $ ./bin/thor -n 2 example.com
+      <!doctype html>
+          <title>Example Domain</title>
+      ...
+      </body>
+      </body>
+      </html>
+      </html>
+      Bandwidth: 0.05 MB/s
+      Bandwidth: 0.05 MB/s
+      Elapsed Time: 0.02 seconds
+
+  <div class="alert alert-success" markdown="1">
+  **Note**: Each **child** [process] should print the **bandwidth** it computes
+  to `stderr`, while the **parent** prints the **elapsed time** to `stderr`.
+  </div>
+
+  [process]: https://en.wikipedia.org/wiki/Process_(computing)
+
   ### Task 1: `src/thor.c`
 
   The `src/thor.c` file contains the [C] implementation of the `thor`
@@ -1156,6 +1191,9 @@ body:       |
       ...
       $ git add src/socket.c                    # Mark changes for commit
       $ git commit -m "homework09: socket"      # Record changes
+      ...
+      $ git add src/http.c                      # Mark changes for commit
+      $ git commit -m "homework09: http"        # Record changes
       ...
       $ git add src/timestamp.c                 # Mark changes for commit
       $ git commit -m "homework09: timestamp"   # Record changes
