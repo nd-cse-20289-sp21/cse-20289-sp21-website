@@ -742,15 +742,15 @@ body:       |
          Score 2.00 / 2.00
         Status Success
 
-  ## <strike>Guru Point: Thor.py, TROLL, IRC Bot, VPS (4 Points)</strike>
+  ## Guru Point: <strike>Thor.py, TROLL</strike>, IRC Bot, VPS (<strike>4</strike> 2 Points)
 
   <strike>For this week, there are four Guru Point opportunities.</strike>
 
   <div class="alert alert-danger" markdown="1">
   #### <i class="fa fa-bell-slash"></i> Academic Dishonesty
 
-  Due to the rampant **academic dishonesty** surrounding recent **Guru
-  Points**, **none** of these opportunities will be available.
+  Due to the widespread **academic dishonesty** surrounding recent **Guru
+  Points**, only **two** of these opportunities will be available.
 
   </div>
 
@@ -992,7 +992,7 @@ body:       |
 
   </div>
 
-  ### <strike>IRC Bot (1 Point)</strike>
+  ### IRC Bot (1 Point)
 
   For extra credit, you are to use [Python] and [sockets] to implement your own
   version of [bobbit], an [IRC] chat bot.  Your bot should connect to the
@@ -1105,12 +1105,12 @@ body:       |
 
   To get credit for this Guru Point, you must have your [IRC] bot join the
   `#bots` channel on the [chat.ndlug.org] server and demonstrate its
-  functionality.  You have up until **Tuesday, May 11** to verify your guru
-  point.
+  functionality yourself (by logging into the server with your own account).
+  You have up until **Tuesday, May 11** to verify your guru point.
 
   </div>
 
-  ### <strike>VPS (1 Point)</strike>
+  ### VPS (1 Point)
 
   For extra extra credit, you are to sign up for [virtual private server] on a
   service such as [Digital Ocean], [Linode], [Amazon Web Services], [Microsoft Azure],
