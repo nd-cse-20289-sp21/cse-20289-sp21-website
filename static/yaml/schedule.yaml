@@ -387,13 +387,16 @@
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1NZek__BOU6tqGpqEYlY1LJSnMzCsY9fl_K2m3VFcCNc/edit?usp=sharing
+          - name:       Notebook
+            link:       https://docs.google.com/presentation/d/1TOc95fu-uib-ypF5vi3Gz1iSfjncIPP6kxSMdLgSe7Q/edit?usp=sharing
+          - name:       Panopto
+            link:       https://notredame.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=7a21df49-c1cb-4b5d-a944-ad1d0128faad
 
       - date:           Wed 05/05
         topics:         Concurrent HTTP Server
         items:
           - name:       Slides
             link:       https://docs.google.com/presentation/d/1NZek__BOU6tqGpqEYlY1LJSnMzCsY9fl_K2m3VFcCNc/edit?usp=sharing
-
 
       - date:           Fri 05/07
         topics:         VPS
