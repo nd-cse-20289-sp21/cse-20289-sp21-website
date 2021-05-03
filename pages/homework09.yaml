@@ -1115,6 +1115,15 @@ body:       |
   For extra extra credit, you are to sign up for [virtual private server] on a
   service such as [Digital Ocean], [Linode], [Amazon Web Services], [Microsoft Azure],
   [Google Cloud], or [Vultr] and run the `loki.py` [HTTP] server from that [VPS].
+  
+  <div class="alert alert-success" markdown="1">
+  #### <i class="fa fa-github"></i> GitHub Student Developer Pack
+
+  As mentioned in class, you are eligible for the [GitHub Student Developer
+  Pack], which provides you with credits to [Digital Ocean] and [Microsoft
+  Azure] (among many other free goodies).
+
+  </div>
 
   <div class="alert alert-info" markdown="1">
   #### <i class="fa fa-check"></i> Verification
@@ -1134,6 +1143,7 @@ body:       |
   [Microsoft Azure]: https://azure.microsoft.com/en-us/free
   [Google Cloud]: https://cloud.google.com/
   [Vultr]: https://vultr.com/
+  [GitHub Student Developer Pack]: https://education.github.com/pack
 
   ## Submission
 
