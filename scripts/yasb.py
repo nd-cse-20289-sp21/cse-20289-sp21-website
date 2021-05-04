@@ -24,6 +24,7 @@ import dateutil.parser
 import tornado.template
 import markdown
 import markdown.extensions.codehilite
+import markdown.extensions.toc
 import yaml
 
 # Page -------------------------------------------------------------------------
@@ -45,6 +46,7 @@ def load_page_from_yaml(path):
 
 def render_page(page):
     hilite = markdown.extensions.codehilite.CodeHiliteExtension(noclasses=True)
+    toc    = markdown.extensions.toc.TocExtension(permalink=True)
     loader = tornado.template.Loader('templates')
     layout = u'''
 {{% extends "base.tmpl %}}
@@ -52,7 +54,7 @@ def render_page(page):
 {{% block body %}}
 {}
 {{% end %}}
-'''.format(markdown.markdown(page.body, extensions=['extra', hilite]))
+'''.format(markdown.markdown(page.body, extensions=['extra', toc, hilite]))
 
     template = tornado.template.Template(layout, loader=loader)
     settings = {
