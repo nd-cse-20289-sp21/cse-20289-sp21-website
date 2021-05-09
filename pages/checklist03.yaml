@@ -264,6 +264,11 @@ body:       |
     3. When we declare a variable, where is the data allocated ([stack],
     [heap], **data**, **code**)?
 
+    4. How does [word alignment] influence the amount of memory allocated for
+    [struct]s and [union]s?
+
+    [word alignment]: https://en.wikipedia.org/wiki/Data_structure_alignment#2
+
     #### Sample Question
 
     Given the following [C] program:
