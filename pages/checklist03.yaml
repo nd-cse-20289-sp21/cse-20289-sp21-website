@@ -321,19 +321,15 @@ body:       |
 
         - How would we **remove** an entry in a [linked list]?
 
-        - What are the time and space [complexities] of the **insert**,
-          **search**, and **remove** operations?
-
     5. What is [hash table]?
+
+        - How does a [hash table] utilize a [hash function]?
 
         - What is a [collision]?
 
         - How does [separate chaining] handle a [collision]?
 
-        - How does [load factor] impact the performance of a [hash table]?
-
-        - What are the time and space [complexities] of the **insert**,
-          **search**, and **remove** operations?
+    [hash function]: https://en.wikipedia.org/wiki/Hash_function
 
     #### Sample Questions
 
