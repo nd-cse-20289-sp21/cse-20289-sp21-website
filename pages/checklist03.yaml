@@ -409,8 +409,8 @@ body:       |
                 Table *t = malloc(sizeof(Table));
                 if (t)
                 {
-                  t->buckets = (buckets ? buckets : DEFAULT_BUCKETS);
-                  t->data    = malloc(sizeof(int) * buckets);
+                    t->buckets = (buckets ? buckets : DEFAULT_BUCKETS);
+                    t->data    = malloc(sizeof(int) * buckets);
                 }
             }
 
@@ -421,7 +421,7 @@ body:       |
 
             bool    table_insert(Table *t, int value)
             {
-                size_t hash = value % t->buckets;
+                size_t hash = value;
 
                 for (size_t offset = 0; offset < t->buckets; offset++)
                 {
@@ -442,7 +442,7 @@ body:       |
 
             bool    table_search(Table *t, int value)
             {
-                size_t hash = value % t->buckets;
+                size_t hash = value;
 
                 for (size_t offset = 0; offset < t->buckets; offset++)
                 {
@@ -497,7 +497,10 @@ body:       |
 
         8. Which line do you need to **add** to fix these errors?
 
-        9. Implement `table_remove(Table *t, int value)`
+        9. Both the `table_insert` and `table_search` do not compute the `hash`
+        correctly.  What is missing?
+
+        10. Implement `table_remove(Table *t, int value)`
 
     [singly-linked list]:   https://en.wikipedia.org/wiki/Linked_list#Singly_linked_lists
     [linked list]:          https://en.wikipedia.org/wiki/Linked_list
@@ -522,6 +525,8 @@ body:       |
     [segmentation faults]:  https://en.wikipedia.org/wiki/Segmentation_fault
     [little-endian]:    https://en.wikipedia.org/wiki/Endianness#Little
     [big-endian]:       https://en.wikipedia.org/wiki/Endianness#Big
+    [gdb]: https://man7.org/linux/man-pages/man1/gdb.1.html
+    [valgrind]: https://man7.org/linux/man-pages/man1/valgrind.1.html
 
 
     <hr>
