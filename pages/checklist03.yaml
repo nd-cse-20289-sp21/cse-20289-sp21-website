@@ -274,12 +274,14 @@ body:       |
     Given the following [C] program:
 
         :::C
-        typedef struct {
+        typedef struct
+        {
             char key;
             int  value;
         } Pair;
 
-        int main(int argc, char* argv[]) {
+        int main(int argc, char* argv[])
+        {
             char    c = 'k';
             int     v = 2;
 
@@ -336,7 +338,8 @@ body:       |
     1. Given the following [C] program:
 
             :::C
-            typedef struct Node {
+            typedef struct Node
+            {
                 int value; 
                 struct Node *next; 
             } Node;
@@ -345,30 +348,33 @@ body:       |
                 Node *head;
             } List;
 
-            void list_fprint(List *l, FILE *stream) {
+            void list_fprint(List *l, FILE *stream)
+            {
                 for (Node *c = l->head; c; c = c->next)
                     fprintf(stream, "%d\n", c->stream);
             }
 
-            bool list_remove(List *l, int v) {
+            bool list_remove(List *l, int v)
+            {
                 // TODO
             }
 
-            int main(int argc, char *argv[]) {
-                  List l;
-                  char buffer[BUFSIZ];
+            int main(int argc, char *argv[])
+            {
+                List l;
+                char buffer[BUFSIZ];
 
-                  while (fgets(buffer, BUFSIZ, stdin)) {
-                        Node *next  = calloc(1, sizeof(Node));
-                        next->value = atoi(buffer);
-                        next->next  = l.head;
-                        l.head      = next;
-                    }
+                while (fgets(buffer, BUFSIZ, stdin))
+                {
+                    Node *next  = calloc(1, sizeof(Node));
+                    next->value = atoi(buffer);
+                    next->next  = l.head;
+                    l.head      = next;
+                }
 
-
-                    list_fprint(&l, stdout);
-                    list_remove(&l, 42);
-                    return 0;
+                list_fprint(&l, stdout);
+                list_remove(&l, 42);
+                return 0;
             }
 
         Given the linked list code above, implement the `list_remove` function
