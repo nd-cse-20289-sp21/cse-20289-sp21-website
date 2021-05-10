@@ -375,30 +375,123 @@ body:       |
         which removes **all nodes** that contain the specified value.  Return
         whether or not any node was removed.
 
-    2. An **anagram** is a word formed by rearranging the letters of another word.
-    For instance, *cinema* is an **anagram** of *iceman*.  The following
-    function determines if the two given strings are anagrams:
+    2. Given the follow [hash table] (with [linear probing]) implementation at [https://yld.me/raw/eRVG.c](https://yld.me/raw/eRVG.c):
 
-            :::c
-            bool is_anagram(const char *s1, const char *s2) {
-                int max = 0;
+            :::C
+            /* hash_table.c */
 
-                for (const char *c = s1; c; c++) { if (*c > max) max = *c; }
-                for (const char *c = s2; c; c++) { if (*c > max) max = *c; }
+            #include <stdbool.h>
+            #include <stdio.h>
+            #include <stdlib.h>
 
-                int *counts1 = malloc(max * sizeof(int)), *counts2 = malloc(max * sizeof(int));
+            /* Constants */
 
-                for (const char *c = s1; c; c++) { counts1[(int)*c]++; }
-                for (const char *c = s2; c; c++) { counts2[(int)*c]++; }
+            #define DEFAULT_BUCKETS (1<<5)
 
-                for (int i = 0; i <= max; i++) if (counts1[i] != counts2[i]) { return false; }
-                free(counts1); free(counts2);
-                return true;
+            /* Structures */
+
+            typedef struct
+            {
+                int    *data;
+                size_t buckets;
+            } Table;
+
+            /* Functions */
+
+            Table * table_create(size_t buckets)
+            {
+                Table *t = malloc(sizeof(Table));
+                if (t)
+                {
+                  t->buckets = (buckets ? buckets : DEFAULT_BUCKETS);
+                  t->data    = malloc(sizeof(int) * buckets);
+                }
             }
 
-        This function has the following memory errors: [segmentation fault],
-          invalid read, uninitialized memory, and [memory leak].  Briefly
-          describe how you would fix these errors.
+            void    table_delete(Table *t)
+            {
+                free(t);
+            }
+
+            bool    table_insert(Table *t, int value)
+            {
+                size_t hash = value % t->buckets;
+
+                for (size_t offset = 0; offset < t->buckets; offset++)
+                {
+                    size_t bucket = hash + offset;
+                    if (!t->data[bucket])
+                    {
+                        t->data[bucket] = value;
+                        return true;
+                    }
+                    if (t->data[bucket] == value)
+                    {
+                        return false;
+                    }
+                }
+
+                return false;
+            }
+
+            bool    table_search(Table *t, int value)
+            {
+                size_t hash = value % t->buckets;
+
+                for (size_t offset = 0; offset < t->buckets; offset++)
+                {
+                    size_t bucket = hash + offset;
+                    if (!t->data[bucket])
+                    {
+                        return false;
+                    }
+                    if (t->data[bucket] == value)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            /* Main Execution */
+
+            int main(int argc, char *argv[])
+            {
+                int   d[] = {4, 6, 5, 5, 6, 0};
+                Table  *t = table_create(0);
+
+                for (int *p = d; *p; p++)
+                {
+                  table_insert(t, p);
+                }
+
+                for (int i = 0; i < 10; i++)
+                {
+                  printf("table_search(%d) = %s\n", i, table_search(t, i) ? "true" : "false");
+                }
+
+                table_delete(t);
+                return EXIT_SUCCESS;
+            }
+
+        1. Compile and run the code using [gdb].  Where does the program **segfault**?
+
+        2. Which line do you need to **change** to fix these errors?
+
+        3. Compile and run the code using [valgrind].  What type of **memory errors** are there?
+
+        4. Which line do you need to **change** to fix these errors?
+
+        5. Compile and run the code using [valgrind].  What type of **memory errors** are there?
+
+        6. Which line do you need to **change** to fix these errors?
+        
+        7. Compile and run the code using [valgrind].  What type of **memory errors** are there?
+        
+        8. Which line do you need to **add** to fix these errors?
+
+        9. Implement `table_remove(Table *t, int value)`
 
     [singly-linked list]:   https://en.wikipedia.org/wiki/Linked_list#Singly_linked_lists
     [linked list]:          https://en.wikipedia.org/wiki/Linked_list
@@ -407,6 +500,7 @@ body:       |
     [collision]:            https://en.wikipedia.org/wiki/Collision_(computer_science)
     [separate chaining]:    https://en.wikipedia.org/wiki/Hash_table#Separate_chaining
     [load factor]:          https://en.wikipedia.org/wiki/Hash_table#Key_statistics
+    [linear probing]:       https://en.wikipedia.org/wiki/Linear_probing
 
     [struct]:       https://en.wikipedia.org/wiki/Record_(computer_science)
     [union]:        https://en.wikipedia.org/wiki/Union_type
