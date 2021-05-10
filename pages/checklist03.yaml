@@ -463,12 +463,12 @@ body:       |
 
                 for (int *p = d; *p; p++)
                 {
-                  table_insert(t, p);
+                    table_insert(t, p);
                 }
 
                 for (int i = 0; i < 10; i++)
                 {
-                  printf("table_search(%d) = %s\n", i, table_search(t, i) ? "true" : "false");
+                    printf("table_search(%d) = %s\n", i, table_search(t, i) ? "true" : "false");
                 }
 
                 table_delete(t);
@@ -486,9 +486,9 @@ body:       |
         5. Compile and run the code using [valgrind].  What type of **memory errors** are there?
 
         6. Which line do you need to **change** to fix these errors?
-        
+
         7. Compile and run the code using [valgrind].  What type of **memory errors** are there?
-        
+
         8. Which line do you need to **add** to fix these errors?
 
         9. Implement `table_remove(Table *t, int value)`
@@ -664,7 +664,53 @@ body:       |
 
     #### Sample Question
 
-    Draw a diagram of the typical life cycle of a process.
+    Given the following [C] code:
+
+        :::C
+        /* forking.c */
+        #include <stdlib.h>
+        #include <unistd.h>
+        #include <sys/wait.h>
+
+        int main(int argc, char *argv[]) {
+            int status = 0;
+
+            for (int i = 1; i < argc; i++) {
+                pid_t pid = fork();
+
+                if (pid < 0) {
+                    return EXIT_FAILURE;
+                }
+
+                if (pid == 0) {
+                    execlp(argv[i], "forkit", NULL);
+                }
+            }
+
+            for (int i = 1; i < argc; i++) {
+                int child_status;
+                while (wait(&child_status) < 0) {
+                    status += child_status;
+                }
+            }
+
+            return status;
+        }
+
+    Which of the following statements are true (**select all that apply**)?
+
+    1. The `execlp` always succeeds.
+    2. The `execlp` always fails.
+    3. The `execlp` may succeed depending on the arguments.
+    4. `main` will always return with success.
+    5. `main` will always return with failure.
+    6. `main` will may return with success depending on the arguments.
+    7. At most one child process may run concurrently with the parent.
+    8. Multiple child processes may run concurrently with the parent.
+    9. This program has fork bomb potential.
+    10. This program does not have fork bomb potential.
+    11. This program always terminates gracefully.
+    12. This program sometimes hangs indefinitely.
 
     [system]: http://man7.org/linux/man-pages/man3/system.3.html
 
