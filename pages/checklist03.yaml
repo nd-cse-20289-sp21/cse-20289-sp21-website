@@ -351,7 +351,7 @@ body:       |
             void list_fprint(List *l, FILE *stream)
             {
                 for (Node *c = l->head; c; c = c->next)
-                    fprintf(stream, "%d\n", c->stream);
+                    fprintf(stream, "%d\n", c->value);
             }
 
             bool list_remove(List *l, int v)
@@ -535,19 +535,12 @@ body:       |
 
     1. What exactly are [system calls]?
 
-        - What is the difference between [user mode] and [kernel mode]?
-
-        - What happens when an application performs a [system call]?
-
     2. What are some reasons why [system calls] related to [files],
     [processes], and [networking] would fail?
 
         - How do we check these failures?
 
         - How do we get the error message related to these failures?
-
-    [user mode]:    https://en.wikipedia.org/wiki/User_space
-    [kernel mode]:  https://en.wikipedia.org/wiki/Protection_ring#SUPERVISOR-MODE
 
     <hr>
 
